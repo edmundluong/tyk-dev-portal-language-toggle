@@ -1,0 +1,15 @@
+<!-- Template rendered in case the portal is disabled by the admin -->
+{{ $cookies := (req).Header.Get "Cookie" }}
+{{ $supportedLangs := list "en" "ar" "fr" "es" }}
+{{ $lang := "en" }}
+{{ range $supportedLangs }}{{ if regexMatch (printf "tdp_locale=%s" .) $cookies }}{{ $lang = . }}{{ end }}{{ end }}
+{{ $t := dict
+  "heading" (dict "en" "This Portal is disabled" "ar" "هذه البوابة معطّلة" "fr" "Ce portail est désactivé" "es" "Este portal está desactivado")
+}}
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 mb-5">
+      <h2>{{ index (index $t "heading") $lang }}</h2>
+    </div>
+  </div>
+</div>

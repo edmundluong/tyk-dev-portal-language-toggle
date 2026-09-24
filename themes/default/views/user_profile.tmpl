@@ -1,0 +1,203 @@
+<!-- Template used to view & edit the API consumer profile -->
+
+{{ $user := CurrentUser req }}
+{{ $userEmail := $user.Email}}
+{{ $cookies := (req).Header.Get "Cookie" }}
+{{ $supportedLangs := list "en" "ar" "fr" "es" }}
+{{ $lang := "en" }}
+{{ range $supportedLangs }}{{ if regexMatch (printf "tdp_locale=%s" .) $cookies }}{{ $lang = . }}{{ end }}{{ end }}
+{{/* The `date` funcmap function has no locale awareness -- for any
+     language with an entry in $monthNames, build the date manually from
+     the numeric day/month/year pieces and a looked-up month name;
+     languages with no entry (including English) fall back to `date`
+     directly. */}}
+{{ $monthNames := dict "ar" (dict "1" "يناير" "2" "فبراير" "3" "مارس" "4" "أبريل" "5" "مايو" "6" "يونيو" "7" "يوليو" "8" "أغسطس" "9" "سبتمبر" "10" "أكتوبر" "11" "نوفمبر" "12" "ديسمبر") "fr" (dict "1" "janvier" "2" "février" "3" "mars" "4" "avril" "5" "mai" "6" "juin" "7" "juillet" "8" "août" "9" "septembre" "10" "octobre" "11" "novembre" "12" "décembre") "es" (dict "1" "enero" "2" "febrero" "3" "marzo" "4" "abril" "5" "mayo" "6" "junio" "7" "julio" "8" "agosto" "9" "septiembre" "10" "octubre" "11" "noviembre" "12" "diciembre") }}
+{{ $t := dict
+  "profile_settings" (dict "en" "Profile settings" "ar" "إعدادات الملف الشخصي" "fr" "Paramètres du profil" "es" "Configuración del perfil")
+  "reset_sent" (dict "en" "An email to reset password has been sent. Check your inbox." "ar" "تم إرسال بريد إلكتروني لإعادة تعيين كلمة المرور. تحقق من صندوق الوارد." "fr" "Un e-mail de réinitialisation du mot de passe a été envoyé. Vérifiez votre boîte de réception." "es" "Se ha enviado un correo para restablecer la contraseña. Revise su bandeja de entrada.")
+  "personal_details" (dict "en" "Personal Details" "ar" "التفاصيل الشخصية" "fr" "Informations personnelles" "es" "Datos personales")
+  "edit_details" (dict "en" "Edit details" "ar" "تعديل التفاصيل" "fr" "Modifier les détails" "es" "Editar detalles")
+  "cancel" (dict "en" "Cancel" "ar" "إلغاء" "fr" "Annuler" "es" "Cancelar")
+  "save" (dict "en" "Save" "ar" "حفظ" "fr" "Enregistrer" "es" "Guardar")
+  "name" (dict "en" "Name:" "ar" "الاسم:" "fr" "Nom :" "es" "Nombre:")
+  "email" (dict "en" "Email:" "ar" "البريد الإلكتروني:" "fr" "E-mail :" "es" "Correo electrónico:")
+  "password" (dict "en" "Password:" "ar" "كلمة المرور:" "fr" "Mot de passe :" "es" "Contraseña:")
+  "first_name" (dict "en" "First name:" "ar" "الاسم الأول:" "fr" "Prénom :" "es" "Nombre:")
+  "last_name" (dict "en" "Last name:" "ar" "اسم العائلة:" "fr" "Nom :" "es" "Apellidos:")
+  "first_ph" (dict "en" "First *" "ar" "الاسم الأول *" "fr" "Prénom *" "es" "Nombre *")
+  "last_ph" (dict "en" "Last *" "ar" "اسم العائلة *" "fr" "Nom *" "es" "Apellidos *")
+  "email_ph" (dict "en" "Your Email *" "ar" "بريدك الإلكتروني *" "fr" "Votre e-mail *" "es" "Su correo electrónico *")
+  "current_password" (dict "en" "Current password:" "ar" "كلمة المرور الحالية:" "fr" "Mot de passe actuel :" "es" "Contraseña actual:")
+  "current_password_ph" (dict "en" "Your current Password *" "ar" "كلمة مرورك الحالية *" "fr" "Votre mot de passe actuel *" "es" "Su contraseña actual *")
+  "new_password" (dict "en" "New password:" "ar" "كلمة المرور الجديدة:" "fr" "Nouveau mot de passe :" "es" "Nueva contraseña:")
+  "new_password_ph" (dict "en" "Your Password *" "ar" "كلمة مرورك *" "fr" "Votre mot de passe *" "es" "Su contraseña *")
+  "confirm_new_password" (dict "en" "Confirm new password:" "ar" "تأكيد كلمة المرور الجديدة:" "fr" "Confirmez le nouveau mot de passe :" "es" "Confirme la nueva contraseña:")
+  "account_information" (dict "en" "Account Information" "ar" "معلومات الحساب" "fr" "Informations sur le compte" "es" "Información de la cuenta")
+  "member_since" (dict "en" "Member since:" "ar" "عضو منذ:" "fr" "Membre depuis :" "es" "Miembro desde:")
+  "advanced_settings" (dict "en" "Advanced Settings" "ar" "الإعدادات المتقدمة" "fr" "Paramètres avancés" "es" "Configuración avanzada")
+  "delete_profile" (dict "en" "Delete this profile" "ar" "حذف هذا الملف الشخصي" "fr" "Supprimer ce profil" "es" "Eliminar este perfil")
+  "delete_profile_sub" (dict "en" "Delete all your apps and credentials" "ar" "حذف جميع تطبيقاتك وبيانات الاعتماد" "fr" "Supprimer toutes vos applications et identifiants" "es" "Eliminar todas sus aplicaciones y credenciales")
+  "delete" (dict "en" "Delete" "ar" "حذف" "fr" "Supprimer" "es" "Eliminar")
+  "delete_modal_title" (dict "en" "Delete profile?" "ar" "حذف الملف الشخصي؟" "fr" "Supprimer le profil ?" "es" "¿Eliminar perfil?")
+  "delete_modal_body" (dict "en" "If deleting this profile, all your apps and access credentials will also be deleted. This action cannot be undone." "ar" "في حال حذف هذا الملف الشخصي، سيتم أيضًا حذف جميع تطبيقاتك وبيانات الوصول. لا يمكن التراجع عن هذا الإجراء." "fr" "Si vous supprimez ce profil, toutes vos applications et identifiants d'accès seront également supprimés. Cette action est irréversible." "es" "Si elimina este perfil, también se eliminarán todas sus aplicaciones y credenciales de acceso. Esta acción no se puede deshacer.")
+  "delete_modal_confirm" (dict "en" "Do you wish to continue?" "ar" "هل تريد الاستمرار؟" "fr" "Souhaitez-vous continuer ?" "es" "¿Desea continuar?")
+}}
+<div class="private-portal-wrapper">
+  <div class="container">
+    {{ if .errors }}
+      {{ range $key, $errs := .errors }}
+        <div class="alert alert-warning cart-error" role="alert">
+          <i class="tyk-icon tykon tykon-warning "></i>
+          <div class="alert__content">
+            <strong>{{$key}}</strong>
+            <ul>
+              {{ range $errs }}
+                <li>{{.}}</li>
+              {{ end }}
+            </ul>
+          </div>
+        </div>
+      {{ end }}
+    {{ end }}
+    <form method="post">
+      <div>
+        <h1 class="page-title-wrapper heading-large mb-5">{{ index (index $t "profile_settings") $lang }}</h1>
+        {{ if .error }}
+          <div class="alert alert-danger" role="alert">
+            <i class="tyk-icon tykon tykon-warning "></i>
+            <div class="alert__content">{{ .error }}</div>
+          </div>
+        {{ end }}
+        {{ if .done }}
+          <div class="alert alert-success" role="alert">
+            <i class="tyk-icon tykon tykon-check "></i>
+            <div class="alert__content">{{ index (index $t "reset_sent") $lang }}</div>
+          </div>
+        {{ end }}
+      </div>
+      <div class="profile-wrapper__card-section">
+        <div class="d-flex flex-row justify-content-between align-items-start flex-wrap mb-2 mt-4">
+          <h2 class="m-0 heading-medium">{{ index (index $t "personal_details") $lang }}</h2>
+          <div class="cta-btns-wrapper">
+            <button type="button" class="btn btn-primary-outline enable-editing d-block" data-action="edit">
+              {{ index (index $t "edit_details") $lang }}
+            </button>
+            <div class="edit-cta d-none disable-editing">
+              <button type="button" class="btn btn-secondary-outline" data-action="cancel">
+                {{ index (index $t "cancel") $lang }}
+              </button>
+              <input type="hidden" name="mode" value="update" />
+              <input type="hidden" value="{{ $user.ID}}">
+              <button type="submit" class="btn btn-primary" data-action="save">{{ index (index $t "save") $lang }}</button>
+            </div>
+          </div>
+        </div>
+        <div class="card p-0 mb-4">
+          <div class="card-footer__static-data d-block no-border w-100">
+            <div class="col-lg-12">
+              <div class="d-flex flex-row justify-content-between align-items-start flex-wrap p-3 requests-row-section__info">
+                <div class="d-flex flex-column pr-3">
+                  <h6 class="heading-small text-default mr-4">{{ index (index $t "name") $lang }}</h6>
+                </div>
+                <div class="text-regular-14 private-portal-user-details">
+                  {{ $user.DisplayName }}
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-12 requests-row-section">
+              <div class="d-flex flex-row justify-content-between align-items-start flex-wrap p-3 requests-row-section__info">
+                <div class="d-flex flex-column pr-3">
+                  <h6 class="heading-small text-default mr-4">{{ index (index $t "email") $lang }}</h6>
+                </div>
+                <div class="text-regular-14 private-portal-user-details">
+                  {{ $user.Email }}
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-12">
+              <div class="d-flex flex-row justify-content-between align-items-start flex-wrap p-3 requests-row-section__info">
+                <div class="d-flex flex-column pr-3">
+                  <h6 class="heading-small text-default mr-4">{{ index (index $t "password") $lang }}</h6>
+                </div>
+                <div class="text-regular-14">
+                  *************
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card-footer__dynamic-data d-none w-100 p-3">
+            <div class="mb-4">
+              <label class="heading-small text-default">{{ index (index $t "first_name") $lang }}</label>
+              <input type="text" name="first" class="form-control" placeholder="{{ index (index $t "first_ph") $lang }}" value="{{$user.First}}" />
+            </div>
+            <div class="mb-4">
+              <label class="heading-small text-default">{{ index (index $t "last_name") $lang }}</label>
+              <input type="text" name="last" class="form-control" placeholder="{{ index (index $t "last_ph") $lang }}" value="{{$user.Last}}" />
+            </div>
+            <div class="mb-4">
+              <label class="heading-small text-default">{{ index (index $t "email") $lang }}</label>
+              <input type="email" name="email" class="form-control" placeholder="{{ index (index $t "email_ph") $lang }}" value="{{$user.Email}}" readonly />
+            </div>
+            {{if $user.IsPasswordProvider}}
+              <div class="mb-4">
+                <label class="heading-small text-default">{{ index (index $t "current_password") $lang }}</label>
+                <input autocomplete="new-password" type="password" name="current_password" class="form-control" placeholder="{{ index (index $t "current_password_ph") $lang }}" value=""/>
+              </div>
+              <div class="mb-4">
+                <label class="heading-small text-default">{{ index (index $t "new_password") $lang }}</label>
+                <input autocomplete="new-password" type="password" name="password1" class="form-control" placeholder="{{ index (index $t "new_password_ph") $lang }}" value=""/>
+              </div>
+              <div class="mb-4">
+                <label class="heading-small text-default">{{ index (index $t "confirm_new_password") $lang }}</label>
+                <input autocomplete="new-password" type="password" name="password2" class="form-control" placeholder="{{ index (index $t "new_password_ph") $lang }}" value=""/>
+              </div>
+            {{end}}
+          </div>
+        </div>
+      </div>
+      <div class="mb-5">
+        <h2 class="heading-medium mb-3">{{ index (index $t "account_information") $lang }}</h2>
+        <div class="card p-0 mb-4">
+          <div class="col-lg-12">
+            <div class="d-flex flex-row justify-content-between align-items-start flex-wrap p-3 requests-row-section__info">
+              <div class="d-flex flex-column pr-3">
+                <h6 class="heading-small text-default">{{ index (index $t "member_since") $lang }}</h6>
+              </div>
+              <div class="text-regular-14">
+                {{ $md := index $monthNames $lang }}{{ if $md }}{{ $user.CreatedAt | date "2" }} {{ index $md ($user.CreatedAt | date "1") }} {{ $user.CreatedAt | date "2006 15:04" }}{{ else }}{{ $user.CreatedAt | date "2 Jan, 2006 15:04" }}{{ end }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <h2 class="heading-medium mb-3">{{ index (index $t "advanced_settings") $lang }}</h2>
+        <div class="card p-0 mb-4">
+          <div class="card-footer m-0 p-4 d-flex flex-row w-100 justify-content-between">
+            <div>
+              <h4 class="heading-medium text-default">{{ index (index $t "delete_profile") $lang }}</h4>
+              <h5 class="body-xlarge-default">{{ index (index $t "delete_profile_sub") $lang }}</h5>
+            </div>
+            <div>
+              <button type="button" class="btn btn-danger-outline" data-toggle="modal" data-target="#deleteProfileModal">
+                {{ index (index $t "delete") $lang }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      </form>
+  </div>
+</div>
+
+{{ render "confirmation_modal" (dict
+  "id" "deleteProfileModal"
+  "title" (index (index $t "delete_modal_title") $lang)
+  "body" (raw (print "<p class='body-xlarge-default'>" (index (index $t "delete_modal_body") $lang) "</p><p class='body-xlarge-default'>" (index (index $t "delete_modal_confirm") $lang) "</p>"))
+  "confirmText" (index (index $t "delete") $lang)
+  "cancelText" (index (index $t "cancel") $lang)
+  "confirmClass" "btn-danger"
+  "showIcon" true
+  "useForm" true
+  "hiddenFields" (dict "mode" "delete")
+) }}

@@ -1,0 +1,64 @@
+{{ $cookies := (req).Header.Get "Cookie" }}
+{{ $supportedLangs := list "en" "ar" "fr" "es" }}
+{{ $lang := "en" }}
+{{ range $supportedLangs }}{{ if regexMatch (printf "tdp_locale=%s" .) $cookies }}{{ $lang = . }}{{ end }}{{ end }}
+{{ $t := dict
+  "role_permissions" (dict "en" "Role Permissions" "ar" "أذونات الدور" "fr" "Autorisations du rôle" "es" "Permisos del rol")
+  "permissions" (dict "en" "Permissions" "ar" "الأذونات" "fr" "Autorisations" "es" "Permisos")
+  "super_admin" (dict "en" "Super Admin" "ar" "المسؤول العام" "fr" "Super administrateur" "es" "Superadministrador")
+  "team_member" (dict "en" "Team Member" "ar" "عضو الفريق" "fr" "Membre de l'équipe" "es" "Miembro del equipo")
+  "invite_delete_users" (dict "en" "Invite and delete users from the org" "ar" "دعوة وحذف المستخدمين من المؤسسة" "fr" "Inviter et supprimer des utilisateurs de l'organisation" "es" "Invitar y eliminar usuarios de la organización")
+  "change_roles_users" (dict "en" "Change roles for users" "ar" "تغيير أدوار المستخدمين" "fr" "Modifier les rôles des utilisateurs" "es" "Cambiar los roles de los usuarios")
+  "view_credentials" (dict "en" "View credentials" "ar" "عرض بيانات الاعتماد" "fr" "Voir les identifiants" "es" "Ver credenciales")
+  "revoke_reset_credentials" (dict "en" "Revoke or reset credentials" "ar" "إلغاء أو إعادة تعيين بيانات الاعتماد" "fr" "Révoquer ou réinitialiser les identifiants" "es" "Revocar o restablecer credenciales")
+  "delete_apps" (dict "en" "Delete Apps" "ar" "حذف التطبيقات" "fr" "Supprimer les applications" "es" "Eliminar aplicaciones")
+  "create_apps" (dict "en" "Create Apps" "ar" "إنشاء التطبيقات" "fr" "Créer des applications" "es" "Crear aplicaciones")
+}}
+<div class="dashed-table-border mb-4">
+  <div id="consumer-users" hidden>
+    <label class="heading-medium text-default">{{ index (index $t "role_permissions") $lang }}</label>
+    <div class="table-wrapper">
+      <table class="table">
+        <thead>
+          <tr class="heading-small">
+            <th>{{ index (index $t "permissions") $lang }}</th>
+            <th>{{ index (index $t "super_admin") $lang }}</th>
+            <th>{{ index (index $t "team_member") $lang }}</th>
+          </tr>
+        </thead>
+        <tbody class="text-regular-14">
+          <tr>
+            <td>{{ index (index $t "invite_delete_users") $lang }}</td>
+            <td><i class="tykon tykon-check"></i></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>{{ index (index $t "change_roles_users") $lang }}</td>
+            <td><i class="tykon tykon-check"></i></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>{{ index (index $t "view_credentials") $lang }}</td>
+            <td><i class="tykon tykon-check"></i></td>
+            <td><i class="tykon tykon-check"></i></td>
+          </tr>
+          <tr>
+            <td>{{ index (index $t "revoke_reset_credentials") $lang }}</td>
+            <td><i class="tykon tykon-check"></i></td>
+            <td><i class="tykon tykon-check"></i></td>
+          </tr>
+          <tr>
+            <td>{{ index (index $t "delete_apps") $lang }}</td>
+            <td><i class="tykon tykon-check"></i></td>
+            <td><i class="tykon tykon-check"></i></td>
+          </tr>
+          <tr>
+            <td>{{ index (index $t "create_apps") $lang }}</td>
+            <td><i class="tykon tykon-check"></i></td>
+            <td><i class="tykon tykon-check"></i></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

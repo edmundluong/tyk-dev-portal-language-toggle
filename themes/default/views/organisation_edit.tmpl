@@ -1,0 +1,66 @@
+{{ $cookies := (req).Header.Get "Cookie" }}
+{{ $supportedLangs := list "en" "ar" "fr" "es" }}
+{{ $lang := "en" }}
+{{ range $supportedLangs }}{{ if regexMatch (printf "tdp_locale=%s" .) $cookies }}{{ $lang = . }}{{ end }}{{ end }}
+{{ $t := dict
+  "back_to_users" (dict "en" "< Back to user list" "ar" "< الرجوع إلى قائمة المستخدمين" "fr" "< Retour à la liste des utilisateurs" "es" "< Volver a la lista de usuarios")
+  "create_org" (dict "en" "Create an Organisation" "ar" "إنشاء مؤسسة" "fr" "Créer une organisation" "es" "Crear una organización")
+  "create_org_desc" (dict "en" "With an organisation admin account you will be able to invite external users to collaborate with." "ar" "بحساب مسؤول مؤسسة، ستتمكن من دعوة مستخدمين خارجيين للتعاون معهم." "fr" "Avec un compte administrateur d'organisation, vous pourrez inviter des utilisateurs externes à collaborer." "es" "Con una cuenta de administrador de organización, podrá invitar a usuarios externos a colaborar.")
+  "org_name" (dict "en" "Organisation Name:" "ar" "اسم المؤسسة:" "fr" "Nom de l'organisation :" "es" "Nombre de la organización:")
+  "name_ph" (dict "en" "Name" "ar" "الاسم" "fr" "Nom" "es" "Nombre")
+  "cancel" (dict "en" "Cancel" "ar" "إلغاء" "fr" "Annuler" "es" "Cancelar")
+  "create" (dict "en" "Create Organisation" "ar" "إنشاء مؤسسة" "fr" "Créer une organisation" "es" "Crear organización")
+}}
+<div class="private-portal-wrapper">
+    <div class="apps-wrapper container">
+        <p class="mb-3 mt-3">
+            <a href="/portal/private/users" class="breadcrumb-link">
+                {{ index (index $t "back_to_users") $lang }}
+            </a>
+        </p>
+
+        {{ if .errors }}
+            {{ range $key, $errs := .errors }}
+                <div class="alert alert-warning cart-error" role="alert">
+                    <i class="tyk-icon tykon tykon-warning "></i>
+                    <div class="alert__content">
+                        <strong>{{$key}}</strong>
+                        <ul>
+                            {{ range $errs }}
+                                <li>{{.}}</li>
+                            {{ end }}
+                        </ul>
+                    </div>
+                </div>
+            {{ end }}
+        {{ end }}
+
+        <form method="post" id="org-create">
+            {{ if .error }}
+                <div class="alert alert-danger" role="alert">
+                    <i class="tyk-icon tykon tykon-warning "></i>
+                    <div class="alert__content">{{ .error }}</div>
+                </div>
+            {{ end }}
+            <div class="apps-wrapper__card-section mt-5">
+                <h1 class="heading-large">{{ index (index $t "create_org") $lang }}</h1>
+                <p class="text-regular-14 text-default-subdue mt-2">{{ index (index $t "create_org_desc") $lang }}</p>
+
+                <div class="card p-0 mb-4 mt-4">
+                    <div class="card-footer m-0 p-4">
+                        <div class="mb-4">
+                            <label class="heading-small text-default">{{ index (index $t "org_name") $lang }}</label>
+                            <input type="text" class="form-control" name="name"  value="{{.name}}" placeholder="{{ index (index $t "name_ph") $lang }}" required autofocus />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group text-right mt-4">
+                    <a id="org_cancel" class="btn btn-secondary-outline" href="/portal/private/users">{{ index (index $t "cancel") $lang }}</a>
+                    <input type="submit" name="submit" class="btn btn-primary" value="{{ index (index $t "create") $lang }}" />
+                </div>
+            </div>
+
+        </form>
+    </div>
+</div>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+{{ $cookies := (req).Header.Get "Cookie" }}
+{{/* Add a language by adding its code here (and to $rtlLangs if it reads
+     right-to-left) -- nothing else in this block needs to change. This
+     block is duplicated per layout file; keep all copies in sync. */}}
+{{ $supportedLangs := list "en" "ar" "fr" "es" }}
+{{ $rtlLangs := list "ar" }}
+{{ $lang := "en" }}
+{{ range $supportedLangs }}{{ if regexMatch (printf "tdp_locale=%s" .) $cookies }}{{ $lang = . }}{{ end }}{{ end }}
+<html lang="{{ $lang }}" {{ if has $lang $rtlLangs }}dir="rtl"{{ end }}>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>{{.product.Name}}: {{.api.Name}} Documentation</title>
+
+    <link href="/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/stylesheets/fonts.css" rel="stylesheet">
+    <link href="/assets/stylesheets/main.css" rel="stylesheet">
+    {{ if has $lang $rtlLangs }}<link href="/assets/stylesheets/rtl.css" rel="stylesheet">{{ end }}
+
+    <!-- stoplight.io -->
+    <script src="https://unpkg.com/@asyncapi/react-component@latest/browser/standalone/index.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/@asyncapi/react-component@latest/styles/default.min.css">
+
+    <!-- <link rel="stylesheet" href=""> -->
+
+</head>
+<body>
+
+{{ render "top_nav" . }}
+<!-- Page Content -->
+    {{ yield }}
+{{ render "footer" . }}
+
+</body>
+</html>

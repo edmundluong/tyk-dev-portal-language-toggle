@@ -1,0 +1,79 @@
+{{ $cookies := (req).Header.Get "Cookie" }}
+{{ $supportedLangs := list "en" "ar" "fr" "es" }}
+{{ $lang := "en" }}
+{{ range $supportedLangs }}{{ if regexMatch (printf "tdp_locale=%s" .) $cookies }}{{ $lang = . }}{{ end }}{{ end }}
+{{ $t := dict
+  "register" (dict "en" "Register" "ar" "التسجيل" "fr" "S'inscrire" "es" "Registrarse")
+  "pending" (dict "en" "The registration request has been sent, you'll recieve an email once it's been approved." "ar" "تم إرسال طلب التسجيل، وستتلقى بريدًا إلكترونيًا عند الموافقة عليه." "fr" "La demande d'inscription a été envoyée ; vous recevrez un e-mail une fois qu'elle aura été approuvée." "es" "Se ha enviado la solicitud de registro; recibirá un correo cuando se apruebe.")
+  "org_name" (dict "en" "Organisation name" "ar" "اسم المؤسسة" "fr" "Nom de l'organisation" "es" "Nombre de la organización")
+  "org_name_ph" (dict "en" "Organisation name *" "ar" "اسم المؤسسة *" "fr" "Nom de l'organisation *" "es" "Nombre de la organización *")
+  "email" (dict "en" "Email Address" "ar" "البريد الإلكتروني" "fr" "Adresse e-mail" "es" "Dirección de correo electrónico")
+  "email_ph" (dict "en" "Your Email *" "ar" "بريدك الإلكتروني *" "fr" "Votre e-mail *" "es" "Su correo electrónico *")
+  "first" (dict "en" "First name" "ar" "الاسم الأول" "fr" "Prénom" "es" "Nombre")
+  "first_ph" (dict "en" "First *" "ar" "الاسم الأول *" "fr" "Prénom *" "es" "Nombre *")
+  "last" (dict "en" "Last name" "ar" "اسم العائلة" "fr" "Nom" "es" "Apellidos")
+  "last_ph" (dict "en" "Last *" "ar" "اسم العائلة *" "fr" "Nom *" "es" "Apellidos *")
+  "password" (dict "en" "Password" "ar" "كلمة المرور" "fr" "Mot de passe" "es" "Contraseña")
+  "password_ph" (dict "en" "Your Password *" "ar" "كلمة مرورك *" "fr" "Votre mot de passe *" "es" "Su contraseña *")
+  "confirm_password" (dict "en" "Confirm password" "ar" "تأكيد كلمة المرور" "fr" "Confirmer le mot de passe" "es" "Confirmar contraseña")
+  "confirm_password_ph" (dict "en" "Confirm Password *" "ar" "تأكيد كلمة المرور *" "fr" "Confirmer le mot de passe *" "es" "Confirmar contraseña *")
+  "login_link" (dict "en" "Already have an account? Login!" "ar" "لديك حساب بالفعل؟ سجّل الدخول!" "fr" "Vous avez déjà un compte ? Connectez-vous !" "es" "¿Ya tiene una cuenta? ¡Inicie sesión!")
+}}
+<div class="container login-container">
+    <div class="row">
+        <div class="col-md-3 "></div>
+        <div class="col-md-6 login-form-1">
+            <h3>{{ index (index $t "register") $lang }}</h3>
+            {{ if .pending }}
+                <div class="alert alert-info" role="alert">
+                    <i class="tyk-icon tykon tykon-warning "></i>
+                    <div class="alert__content">{{ index (index $t "pending") $lang }}</div>
+                </div>
+            {{ else }}
+            <form action="/auth/password/register" method="post">
+                {{ if .errors }}
+                    {{ range $field, $errs := .errors }}
+                        {{ range $errs }}
+                            <div class="alert alert-danger" role="alert">
+                                <i class="tyk-icon tykon tykon-warning "></i>
+                                <div class="alert__content">{{.}}</div>
+                            </div>
+                        {{ end }}
+                    {{ end }}
+                {{ end }}
+                <div class="form-group">
+                    <label class="form-label">{{ index (index $t "org_name") $lang }}</label>
+                    <input type="text" name="org_name" class="form-control" placeholder="{{ index (index $t "org_name_ph") $lang }}" value="" />
+                </div>
+                <div class="form-group">
+                    <label class="form-label">{{ index (index $t "email") $lang }}</label>
+                    <input type="email" name="email" class="form-control" placeholder="{{ index (index $t "email_ph") $lang }}" value="" />
+                </div>
+                <div class="form-group">
+                    <label class="form-label">{{ index (index $t "first") $lang }}</label>
+                    <input type="text" name="first" class="form-control" placeholder="{{ index (index $t "first_ph") $lang }}" value="" />
+                </div>
+                <div class="form-group">
+                    <label class="form-label">{{ index (index $t "last") $lang }}</label>
+                    <input type="text" name="last" class="form-control" placeholder="{{ index (index $t "last_ph") $lang }}" value="" />
+                </div>
+                <div class="form-group">
+                    <label class="form-label">{{ index (index $t "password") $lang }}</label>
+                    <input type="password" name="password1" class="form-control" placeholder="{{ index (index $t "password_ph") $lang }}" value="" autocomplete="off" />
+                </div>
+                <div class="form-group">
+                    <label class="form-label">{{ index (index $t "confirm_password") $lang }}</label>
+                    <input type="password" name="password2" class="form-control" placeholder="{{ index (index $t "confirm_password_ph") $lang }}" value="" autocomplete="off" />
+                </div>
+                <div class="form-group">
+                    <input type="submit" name="submit" class="btnSubmit" value="{{ index (index $t "register") $lang }}" />
+                </div>
+                <div class="form-group">
+                    <a href="{{LoginURL}}">{{ index (index $t "login_link") $lang }}</a>
+                </div>
+            </form>
+            {{ end }}
+        </div>
+        <div class="col-md-3"></div>
+    </div>
+</div>

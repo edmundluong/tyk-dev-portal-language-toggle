@@ -1,0 +1,148 @@
+<!-- Main top navigation menu used across the app -->
+{{ $cookies := (req).Header.Get "Cookie" }}
+{{/* Add a language by adding one entry to $languages (code/label/flag -- flag
+     is optional) and, if needed, to $rtlLangs and $homePaths below. Nothing
+     else in this file needs to change. This block is duplicated per layout/
+     partial; keep all copies in sync. */}}
+{{ $languages := list
+  (dict "code" "en" "label" "EN" "flag" "🇬🇧")
+  (dict "code" "ar" "label" "AR" "flag" "🇸🇦")
+  (dict "code" "fr" "label" "FR" "flag" "🇫🇷")
+  (dict "code" "es" "label" "ES" "flag" "🇪🇸")
+}}
+{{ $rtlLangs := list "ar" }}
+{{ $homePaths := dict "en" "/" "ar" "/ar" "fr" "/fr" "es" "/es" }}
+{{ $supportedLangs := list "en" "ar" "fr" "es" }}
+{{ $lang := "en" }}
+{{ range $supportedLangs }}{{ if regexMatch (printf "tdp_locale=%s" .) $cookies }}{{ $lang = . }}{{ end }}{{ end }}
+{{ $t := dict
+  "brand" (dict "en" "DEVELOPER PORTAL" "ar" "بوابة المطورين" "fr" "PORTAIL DÉVELOPPEUR" "es" "PORTAL DEL DESARROLLADOR")
+  "create_org" (dict "en" "Create an Organisation" "ar" "إنشاء مؤسسة" "fr" "Créer une organisation" "es" "Crear una organización")
+  "my_dashboard" (dict "en" "My Dashboard" "ar" "لوحة التحكم" "fr" "Mon tableau de bord" "es" "Mi panel de control")
+  "profile" (dict "en" "Profile" "ar" "الملف الشخصي" "fr" "Profil" "es" "Perfil")
+  "logout" (dict "en" "Log out" "ar" "تسجيل الخروج" "fr" "Se déconnecter" "es" "Cerrar sesión")
+  "login" (dict "en" "Log in" "ar" "تسجيل الدخول" "fr" "Se connecter" "es" "Iniciar sesión")
+  "register" (dict "en" "Register" "ar" "التسجيل" "fr" "S'inscrire" "es" "Registrarse")
+  "admin_app" (dict "en" "Go to Admin App >" "ar" "الذهاب إلى تطبيق الإدارة" "fr" "Aller à l'application d'administration >" "es" "Ir a la aplicación de administración >")
+  "quit_preview" (dict "en" "QUIT PREVIEW" "ar" "إنهاء المعاينة" "fr" "QUITTER L'APERÇU" "es" "SALIR DE LA VISTA PREVIA")
+  "toggle_nav" (dict "en" "Toggle navigation" "ar" "تبديل التنقل" "fr" "Basculer la navigation" "es" "Alternar navegación")
+}}
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+  <div class="container">
+    {{/* Current entry from $languages, for the toggle button's own label --
+         falls back to the first entry (index 0) if $lang somehow isn't in
+         the list, so this never renders empty. */}}
+    {{ $currentLang := index $languages 0 }}
+    {{ range $languages }}{{ if eq .code $lang }}{{ $currentLang = . }}{{ end }}{{ end }}
+    <div class="dropdown lang-switcher mr-3">
+      <a href="#" class="nav-link dropdown-toggle lang-switcher__toggle" id="langSwitcherToggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        {{ $currentLang.flag }} {{ $currentLang.label }}
+        <svg class="lang-switcher__caret" width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+      <div class="dropdown-menu lang-switcher__menu" aria-labelledby="langSwitcherToggle">
+        {{ range $languages }}
+          <a href="#" class="dropdown-item lang-switcher__link {{ if eq .code $lang }}active{{ end }}" onclick="tykSwitchLang('{{ .code }}');return false;">{{ .flag }} {{ .label }}</a>
+        {{ end }}
+      </div>
+    </div>
+    <a class="navbar-brand" href="{{ index $homePaths $lang }}">{{ index (index $t "brand") $lang }}</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="{{ index (index $t "toggle_nav") $lang }}">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav align-items-center justify-content-between">
+        <div class="d-flex navbar-menu-items">
+          {{ $menus := GetMenus }}
+          {{ $primaryMenu := $menus.Primary }}
+          {{/* Naming convention: a non-English primary menu is a DB row named
+               "Primary<SUFFIX>" (e.g. "PrimaryAR"). Add a language's suffix
+               here to pick it up -- no other logic needed. */}}
+          {{ $menuSuffixes := dict "ar" "AR" "fr" "FR" "es" "ES" }}
+          {{ $altMenuName := index $menuSuffixes $lang }}
+          {{ if $altMenuName }}
+            {{ $altMenu := index $menus (printf "Primary%s" $altMenuName) }}
+            {{ if $altMenu }}{{ $primaryMenu = $altMenu }}{{ end }}
+          {{ end }}
+          {{ if $primaryMenu }}
+            {{ range $primaryMenu.Children }}
+              <li class="nav-item {{ if .Children }}dropdown{{end}} mr-2">
+                <a class="nav-link {{ if .Children }}dropdown-toggle{{end}}" href="{{.Path}}">{{.Tag}}</a>
+                {{ if .Children }}
+                  <ul class="dropdown-menu submenu" aria-labelledby="navbarDropdownMenuLink">
+                    {{ range .Children }}
+                      <li class="nav-item">
+                        <a class="dropdown-item" href="{{.Path}}">{{.Tag}}</a>
+                      </li>
+                    {{ end }}
+                  </ul>
+                {{ end }}
+              </li>
+            {{ end }}
+          {{ end }}
+        </div>
+
+        <div class="d-flex navbar-cta align-items-center">
+          {{if CanCreateOrganisation req }}
+            <div>
+                <a id="create-org-btn" class="btn btn-secondary" href="/portal/private/organisation">{{ index (index $t "create_org") $lang }}</a>
+            </div>
+          {{end}}
+          {{ $user := CurrentUser req }}
+          {{ if $user }}
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="{{.Path}}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="tyk-icon tykon tykon-profile "></i>
+                {{ $user.DisplayName }}
+              </a>
+              <ul class="dropdown-menu submenu" aria-labelledby="navbarDropdownMenuLink">
+                {{ if ne $user.Role "provider-admin"}}
+                  <li class="nav-item">
+                    <a class="dropdown-item" href="/portal/private/dashboard">{{ index (index $t "my_dashboard") $lang }}</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="dropdown-item" href="/portal/private/profile">{{ index (index $t "profile") $lang }}</a>
+                  </li>
+                {{ end }}
+                <li class="nav-item">
+                  <a class="dropdown-item" href="/auth/logout">{{ index (index $t "logout") $lang }}</a>
+                </li>
+              </ul>
+            </li>
+            {{if and (not $user.ResetPassword) (eq $user.Role "provider-admin")}}
+              <li class="nav-item">
+                <a class="nav-link admin-dash" href="/admin">{{ index (index $t "admin_app") $lang }} &gt;</a>
+              </li>
+            {{end}}
+            {{ if IsShoppingCartEnabled }}
+              {{ $cart := GetCart $user.ID }}
+              {{ if ne $user.Role "provider-admin" }}
+                <li class="nav-item cart">
+                  <a class="nav-link cart__link" href="/portal/private/cart/provision">
+                    {{if $cart}}
+                      <img src="/assets/images/icons/cart.svg">
+                    {{else}}
+                      <img src="/assets/images/icons/full-cart.svg">
+                    {{end}}
+                    <span class="badge cart__item-count">{{if $cart}} {{ $cart.TotalProducts }} {{end}}</span>
+                  </a>
+                </li>
+              {{ end }}
+            {{ end }}
+          {{ else }}
+            <li class="nav-item">
+              <a class="btn btn-primary btn-login" href="{{LoginURL}}">{{ index (index $t "login") $lang }}</a>
+            </li>
+            <li class="nav-item">
+              <a class="btn btn-secondary" href="/auth/password/register">{{ index (index $t "register") $lang }}</a>
+            </li>
+          </div>
+        {{ end }}
+      </ul>
+    </div>
+  </div>
+    {{if .previewId}}
+        <a href="?deactivate-preview=true" class="btn btn-primary" id="deactivate-preview-btn">{{ index (index $t "quit_preview") $lang }} </a>
+    {{end}}
+</nav>

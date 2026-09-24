@@ -1,0 +1,50 @@
+{{ $cookies := (req).Header.Get "Cookie" }}
+{{ $supportedLangs := list "en" "ar" "fr" "es" }}
+{{ $lang := "en" }}
+{{ range $supportedLangs }}{{ if regexMatch (printf "tdp_locale=%s" .) $cookies }}{{ $lang = . }}{{ end }}{{ end }}
+{{ $t := dict
+  "heading" (dict "en" "Complete your registration" "ar" "أكمل تسجيلك" "fr" "Terminez votre inscription" "es" "Complete su registro")
+  "password" (dict "en" "Password" "ar" "كلمة المرور" "fr" "Mot de passe" "es" "Contraseña")
+  "confirm_password" (dict "en" "Confirm Password" "ar" "تأكيد كلمة المرور" "fr" "Confirmer le mot de passe" "es" "Confirmar contraseña")
+  "reset" (dict "en" "Reset" "ar" "إعادة التعيين" "fr" "Réinitialiser" "es" "Restablecer")
+  "completed" (dict "en" "Your registration has been completed. You can now " "ar" "تم إكمال تسجيلك. يمكنك الآن " "fr" "Votre inscription est terminée. Vous pouvez maintenant " "es" "Su registro se ha completado. Ya puede ")
+  "login" (dict "en" "login" "ar" "تسجيل الدخول" "fr" "connexion" "es" "inicio de sesión")
+}}
+<div class="container login-container">
+    <div class="row">
+        <div class="col-md-3 "></div>
+        <div class="col-md-6 login-form-1">
+            <h3>{{ index (index $t "heading") $lang }}</h3>
+            <form action="/auth/password/update/code?token={{.code}}" method="post">
+                {{ if .errors }}
+                <div class="alert alert-danger" role="alert">
+                    <i class="tyk-icon tykon tykon-warning "></i>
+                    {{ range .errors }}
+                        {{ range $msg := . }}
+                        <div class="alert__content">{{$msg}}</div>
+                        {{ end }}
+                    {{ end }}
+                </div>
+                {{ end }}
+
+                {{ if .done }}
+                <div class="alert alert-success" role="alert">
+                    <i class="tyk-icon tykon tykon-check "></i>
+                    <div class="alert__content">{{ index (index $t "completed") $lang }}<a href="{{LoginURL}}">{{ index (index $t "login") $lang }}</a>.</div>
+                </div>
+                {{ else }}
+                <div class="form-group">
+                    <input type="password" name="password1" class="form-control" placeholder="{{ index (index $t "password") $lang }}" value="" autocomplete="off" />
+                </div>
+                <div class="form-group">
+                    <input type="password" name="password2" class="form-control" placeholder="{{ index (index $t "confirm_password") $lang }}" value="" autocomplete="off" />
+                </div>
+                <div class="form-group">
+                    <input type="submit" name="submit" class="btnSubmit" value="{{ index (index $t "reset") $lang }}" />
+                </div>
+                {{ end }}
+            </form>
+        </div>
+        <div class="col-md-3"></div>
+    </div>
+</div>

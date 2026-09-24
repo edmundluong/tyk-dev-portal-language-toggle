@@ -1,0 +1,130 @@
+{{ $user := CurrentUser req }}
+{{ $cookies := (req).Header.Get "Cookie" }}
+{{ $supportedLangs := list "en" "ar" "fr" "es" }}
+{{ $lang := "en" }}
+{{ range $supportedLangs }}{{ if regexMatch (printf "tdp_locale=%s" .) $cookies }}{{ $lang = . }}{{ end }}{{ end }}
+{{/* The `date` funcmap function has no locale awareness -- for any
+     language with an entry in $monthNames, build the date manually from
+     the numeric day/month/year pieces and a looked-up month name;
+     languages with no entry (including English) fall back to `date`
+     directly. */}}
+{{ $monthNames := dict "ar" (dict "1" "يناير" "2" "فبراير" "3" "مارس" "4" "أبريل" "5" "مايو" "6" "يونيو" "7" "يوليو" "8" "أغسطس" "9" "سبتمبر" "10" "أكتوبر" "11" "نوفمبر" "12" "ديسمبر") "fr" (dict "1" "janvier" "2" "février" "3" "mars" "4" "avril" "5" "mai" "6" "juin" "7" "juillet" "8" "août" "9" "septembre" "10" "octobre" "11" "novembre" "12" "décembre") "es" (dict "1" "enero" "2" "febrero" "3" "marzo" "4" "abril" "5" "mayo" "6" "junio" "7" "julio" "8" "agosto" "9" "septiembre" "10" "octubre" "11" "noviembre" "12" "diciembre") }}
+{{ $t := dict
+  "users" (dict "en" "Users" "ar" "المستخدمون" "fr" "Utilisateurs" "es" "Usuarios")
+  "users_desc" (dict "en" "Here's a list of all the members that are part of this organisation." "ar" "هذه قائمة بجميع الأعضاء المنتمين إلى هذه المؤسسة." "fr" "Voici la liste de tous les membres de cette organisation." "es" "Esta es la lista de todos los miembros que forman parte de esta organización.")
+  "invite_new_user" (dict "en" "Invite new user" "ar" "دعوة مستخدم جديد" "fr" "Inviter un nouvel utilisateur" "es" "Invitar a un nuevo usuario")
+  "search_ph" (dict "en" "Search" "ar" "بحث" "fr" "Rechercher" "es" "Buscar")
+  "search" (dict "en" "Search" "ar" "بحث" "fr" "Rechercher" "es" "Buscar")
+  "name" (dict "en" "Name" "ar" "الاسم" "fr" "Nom" "es" "Nombre")
+  "email" (dict "en" "Email" "ar" "البريد الإلكتروني" "fr" "E-mail" "es" "Correo electrónico")
+  "role" (dict "en" "Role" "ar" "الدور" "fr" "Rôle" "es" "Rol")
+  "member_since" (dict "en" "Member Since" "ar" "عضو منذ" "fr" "Membre depuis" "es" "Miembro desde")
+  "status" (dict "en" "Status" "ar" "الحالة" "fr" "Statut" "es" "Estado")
+  "action" (dict "en" "Action" "ar" "الإجراء" "fr" "Action" "es" "Acción")
+  "registered" (dict "en" "Registered" "ar" "مسجَّل" "fr" "Inscrit" "es" "Registrado")
+  "pending" (dict "en" "Pending" "ar" "معلَّق" "fr" "En attente" "es" "Pendiente")
+  "edit" (dict "en" "Edit" "ar" "تعديل" "fr" "Modifier" "es" "Editar")
+  "no_users" (dict "en" "No user to be shown." "ar" "لا يوجد مستخدمون لعرضهم." "fr" "Aucun utilisateur à afficher." "es" "No hay usuarios que mostrar.")
+}}
+<div class="private-portal-wrapper">
+  <div class="container">
+
+    {{ render "messages" . }}
+
+    <div class="row">
+      <div>
+        <div class="row">
+          <div class="col-md-9 page-title-wrapper">
+            <h1 class="heading-large">{{ index (index $t "users") $lang }}</h1>
+            <p class="text-default-subdue">{{ index (index $t "users_desc") $lang }}</p>
+          </div>
+          {{ if eq $user.Role "consumer-admin" }}
+          <div class="col-2 align-self-center">
+            <a class="btn btn-primary" href="users/invite">
+              <i class="tyk-icon tykon tykon-plus "></i>
+              <span>{{ index (index $t "invite_new_user") $lang }}</span>
+            </a>
+          </div>
+          {{ end }}
+        </div>
+        <form class="mb-4 mt-4">
+          <div class="search-form-wrapper d-flex flex-row">
+            <div class="pr-2 input-group search-container w-100">
+              <input type="text" placeholder="{{ index (index $t "search_ph") $lang }}" class="form-control search-input" id="search" name="search">
+              <div class="input-group-append">
+                <label class="search__label">
+                  <i class="tyk-icon tykon tykon-search"></i>
+                </label>
+              </div>
+            </div>
+            <div class="pr-2 align-self-center ml-auto">
+              <button type="submit" class="btn btn-primary-outline w-100">{{ index (index $t "search") $lang }}</button>
+            </div>
+          </div>
+        </form>
+        <div class="mb-5">
+          {{ $userInvites := FilterUserInvites req }}
+          {{ if $userInvites }}
+            <div class="table-wrapper">
+              <table class="table">
+                <thead>
+                  <tr class="heading-small">
+                    <th>{{ index (index $t "name") $lang }}</th>
+                    <th>{{ index (index $t "email") $lang }}</th>
+                    <th>{{ index (index $t "role") $lang }}</th>
+                    <th>{{ index (index $t "member_since") $lang }}</th>
+                    <th>{{ index (index $t "status") $lang }}</th>
+                    <th class="actions-cell">{{ index (index $t "action") $lang }}</th>
+                  </tr>
+                </thead>
+                <tbody class="text-regular-14">
+                  {{ $roles := .roles }}
+                  {{ range $i, $userInvite := $userInvites }}
+                    <tr>
+                      <td>
+                        {{ if eq $user.Role "consumer-team-member" }}
+                          {{ $userInvite.First }} {{ $userInvite.Last }}
+                        {{ else }}
+                          <a class="breadcrumb-link private-portal-user-details" href="users/{{ $userInvite.ID }}">{{ $userInvite.First }} {{ $userInvite.Last }}</a>
+                        {{ end }}
+                      </td>
+                      <td class="private-portal-user-details"> {{ $userInvite.Email }} </td>
+                      <td> {{ index $roles $userInvite.Role }} </td>
+                      <td> {{ $md := index $monthNames $lang }}{{ if $md }}{{ $userInvite.CreatedAt | date "2" }} {{ index $md ($userInvite.CreatedAt | date "1") }} {{ $userInvite.CreatedAt | date "2006 15:04" }}{{ else }}{{ $userInvite.CreatedAt | date "2 Jan, 2006 15:04" }}{{ end }}</td>
+                      {{ if $userInvite.Uactive }}
+                        <td><i class="bi bi-check-circle-fill status-registered"></i> {{ index (index $t "registered") $lang }}</td>
+                      {{ else if $userInvite.Joined }}
+                        <td><i class="bi bi-clock-fill check-active"></i> {{ index (index $t "registered") $lang }}</td>
+                      {{ else }}
+                        <td><i class="bi bi-check-circle-fill pending-clock"></i> {{ index (index $t "pending") $lang }}</td>
+                      {{ end }}
+                      <td>
+                        {{ if eq $user.Role "consumer-team-member" }}
+                          -
+                        {{ else }}
+                          <div class="dropdown text-center">
+                            <button class="btn p-0" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              <img src="/assets/images/icons/dots.svg">
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                              <a class="dropdown-item" href="users/{{ $userInvite.ID }}/edit">{{ index (index $t "edit") $lang }}</a>
+                            </div>
+                          </div>
+                        {{ end }}
+                      </td>
+                    </tr>
+                  {{ end }}
+                </tbody>
+              </table>
+            </div>
+          {{ else }}
+            <div class="alert alert-info" role="alert">
+              <i class="tyk-icon tykon tykon-warning "></i>
+              <div class="alert__content">{{ index (index $t "no_users") $lang }}</div>
+            </div>
+          {{ end }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

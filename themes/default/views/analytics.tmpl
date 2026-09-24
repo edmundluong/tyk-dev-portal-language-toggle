@@ -1,0 +1,375 @@
+{{ $user := CurrentUser req }}
+{{ $cookies := (req).Header.Get "Cookie" }}
+{{ $supportedLangs := list "en" "ar" "fr" "es" }}
+{{ $lang := "en" }}
+{{ range $supportedLangs }}{{ if regexMatch (printf "tdp_locale=%s" .) $cookies }}{{ $lang = . }}{{ end }}{{ end }}
+{{ $t := dict
+  "dashboard" (dict "en" "Dashboard" "ar" "لوحة البيانات" "fr" "Tableau de bord" "es" "Panel de control")
+  "welcome_back" (dict "en" "welcome back!" "ar" "مرحبًا بعودتك!" "fr" "content de vous revoir !" "es" "¡bienvenido de nuevo!")
+  "hi" (dict "en" "Hi" "ar" "مرحبًا" "fr" "Bonjour" "es" "Hola")
+  "this_week" (dict "en" "This week" "ar" "هذا الأسبوع" "fr" "Cette semaine" "es" "Esta semana")
+  "performance" (dict "en" "Perfomance" "ar" "الأداء" "fr" "Performance" "es" "Rendimiento")
+  "overview" (dict "en" "Overview" "ar" "نظرة عامة" "fr" "Aperçu" "es" "Resumen")
+  "total_api_calls" (dict "en" "Total API Calls" "ar" "إجمالي طلبات API" "fr" "Total des appels API" "es" "Total de llamadas API")
+  "vs_last_week" (dict "en" "vs last week" "ar" "مقارنة بالأسبوع الماضي" "fr" "par rapport à la semaine dernière" "es" "frente a la semana pasada")
+  "error_rate_avg" (dict "en" "Error rate (average)" "ar" "معدل الأخطاء (المتوسط)" "fr" "Taux d'erreur (moyenne)" "es" "Tasa de errores (media)")
+  "latency_avg" (dict "en" "Latency (average)" "ar" "زمن الاستجابة (المتوسط)" "fr" "Latence (moyenne)" "es" "Latencia (media)")
+  "success" (dict "en" "Success" "ar" "النجاح" "fr" "Succès" "es" "Correcto")
+  "errors" (dict "en" "Errors" "ar" "الأخطاء" "fr" "Erreurs" "es" "Errores")
+  "all_apps" (dict "en" "All apps" "ar" "جميع التطبيقات" "fr" "Toutes les applications" "es" "Todas las aplicaciones")
+  "export_csv" (dict "en" "EXPORT TO CSV" "ar" "تصدير إلى CSV" "fr" "EXPORTER EN CSV" "es" "EXPORTAR A CSV")
+  "top5_errors" (dict "en" "Top 5 highest error rates by API" "ar" "أعلى 5 معدلات أخطاء حسب API" "fr" "Top 5 des taux d'erreur les plus élevés par API" "es" "Las 5 tasas de error más altas por API")
+  "error_breakdown" (dict "en" "Error breakdown" "ar" "تفصيل الأخطاء" "fr" "Répartition des erreurs" "es" "Desglose de errores")
+  "filter_data_by" (dict "en" "Filter data by" "ar" "تصفية البيانات حسب" "fr" "Filtrer les données par" "es" "Filtrar datos por")
+  "apps" (dict "en" "Apps" "ar" "التطبيقات" "fr" "Applications" "es" "Aplicaciones")
+  "response_codes" (dict "en" "Response codes" "ar" "رموز الاستجابة" "fr" "Codes de réponse" "es" "Códigos de respuesta")
+  "response_codes_tip" (dict "en" "Type in a response code and press 'Enter' to apply the filter. You can filter by multiple response codes at the same time" "ar" "أدخل رمز استجابة واضغط على 'Enter' لتطبيق الفلتر. يمكنك التصفية بعدة رموز استجابة في الوقت نفسه" "fr" "Saisissez un code de réponse et appuyez sur « Entrée » pour appliquer le filtre. Vous pouvez filtrer par plusieurs codes de réponse à la fois" "es" "Escriba un código de respuesta y pulse «Intro» para aplicar el filtro. Puede filtrar por varios códigos de respuesta a la vez")
+  "all_response_codes" (dict "en" "All response codes" "ar" "جميع رموز الاستجابة" "fr" "Tous les codes de réponse" "es" "Todos los códigos de respuesta")
+  "statistics" (dict "en" "Statistics" "ar" "الإحصائيات" "fr" "Statistiques" "es" "Estadísticas")
+  "time_units" (dict "en" "Time units" "ar" "وحدات الزمن" "fr" "Unités de temps" "es" "Unidades de tiempo")
+  "split_by" (dict "en" "Split by" "ar" "التقسيم حسب" "fr" "Répartir par" "es" "Dividir por")
+  "daily" (dict "en" "Daily" "ar" "يوميًا" "fr" "Quotidien" "es" "Diario")
+  "hourly" (dict "en" "Hourly" "ar" "ساعيًا" "fr" "Horaire" "es" "Cada hora")
+  "export_api_calls_csv" (dict "en" "EXPORT API CALLS TO CSV" "ar" "تصدير طلبات API إلى CSV" "fr" "EXPORTER LES APPELS API EN CSV" "es" "EXPORTAR LLAMADAS API A CSV")
+  "export_errors_csv" (dict "en" "EXPORT ERRORS TO CSV" "ar" "تصدير الأخطاء إلى CSV" "fr" "EXPORTER LES ERREURS EN CSV" "es" "EXPORTAR ERRORES A CSV")
+  "export_latency_csv" (dict "en" "EXPORT LATENCY TO CSV" "ar" "تصدير زمن الاستجابة إلى CSV" "fr" "EXPORTER LA LATENCE EN CSV" "es" "EXPORTAR LATENCIA A CSV")
+  "error_rate" (dict "en" "Error rate" "ar" "معدل الأخطاء" "fr" "Taux d'erreur" "es" "Tasa de errores")
+  "total_errors" (dict "en" "Total errors" "ar" "إجمالي الأخطاء" "fr" "Total des erreurs" "es" "Total de errores")
+  "average_latency" (dict "en" "Average latency" "ar" "متوسط زمن الاستجابة" "fr" "Latence moyenne" "es" "Latencia media")
+  "apis" (dict "en" "APIs" "ar" "واجهات API" "fr" "API" "es" "API")
+}}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+<div class="private-portal-wrapper">
+  <div class="dashboard-container">
+    <div class="page-title-wrapper">
+      <h1 class="heading-large text-default">{{ index (index $t "dashboard") $lang }}</h1>
+      <p class="text-default-subdue">{{ index (index $t "hi") $lang }} {{$user.First}} {{ index (index $t "welcome_back") $lang }}</p>
+    </div>
+    {{ if .errors }}
+      <div class="alert alert-danger" role="alert">
+          {{ range $category, $messages := .errors }}
+          {{$category}}
+          <i class="tyk-icon tykon tykon-warning "></i>
+          {{ range $i, $message := $messages }}
+          <br/>
+          <div class="alert__content">{{ $message }}</div>
+          {{ end }}
+      </div>
+	        {{end}}
+    {{ end }}
+    <div class="d-flex flex-row justify-content-end">
+      <div id="analytics-date-picker" class="date-picker d-flex flex-row justify-content-around">
+        <i class="bi bi-calendar-minus calendar-icon"></i>
+        <p id="analytics-date-picker-selected-range" class="heading-small text-default">{{ index (index $t "this_week") $lang }}</p>
+      </div>
+    </div>
+    <div class="dashboard-tabs-wrapper step-wrapper d-flex d-row mt-14">
+      <div class="step active analytics-tab mr-10">
+        <div class="tab-text">
+          <p class="m-0 heading-small gray">{{ index (index $t "performance") $lang }}</p>
+          <h1 class="m-0 heading-large text-default">{{ index (index $t "overview") $lang }}</h1>
+        </div>
+      </div>
+      <div id="traffic-chart-tab" class="step analytics-tab mr-14">
+        <div class="tab-text">
+          <p class="m-0 heading-small gray">{{ index (index $t "total_api_calls") $lang }}</p>
+          <h1 id="total-api-calls" class="m-0 heading-large text-default"></h1>
+          <div id="traffic-vs-last-week" class="d-flex flex-row align-items-end mt-1">
+            <span id="traffic-vs-last-week-dafault" class="text-regular-14 gray-lighter d-none">-</span>
+            <span class="text-regular-12 gray-lighter ml-3">{{ index (index $t "vs_last_week") $lang }}</span>
+          </div>
+        </div>
+      </div>
+      <div id="error-rate-chart-tab" class="step analytics-tab mr-10">
+        <div class="tab-text">
+          <p class="m-0 heading-small gray">{{ index (index $t "error_rate_avg") $lang }}</p>
+          <h1 id="error-rate-average" class="m-0 heading-large text-default"></h1>
+          <div id="error-rate-vs-last-week" class="d-flex flex-row align-items-end mt-1">
+            <span id="error-rate-vs-last-week-dafault" class="text-regular-14 gray-lighter d-none">-</span>
+            <span class="text-regular-12 gray-lighter ml-3">{{ index (index $t "vs_last_week") $lang }}</span>
+          </div>
+        </div>
+      </div>
+      <div id="latency-chart-tab" class="step analytics-tab">
+        <div class="tab-text">
+          <p class="m-0 heading-small gray">{{ index (index $t "latency_avg") $lang }}</p>
+          <h1 id="latency-average" class="m-0 heading-large text-default"></h1>
+          <div id="latency-vs-last-week" class="d-flex flex-row align-items-end mt-1">
+            <span id="latency-vs-last-week-dafault" class="text-regular-14 gray-lighter d-none">-</span>
+            <span class="text-regular-12 gray-lighter ml-3">{{ index (index $t "vs_last_week") $lang }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="content-wrapper">
+      <div class="content-wrapper__content d-block">
+        <div class="analytics-content d-flex flex-column align-items-center">
+          <div class="api-calls-wrapper flex-column d-flex">
+            <div class="d-flex flex-row">
+              <div class="top-row-content ml-27">
+                <p class="m-0 heading-small gray">{{ index (index $t "total_api_calls") $lang }}</p>
+                <h1 id="usageTabTotalAPICalls" class="m-0 heading-large text-default">0</h1>
+              </div>
+              <div class="top-row-content">
+                <p class="m-0 heading-small gray">{{ index (index $t "success") $lang }}</p>
+                <h1 id="usageTabSuccess" class="m-0 heading-large text-default">0</h1>
+              </div>
+              <div class="top-row-content">
+                <p class="m-0 heading-small gray">{{ index (index $t "errors") $lang }}</p>
+                <h1 id="usageTabErrors" class="m-0 heading-large text-default">0</h1>
+              </div>
+              <select id="analytics-overview-select-apps" class="analytics-select-overview">
+                <option value="0" selected>{{ index (index $t "all_apps") $lang }}</option>
+                {{ range $app := .apps}}
+                  <option value="{{$app.ID}}">
+                      {{$app.Name}}
+                  </option>
+                {{end}}
+              </select>
+            </div>
+
+            <div class="d-flex flex-row">
+              <canvas id="hits-vs-errors-chart" class="d-flex flex-row" style="margin: 20px 20px auto; max-height: 350px;"> </canvas>
+            </div>
+            <div id="hits-vs-errors-chart-csv" class="d-flex flex-row-reverse mt-20 mr-20 export-wrapper">
+              <span class="body-large-bold export">{{ index (index $t "export_csv") $lang }}</span>
+              <i class="bi bi-download download-icon"></i>
+            </div>
+          </div>
+          <div class="d-flex flex-row justify-content-between align-items-center row-graph-wrapper">
+            <div class="errors-graph-wrapper">
+              <div class="d-flex flex-row ml-20 mt-20">
+                <h3 class="text-default">
+                  {{ index (index $t "top5_errors") $lang }}
+                </h3>
+              </div>
+              <div class="d-flex flex-row">
+                <canvas id="error-rates-chart" class="d-flex flex-row" style="margin: 20px 10px auto; min-height:280px;max-height: 280px"> </canvas>
+              </div>
+              <div id="error-rates-chart-csv" class="d-flex flex-row ml-315 mt-20 export-wrapper">
+                <i class="bi bi-download download-icon"></i>
+                <span class="body-large-bold export">{{ index (index $t "export_csv") $lang }}</span>
+              </div>
+            </div>
+            <div class="errors-graph-wrapper">
+              <div class="d-flex flex-row ml-20 mt-20">
+                <h3 class="text-default">
+                  {{ index (index $t "error_breakdown") $lang }}
+                </h3>
+              </div>
+              <div class="d-flex flex-row">
+                <canvas id="error-breakdown-chart" class="d-flex flex-row" style="margin: 20px 10px auto; max-height: 280px"> </canvas>
+              </div>
+              <div id="error-breakdown-chart-csv" class="d-flex flex-row ml-315 mt-20 export-wrapper">
+                <i class="bi bi-download download-icon"></i>
+                <span class="body-large-bold export">{{ index (index $t "export_csv") $lang }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="content-wrapper__content d-none">
+        <div class="analytics-content h-2 d-flex flex-column align-items-center">
+            <div class="filter-data-by">
+              <h4 class="heading-small default-base mt-14 ml-18">{{ index (index $t "filter_data_by") $lang }}</h4>
+              <div class="d-flex flex-row mt-14 ml-20">
+                <div class="d-flex flex-column w-465">
+                  <div id="apps-filter-traffic-chart" class="select-tags-wrapper-apps select-tags-wrapper mt-30 d-flex flex-row ml-2">
+                      <div class="tag-item">
+                      {{ index (index $t "all_apps") $lang }}
+                      <i class="bi bi-x x-icon"></i>
+                      </div>
+                  </div>
+                  <p class="heading-small text-default mb-1">{{ index (index $t "apps") $lang }}</p>
+                  <select class="analytics-select-many analytics-select-many-apps">
+                      <option selected value="All apps">
+                      {{ index (index $t "all_apps") $lang }}
+                      </option>
+                      {{ range $app := .apps}}
+                          <option id="{{$app.Name}}" data-appID="{{$app.ID}}" value="{{$app.Name}}">
+                              {{$app.Name}}
+                          </option>
+                      {{end}}
+                  </select>
+                </div>
+                <div class="d-flex flex-column w-465">
+                  <div class="d-flex flex-row align-items-center">
+                    <p class="heading-small text-default mb-1">{{ index (index $t "response_codes") $lang }}</p>
+                      <span class="help-icon ml-1" data-bs-toggle="tooltip" title="{{ index (index $t "response_codes_tip") $lang }}">
+                        <img src="/assets/images/help.svg" tabindex="0">
+                      </span>
+                  </div>
+                  <div id="codes-filter-traffic-chart" class="analytics-select-many-input d-flex flex-row">
+                    <input placeholder="{{ index (index $t "all_response_codes") $lang }}" class="ml-2" id="response-codes-traffic-chart">
+                    </input>
+                  </div>
+                </div>
+              </div>
+            </div>
+          <div class="total-api-calls-wrapper">
+            <div class="d-flex flex-row mt-29 ml-27 align-items-end">
+              <div class="d-flex flex-column w-185">
+                <p class="heading-small text-default mb-1">{{ index (index $t "statistics") $lang }}</p>
+                <select class="analytics-select-2">
+                  <option value="Total API Calls" selected>{{ index (index $t "total_api_calls") $lang }}</option>
+                </select>
+              </div>
+              <div class="d-flex flex-column w-185">
+                <p class="heading-small text-default mb-1">{{ index (index $t "time_units") $lang }}</p>
+                <select id="traffic-time-unit" class="analytics-select-2">
+                  <option value="day" selected>{{ index (index $t "daily") $lang }}</option>
+                  <option value="hour">{{ index (index $t "hourly") $lang }}</option>
+                </select>
+              </div>
+              <div class="d-flex flex-column w-185">
+                <p class="heading-small text-default mb-1">{{ index (index $t "split_by") $lang }}</p>
+                <select class="analytics-select-2">
+                  <option value="APIs" selected>{{ index (index $t "apis") $lang }}</option>
+                </select>
+              </div>
+              <div id="traffic-chart-csv" class="d-flex flex-row ml-140 mb-2 export-wrapper">
+                <i class="bi bi-download download-icon"></i>
+                <span class="body-large-bold export">{{ index (index $t "export_api_calls_csv") $lang }}</span>
+              </div>
+            </div>
+            <div class="m-4 mt-5">
+              <canvas id="traffic-chart"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="content-wrapper__content d-none">
+        <div class="analytics-content h-2 d-flex flex-column align-items-center">
+          <div class="filter-data-by">
+              <h4 class="heading-small default-base mt-14 ml-18">{{ index (index $t "filter_data_by") $lang }}</h4>
+              <div class="d-flex flex-row mt-14 ml-20">
+                <div class="d-flex flex-column w-465">
+                  <div id="apps-filter-error-rate-chart" class="select-tags-wrapper-apps select-tags-wrapper mt-30 d-flex flex-row ml-2">
+                      <div class="tag-item">
+                      {{ index (index $t "all_apps") $lang }}
+                      <i class="bi bi-x x-icon"></i>
+                      </div>
+                  </div>
+                  <p class="heading-small text-default mb-1">{{ index (index $t "apps") $lang }}</p>
+                  <select class="analytics-select-many-apps analytics-select-many">
+                      <option selected value="All apps">
+                      {{ index (index $t "all_apps") $lang }}
+                      </option>
+                      {{ range $app := .apps}}
+                          <option id="{{$app.Name}}" data-appID="{{$app.ID}}" value="{{$app.Name}}">
+                              {{$app.Name}}
+                          </option>
+                      {{end}}
+                  </select>
+                </div>
+                <div class="d-flex flex-column w-465">
+                  <div class="d-flex flex-row align-items-center">
+                    <p class="heading-small text-default mb-1">{{ index (index $t "response_codes") $lang }}</p>
+                      <span class="help-icon ml-1" data-bs-toggle="tooltip" title="{{ index (index $t "response_codes_tip") $lang }}">
+                        <img src="/assets/images/help.svg" tabindex="0">
+                      </span>
+                  </div>
+                  <div id="codes-filter-error-rate-chart" class="analytics-select-many-input d-flex flex-row">
+                    <input placeholder="{{ index (index $t "all_response_codes") $lang }}" class="ml-2" id="response-codes-error-rate-chart">
+                    </input>
+                  </div>
+                </div>
+              </div>
+          </div>
+          <div class="total-api-calls-wrapper">
+            <div class="d-flex flex-row mt-29 ml-27 align-items-end">
+              <div class="d-flex flex-column w-185">
+                <p class="heading-small text-default mb-1">{{ index (index $t "statistics") $lang }}</p>
+                <select id="error-rate-statistics" class="analytics-select-2">
+                  <option value="error-rate" selected>{{ index (index $t "error_rate") $lang }}</option>
+                  <option value="total-errors">{{ index (index $t "total_errors") $lang }}</option>
+                </select>
+              </div>
+              <div class="d-flex flex-column w-185">
+                <p class="heading-small text-default mb-1">{{ index (index $t "time_units") $lang }}</p>
+                <select id="error-rate-time-unit" class="analytics-select-2">
+                  <option value="hour" selected>{{ index (index $t "hourly") $lang }}</option>
+                  <option value="day">{{ index (index $t "daily") $lang }}</option>
+                </select>
+              </div>
+              <div class="d-flex flex-column w-185">
+                <p class="heading-small text-default mb-1">{{ index (index $t "split_by") $lang }}</p>
+                <select class="analytics-select-2">
+                  <option value="APIs" selected>{{ index (index $t "apis") $lang }}</option>
+                </select>
+              </div>
+              <div id="error-rate-chart-csv" class="d-flex flex-row ml-140 mb-2 export-wrapper">
+                <i class="bi bi-download download-icon"></i>
+                <span class="body-large-bold export">{{ index (index $t "export_errors_csv") $lang }}</span>
+              </div>
+            </div>
+            <div class="m-4 mt-5">
+              <canvas id="error-rate-chart"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="content-wrapper__content d-none">
+        <div class="analytics-content h-2 d-flex flex-column align-items-center">
+          <div class="filter-data-by">
+            <h4 class="heading-small default-base mt-14 ml-18">{{ index (index $t "filter_data_by") $lang }}</h4>
+            <div class="d-flex flex-row mt-14 ml-20">
+                <div class="d-flex flex-column w-465">
+                <div id="apps-filter-latency-chart" class="select-tags-wrapper-apps select-tags-wrapper mt-30 d-flex flex-row ml-2">
+                    <div class="tag-item">
+                    {{ index (index $t "all_apps") $lang }}
+                    <i class="bi bi-x x-icon"></i>
+                    </div>
+                </div>
+                <p class="heading-small text-default mb-1">{{ index (index $t "apps") $lang }}</p>
+                <select class="analytics-select-many-apps analytics-select-many apps-latency">
+                    <option selected value="All apps">
+                    {{ index (index $t "all_apps") $lang }}
+                    </option>
+                    {{ range $app := .apps}}
+                        <option id="{{$app.Name}}" data-appID="{{$app.ID}}" value="{{$app.Name}}">
+                            {{$app.Name}}
+                        </option>
+                    {{end}}
+                </select>
+                </div>
+            </div>
+          </div>
+          <div class="total-api-calls-wrapper">
+            <div class="d-flex flex-row mt-29 ml-27 align-items-end">
+              <div class="d-flex flex-column w-185">
+                <p class="heading-small text-default mb-1">{{ index (index $t "statistics") $lang }}</p>
+                <select class="analytics-select-2">
+                  <option selected value="Average latency">{{ index (index $t "average_latency") $lang }}</option>
+                </select>
+              </div>
+              <div class="d-flex flex-column w-185">
+                <p class="heading-small text-default mb-1">{{ index (index $t "time_units") $lang }}</p>
+                <select id="latency-time-unit" class="analytics-select-2">
+                  <option value="hour" selected>{{ index (index $t "hourly") $lang }}</option>
+                  <option value="day">{{ index (index $t "daily") $lang }}</option>
+                </select>
+              </div>
+              <div class="d-flex flex-column w-185">
+                <p class="heading-small text-default mb-1">{{ index (index $t "split_by") $lang }}</p>
+                <select class="analytics-select-2">
+                  <option value="APIs" selected>{{ index (index $t "apis") $lang }}</option>
+                </select>
+              </div>
+              <div id="latency-chart-csv" class="d-flex flex-row ml-140 mb-2 export-wrapper">
+                <i class="bi bi-download download-icon"></i>
+                <span class="body-large-bold export">{{ index (index $t "export_latency_csv") $lang }}</span>
+              </div>
+            </div>
+            <div class="m-4 mt-5">
+              <canvas id="latency-chart"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-autocolors"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.2.3/flatpickr.js"></script>

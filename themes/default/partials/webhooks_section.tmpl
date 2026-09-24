@@ -1,0 +1,162 @@
+{{ $cred := .cred }}
+{{ $app := .app }}
+{{ $isPending := .isPending }}
+{{ $accessRequest := "" }}
+{{ if $isPending }}
+  {{ $accessRequest = $cred }}
+{{ else }}
+  {{ $accessRequest = $cred.AccessRequest }}
+{{ end }}
+{{ $cookies := (req).Header.Get "Cookie" }}
+{{ $supportedLangs := list "en" "ar" "fr" "es" }}
+{{ $lang := "en" }}
+{{ range $supportedLangs }}{{ if regexMatch (printf "tdp_locale=%s" .) $cookies }}{{ $lang = . }}{{ end }}{{ end }}
+{{ $t := dict
+  "webhooks" (dict "en" "Webhooks" "ar" "الخطافات (Webhooks)" "fr" "Webhooks" "es" "Webhooks")
+  "configure_webhooks" (dict "en" "Configure webhook subscriptions for this credential" "ar" "تهيئة اشتراكات الخطافات لهذه بيانات الاعتماد" "fr" "Configurer les abonnements webhook pour ces identifiants" "es" "Configurar suscripciones de webhook para esta credencial")
+  "url" (dict "en" "URL:" "ar" "الرابط:" "fr" "URL :" "es" "URL:")
+  "secret" (dict "en" "SECRET:" "ar" "السر:" "fr" "SECRET :" "es" "SECRETO:")
+  "secret_label" (dict "en" "Secret:" "ar" "السر:" "fr" "Secret :" "es" "Secreto:")
+  "events" (dict "en" "EVENTS:" "ar" "الأحداث:" "fr" "ÉVÉNEMENTS :" "es" "EVENTOS:")
+  "events_label" (dict "en" "Events:" "ar" "الأحداث:" "fr" "Événements :" "es" "Eventos:")
+  "update_subscription" (dict "en" "Update subscription" "ar" "تحديث الاشتراك" "fr" "Mettre à jour l'abonnement" "es" "Actualizar suscripción")
+  "update_webhook_sub" (dict "en" "Update webhook subscription" "ar" "تحديث اشتراك الخطاف" "fr" "Mettre à jour l'abonnement webhook" "es" "Actualizar suscripción de webhook")
+  "webhook_url" (dict "en" "Webhook URL:" "ar" "رابط الخطاف:" "fr" "URL du webhook :" "es" "URL del webhook:")
+  "webhook_url_ph" (dict "en" "Webhook URL" "ar" "رابط الخطاف" "fr" "URL du webhook" "es" "URL del webhook")
+  "secret_ph" (dict "en" "Secret" "ar" "السر" "fr" "Secret" "es" "Secreto")
+  "cancel" (dict "en" "Cancel" "ar" "إلغاء" "fr" "Annuler" "es" "Cancelar")
+  "save" (dict "en" "Save" "ar" "حفظ" "fr" "Enregistrer" "es" "Guardar")
+  "webhooks_enabled" (dict "en" "Webhooks are enabled for one or more products." "ar" "الخطافات مفعّلة لمنتج واحد أو أكثر." "fr" "Les webhooks sont activés pour un ou plusieurs produits." "es" "Los webhooks están habilitados para uno o más productos.")
+  "subscribe" (dict "en" "Subscribe" "ar" "الاشتراك" "fr" "S'abonner" "es" "Suscribirse")
+  "subscribe_webhook" (dict "en" "Subscribe to webhook" "ar" "الاشتراك في الخطاف" "fr" "S'abonner au webhook" "es" "Suscribirse al webhook")
+}}
+
+<div class="col-lg-12 requests-row-section p-3">
+  <div class="d-flex justify-content-between align-items-center p-3">
+    <div>
+      <h5 class="heading-small text-default m-0">{{ index (index $t "webhooks") $lang }}</h5>
+      <p class="text-regular-14">{{ index (index $t "configure_webhooks") $lang }}</p>
+    </div>
+  </div>
+
+  {{ if $accessRequest.CurrentlySubscribed }}
+    <div class="p-3">
+      <div class="d-flex flex-row justify-content-between align-items-center flex-wrap requests-row-section__info">
+        <div class="d-flex flex-column pr-3">
+          <h6 class="heading-small text-default mr-4 text-uppercase">{{ index (index $t "url") $lang }}</h6>
+        </div>
+        <div class="text-regular-14">
+          <a href="{{ $accessRequest.WebhookURL }}">{{ $accessRequest.WebhookURL }}</a>
+        </div>
+      </div>
+
+      <div class="d-flex flex-row justify-content-between align-items-center flex-wrap requests-row-section__info">
+        <div class="d-flex flex-column pr-3">
+          <h6 class="heading-small text-default mr-6 text-uppercase">{{ index (index $t "secret") $lang }}</h6>
+        </div>
+        <div class="text-regular-14">
+          <input type="password" class="input-as-span content-field" value="{{ $accessRequest.WebhookSecret }}" disabled="">
+          <i class="tyk-icon tykon tykon-copy" data-copy-value="{{ $accessRequest.WebhookSecret }}"></i>
+        </div>
+      </div>
+
+      <div class="d-flex flex-row justify-content-between align-items-center flex-wrap requests-row-section__info">
+        <div class="d-flex flex-column pr-3">
+          <h6 class="heading-small text-default mr-4 text-uppercase">{{ index (index $t "events") $lang }}</h6>
+        </div>
+        <div class="text-regular-14">
+          <i>{{ $accessRequest.WebhookEventTypes }}</i>
+        </div>
+      </div>
+
+      <button type="button" class="btn btn-primary pass-id mt-3" data-toggle="modal" data-target="#edit-webhook-{{$accessRequest.ID}}" data-app-id="{{$app.ID}}">{{ index (index $t "update_subscription") $lang }}</button>
+    </div>
+
+    <form method="post" action="/portal/private/apps/{{ $app.ID }}/access-requests/{{ $accessRequest.ID }}/webhooks">
+      <div class="modal fade" id="edit-webhook-{{ $accessRequest.ID }}" tabindex="-1" role="dialog" aria-labelledby="editWebhookModalTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered flex-column justify-content-center align-items-center" role="document">
+          <div class="modal-content">
+            <div class="modal-body">
+              <h3 class="modal-h3">{{ index (index $t "update_webhook_sub") $lang }}</h3>
+              <div class="row">
+                <label class="heading-small text-default">{{ index (index $t "webhook_url") $lang }}</label>
+                <input name="webhook-url" class="form-control" placeholder="{{ index (index $t "webhook_url_ph") $lang }}" value="{{$accessRequest.WebhookURL}}" required/>
+              </div>
+              <div class="row mb-4">
+                <label class="heading-small text-default">{{ index (index $t "secret_label") $lang }}</label>
+                <input type="password" name="webhook-secret" class="form-control" placeholder="{{ index (index $t "secret_ph") $lang }}" value="{{$accessRequest.WebhookSecret}}"/>
+              </div>
+              <div class="row mb-4">
+                <div class="form-group">
+                  <label class="heading-small text-default">{{ index (index $t "events_label") $lang }}</label>
+                  <div class="row">
+                    <div class="col-12">
+                      {{ range $accessRequest.EventTypes }}
+                        <div class="form-check">
+                          <input class="form-check-input" type="checkbox" name="webhook-event-types[]" value="{{ . }}" id="edit-{{ . }}-{{ $accessRequest.ID }}" {{if StringsContains $accessRequest.WebhookEventTypes . }}checked{{end}}>
+                          <label class="text-regular-14 d-block mt-1" for="edit-{{ . }}-{{ $accessRequest.ID }}">
+                            {{ . }}
+                          </label>
+                        </div>
+                      {{ end }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary-outline" data-dismiss="modal">{{ index (index $t "cancel") $lang }}</button>
+              <input type="submit" class="btn btn-primary" value="{{ index (index $t "save") $lang }}">
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  {{ else }}
+    <div class="p-3 d-flex justify-content-between">
+      <p class="text-regular-14 mb-0">{{ index (index $t "webhooks_enabled") $lang }}</p>
+      <button type="button" class="btn btn-secondary-outline pass-id" data-toggle="modal" data-target="#webhookSubscribe-{{ $accessRequest.ID }}" data-app-id="{{$app.ID}}">{{ index (index $t "subscribe") $lang }}</button>
+    </div>
+  {{ end }}
+</div>
+
+<form method="post" action="/portal/private/apps/{{ $app.ID }}/access-requests/{{ $accessRequest.ID }}/webhooks">
+  <div class="modal fade" id="webhookSubscribe-{{ $accessRequest.ID }}" tabindex="-1" role="dialog" aria-labelledby="webhookSubscribeModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered flex-column justify-content-center align-items-center" role="document">
+      <div class="modal-content">
+        <div class="modal-body">
+          <h3 class="modal-h3 text-default">{{ index (index $t "subscribe_webhook") $lang }}</h3>
+          <div class="row">
+            <label class="heading-small text-default">{{ index (index $t "webhook_url") $lang }}</label>
+            <input name="webhook-url" class="form-control" placeholder="{{ index (index $t "webhook_url_ph") $lang }}" required/>
+          </div>
+          <div class="row mb-4">
+            <label class="heading-small text-default">{{ index (index $t "secret_label") $lang }}</label>
+            <input type="password" name="webhook-secret" class="form-control" placeholder="{{ index (index $t "secret_ph") $lang }}"/>
+          </div>
+          <div class="row mb-4">
+            <div class="form-group">
+              <label class="heading-small text-default">{{ index (index $t "events_label") $lang }}</label>
+              <div class="row">
+                <div class="col-12">
+                  {{ range $accessRequest.EventTypes }}
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" name="webhook-event-types[]" value="{{ . }}" id="subscribe-{{ . }}-{{ $accessRequest.ID }}">
+                      <label class="text-regular-14 d-block mt-1" for="subscribe-{{ . }}-{{ $accessRequest.ID }}">
+                        {{ . }}
+                      </label>
+                    </div>
+                  {{ end }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary-outline" data-dismiss="modal">{{ index (index $t "cancel") $lang }}</button>
+          <input type="submit" class="btn btn-primary" value="{{ index (index $t "save") $lang }}">
+        </div>
+      </div>
+    </div>
+  </div>
+</form>

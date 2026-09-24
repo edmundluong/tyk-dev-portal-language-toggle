@@ -1,0 +1,31 @@
+{{ $cookies := (req).Header.Get "Cookie" }}
+{{ $supportedLangs := list "en" "ar" "fr" "es" }}
+{{ $lang := "en" }}
+{{ range $supportedLangs }}{{ if regexMatch (printf "tdp_locale=%s" .) $cookies }}{{ $lang = . }}{{ end }}{{ end }}
+{{ $t := dict
+  "heading" (dict "en" "First, you need to create an organisation" "ar" "أولًا، عليك إنشاء مؤسسة" "fr" "Vous devez d'abord créer une organisation" "es" "Primero debe crear una organización")
+  "sub" (dict "en" "In order to start inviting users to collaborate with you'll need to create an organisation." "ar" "لتبدأ بدعوة المستخدمين للتعاون، ستحتاج إلى إنشاء مؤسسة." "fr" "Pour commencer à inviter des utilisateurs à collaborer, vous devrez créer une organisation." "es" "Para empezar a invitar a usuarios a colaborar, deberá crear una organización.")
+  "create_org" (dict "en" "Create an Organisation" "ar" "إنشاء مؤسسة" "fr" "Créer une organisation" "es" "Crear una organización")
+  "or" (dict "en" "OR" "ar" "أو" "fr" "OU" "es" "O")
+  "learn_more" (dict "en" " Learn more" "ar" " تعرّف على المزيد" "fr" " En savoir plus" "es" " Más información")
+}}
+<div class="private-portal-wrapper">
+    <div class="container">
+        <div class="card first-invite-card">
+            <div class="card-body text-center d-flex flex-column align-content-center justify-content-center p-4">
+                <h1 class="heading-large mb-3">{{ index (index $t "heading") $lang }}</h1>
+                <p class="text-regular-14 text-default-subdue mb-4">
+                   {{ index (index $t "sub") $lang }}
+                </p>
+                <div class="mb-3">
+                    <a id="create-org-btn" class="btn btn-primary" href="/portal/private/organisation">{{ index (index $t "create_org") $lang }}</a>
+                </div>
+                <p class="text-regular-14 text-default-subdue">
+                 {{ index (index $t "or") $lang }}
+                  <a href="#" class="breadcrumb-link">{{ index (index $t "learn_more") $lang }}</a>
+                  <a href="#"><i class="bi bi-box-arrow-up-right learn-icon"></i></a>
+              </p>
+            </div>
+        </div>
+    </div>
+</div>

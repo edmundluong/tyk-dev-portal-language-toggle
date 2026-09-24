@@ -1,0 +1,40 @@
+{{ $cookies := (req).Header.Get "Cookie" }}
+{{ $supportedLangs := list "en" "ar" "fr" "es" }}
+{{ $lang := "en" }}
+{{ range $supportedLangs }}{{ if regexMatch (printf "tdp_locale=%s" .) $cookies }}{{ $lang = . }}{{ end }}{{ end }}
+{{ $t := dict
+  "heading" (dict "en" "Password reset" "ar" "إعادة تعيين كلمة المرور" "fr" "Réinitialisation du mot de passe" "es" "Restablecimiento de contraseña")
+  "new_password" (dict "en" "Your new password" "ar" "كلمة المرور الجديدة" "fr" "Votre nouveau mot de passe" "es" "Su nueva contraseña")
+  "confirm_password" (dict "en" "Re-enter password" "ar" "أعد إدخال كلمة المرور" "fr" "Ressaisissez le mot de passe" "es" "Vuelva a introducir la contraseña")
+  "reset_password" (dict "en" "Reset password" "ar" "إعادة تعيين كلمة المرور" "fr" "Réinitialiser le mot de passe" "es" "Restablecer contraseña")
+}}
+<div class="d-flex flex-column align-items-center justify-content-center flex-grow-1 login-page-wrapper">
+  <a href="/" class="logo d-flex">
+    <img src="/assets/images/new-logo.svg" alt="Tyk Logo" />
+  </a>
+  <div class="login-form-wrapper">
+    <label class="title-inter login-form-title mt-5">{{ index (index $t "heading") $lang }}</label>
+      {{$flashes := .Flashes}}
+      {{if $flashes}}
+        <ul>
+          {{range $flash := $flashes}}
+            <li class="login-form-label login-form-info text-center">{{$flash.Message}}</li>
+          {{end}}
+        </ul>
+      {{end}}
+    <form action="{{AuthURL "password/update"}}" method="post" class="mb-5">
+        <input type="hidden" name="reset_password_token" value="{{.reset_password_token}}">
+        <div class="form-group">
+            <label class="form-label login-form-label mb-1">{{ index (index $t "new_password") $lang }}</label>
+            <input type="password" name="new_password" class="form-control login-form-input" value="" required autocomplete="off"/>
+        </div>
+        <div class="form-group">
+            <label class="form-label login-form-label mb-1">{{ index (index $t "confirm_password") $lang }}</label>
+            <input type="password" name="confirm_password" class="form-control login-form-input" value="" required autocomplete="off"/>
+        </div>
+        <div class="form-group text-center mt-5">
+            <input type="submit" name="submit" class="btn portal-primary" value="{{ index (index $t "reset_password") $lang }}" />
+        </div>
+    </form>
+  </div>
+</div>

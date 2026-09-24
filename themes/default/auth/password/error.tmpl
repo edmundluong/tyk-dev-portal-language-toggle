@@ -1,0 +1,30 @@
+{{ $cookies := (req).Header.Get "Cookie" }}
+{{ $supportedLangs := list "en" "ar" "fr" "es" }}
+{{ $lang := "en" }}
+{{ range $supportedLangs }}{{ if regexMatch (printf "tdp_locale=%s" .) $cookies }}{{ $lang = . }}{{ end }}{{ end }}
+{{ $t := dict
+  "heading" (dict "en" "Something went wrong" "ar" "حدث خطأ ما" "fr" "Une erreur s'est produite" "es" "Algo salió mal")
+}}
+<!-- Page Content -->
+<div class="container">
+
+    <div class="row">
+        <div class="col-md-12 mb-5">
+            <h2>{{ index (index $t "heading") $lang }}</h2>
+            <hr>
+            {{ if .errors }}
+            <div class="alert alert-danger" role="alert">
+                <i class="tyk-icon tykon tykon-warning "></i>
+                {{ range .errors }}
+                    {{ range $msg := . }}
+                        <div class="alert__content">{{ $msg }}</div>
+                    {{ end }}
+                {{ end }}
+            </div>
+            {{ end }}
+        </div>
+    </div>
+    <!-- /.row -->
+
+</div>
+<!-- /.container -->

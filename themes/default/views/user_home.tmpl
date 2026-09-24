@@ -1,0 +1,137 @@
+<!-- Template used for the 'My Apps' section of an API consumer profile -->
+
+{{ $clients := Clients req }}
+{{ $cookies := (req).Header.Get "Cookie" }}
+{{ $supportedLangs := list "en" "ar" "fr" "es" }}
+{{ $lang := "en" }}
+{{ range $supportedLangs }}{{ if regexMatch (printf "tdp_locale=%s" .) $cookies }}{{ $lang = . }}{{ end }}{{ end }}
+{{/* The `date` funcmap function has no locale awareness -- for any
+     language with an entry in $monthNames, build the date manually from
+     the numeric day/month/year pieces and a looked-up month name;
+     languages with no entry (including English) fall back to `date`
+     directly. */}}
+{{ $monthNames := dict "ar" (dict "1" "يناير" "2" "فبراير" "3" "مارس" "4" "أبريل" "5" "مايو" "6" "يونيو" "7" "يوليو" "8" "أغسطس" "9" "سبتمبر" "10" "أكتوبر" "11" "نوفمبر" "12" "ديسمبر") "fr" (dict "1" "janvier" "2" "février" "3" "mars" "4" "avril" "5" "mai" "6" "juin" "7" "juillet" "8" "août" "9" "septembre" "10" "octobre" "11" "novembre" "12" "décembre") "es" (dict "1" "enero" "2" "febrero" "3" "marzo" "4" "abril" "5" "mayo" "6" "junio" "7" "julio" "8" "agosto" "9" "septiembre" "10" "octubre" "11" "noviembre" "12" "diciembre") }}
+{{ $t := dict
+  "my_apps" (dict "en" "My Apps" "ar" "تطبيقاتي" "fr" "Mes applications" "es" "Mis aplicaciones")
+  "my_apps_desc" (dict "en" "Here you can view and edit your apps. If you need help getting started, take a look at our documentation." "ar" "يمكنك هنا عرض تطبيقاتك وتعديلها. إذا احتجت مساعدة للبدء، راجع مستنداتنا." "fr" "Ici, vous pouvez consulter et modifier vos applications. Si vous avez besoin d'aide pour démarrer, consultez notre documentation." "es" "Aquí puede ver y editar sus aplicaciones. Si necesita ayuda para empezar, consulte nuestra documentación.")
+  "create_new_app" (dict "en" "Create new App" "ar" "إنشاء تطبيق جديد" "fr" "Créer une nouvelle application" "es" "Crear nueva aplicación")
+  "search_ph" (dict "en" "Search" "ar" "بحث" "fr" "Rechercher" "es" "Buscar")
+  "search" (dict "en" "Search" "ar" "بحث" "fr" "Rechercher" "es" "Buscar")
+  "name" (dict "en" "Name" "ar" "الاسم" "fr" "Nom" "es" "Nombre")
+  "description" (dict "en" "Description" "ar" "الوصف" "fr" "Description" "es" "Descripción")
+  "visibility" (dict "en" "Visibility" "ar" "الظهور" "fr" "Visibilité" "es" "Visibilidad")
+  "date_created" (dict "en" "Date Created" "ar" "تاريخ الإنشاء" "fr" "Date de création" "es" "Fecha de creación")
+  "action" (dict "en" "Action" "ar" "الإجراء" "fr" "Action" "es" "Acción")
+  "no_description" (dict "en" "No description set" "ar" "لم يتم تحديد وصف" "fr" "Aucune description définie" "es" "No se ha definido ninguna descripción")
+  "edit" (dict "en" "Edit" "ar" "تعديل" "fr" "Modifier" "es" "Editar")
+  "no_apps" (dict "en" "No apps to be shown." "ar" "لا توجد تطبيقات لعرضها." "fr" "Aucune application à afficher." "es" "No hay aplicaciones que mostrar.")
+  "confirm_delete_title" (dict "en" "Are you sure you want to delete this app ?" "ar" "هل أنت متأكد أنك تريد حذف هذا التطبيق؟" "fr" "Êtes-vous sûr de vouloir supprimer cette application ?" "es" "¿Está seguro de que desea eliminar esta aplicación?")
+  "confirm_delete_body" (dict "en" "This operation cannot be undone. You will also delete following:" "ar" "لا يمكن التراجع عن هذه العملية. ستحذف أيضًا ما يلي:" "fr" "Cette opération est irréversible. Vous supprimerez également les éléments suivants :" "es" "Esta operación no se puede deshacer. También eliminará lo siguiente:")
+  "access_credentials" (dict "en" "Your access credentials" "ar" "بيانات وصولك" "fr" "Vos identifiants d'accès" "es" "Sus credenciales de acceso")
+  "app_details" (dict "en" "App details" "ar" "تفاصيل التطبيق" "fr" "Détails de l'application" "es" "Detalles de la aplicación")
+  "cancel" (dict "en" "Cancel" "ar" "إلغاء" "fr" "Annuler" "es" "Cancelar")
+  "delete_app" (dict "en" "Delete App" "ar" "حذف التطبيق" "fr" "Supprimer l'application" "es" "Eliminar aplicación")
+}}
+<div class="private-portal-wrapper">
+  <div class="container">
+    <div class="row">
+      <div>
+      <div class="row">
+        <div class="col-md-9 page-title-wrapper">
+          <h1 class="heading-large">{{ index (index $t "my_apps") $lang }}</h1>
+          <p class="text-default-subdue">{{ index (index $t "my_apps_desc") $lang }}</p>
+        </div>
+        <div class="col-2 align-self-center">
+          <a class="btn btn-primary" href="apps">
+            <i class="tyk-icon tykon tykon-plus "></i>
+            <span>{{ index (index $t "create_new_app") $lang }}</span>
+          </a>
+        </div>
+      </div>
+        <form class="mb-4 mt-4">
+          <div class="search-form-wrapper d-flex flex-row">
+            <div class="pr-2 input-group search-container w-100">
+              <input type="text" placeholder="{{ index (index $t "search_ph") $lang }}" class="form-control search-input" id="search" name="search">
+              <div class="input-group-append">
+                <label class="search__label">
+                  <i class="tyk-icon tykon tykon-search"></i>
+                </label>
+              </div>
+            </div>
+            <div class="pr-2 align-self-center ml-auto">
+              <button type="submit" class="btn btn-primary-outline w-100">{{ index (index $t "search") $lang }}</button>
+            </div>
+          </div>
+        </form>
+        <div class="mb-5">
+          {{ if $clients }}
+          <div class="table-wrapper">
+            <table class="table">
+              <thead>
+                <tr class="heading-small">
+                  <th>{{ index (index $t "name") $lang }}</th>
+                  <th>{{ index (index $t "description") $lang }}</th>
+                  <th>{{ index (index $t "visibility") $lang }}</th>
+                  <th>{{ index (index $t "date_created") $lang }}</th>
+                  <th class="actions-cell">{{ index (index $t "action") $lang }}</th>
+                </tr>
+              </thead>
+              <tbody class="text-regular-14">
+              {{ range $i, $c := $clients }}
+              {{ $order := .GetFirstAccessRequest }}
+                    <tr>
+                        <td>
+                          <a class="breadcrumb-link" href="apps/{{ $c.ID }}">{{$c.Name}}</a>
+                        </td>
+                        <td> {{ if .Description }} {{ .Description}} {{else}} <i>{{ index (index $t "no_description") $lang }}</i> {{end}}</td>
+                        <td>{{ .Visibility }}</td>
+                        <td>{{ $md := index $monthNames $lang }}{{ if $md }}{{ .CreatedAt | date "2" }} {{ index $md (.CreatedAt | date "1") }} {{ .CreatedAt | date "2006 15:04" }}{{ else }}{{.CreatedAt | date "2 Jan, 2006 15:04" }}{{ end }}</td>
+                        <td>
+                          <div class="dropdown text-center">
+                            <button class="btn p-0" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              <img src="/assets/images/icons/dots.svg">
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                              <a class="dropdown-item" href="apps/{{ $c.ID }}">{{ index (index $t "edit") $lang }}</a>
+                            </div>
+                          </div>
+                        </td>
+                    </tr>
+              {{ end }}
+              </tbody>
+            </table>
+          </div>
+          {{ else }}
+          <div class="alert alert-info" role="alert">
+            <i class="tyk-icon tykon tykon-warning "></i>
+            <div class="alert__content">{{ index (index $t "no_apps") $lang }}</div>
+          </div>
+          {{ end }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<form method="post" action="/app">
+  <div class="modal fade" id="deleteAppModal" tabindex="-1" role="dialog" aria-labelledby="deleteAppModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">{{ index (index $t "confirm_delete_title") $lang }}</h4>
+        </div>
+        <div class="modal-body">
+          <p>{{ index (index $t "confirm_delete_body") $lang }}
+            <ul>
+              <li>{{ index (index $t "access_credentials") $lang }}</li>
+              <li>{{ index (index $t "app_details") $lang }}</li>
+          </p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary-outline" data-dismiss="modal">{{ index (index $t "cancel") $lang }}</button>
+          <input id="set-id" type="hidden" value="">
+          <input type="submit" class="btn btn-danger" value="{{ index (index $t "delete_app") $lang }}"/>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>

@@ -1,0 +1,5 @@
+{{ $cookies := (req).Header.Get "Cookie" }}
+{{ $supportedLangs := list "en" "ar" "fr" "es" }}
+{{ $lang := "en" }}
+{{ range $supportedLangs }}{{ if regexMatch (printf "tdp_locale=%s" .) $cookies }}{{ $lang = . }}{{ end }}{{ end }}
+<div id="graphiql-container">{{ index (dict "en" "Loading…" "ar" "جارٍ التحميل…" "fr" "Chargement…" "es" "Cargando…") $lang }}</div>

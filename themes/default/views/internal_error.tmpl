@@ -1,0 +1,25 @@
+<!-- Template used in case of an internal error -->
+{{ $cookies := (req).Header.Get "Cookie" }}
+{{ $supportedLangs := list "en" "ar" "fr" "es" }}
+{{ $lang := "en" }}
+{{ range $supportedLangs }}{{ if regexMatch (printf "tdp_locale=%s" .) $cookies }}{{ $lang = . }}{{ end }}{{ end }}
+{{ $t := dict
+  "heading" (dict "en" "Internal error" "ar" "خطأ داخلي" "fr" "Erreur interne" "es" "Error interno")
+  "message" (dict "en" "Try again. If the problem persists please contact us." "ar" "حاول مرة أخرى. إذا استمرت المشكلة، يرجى التواصل معنا." "fr" "Réessayez. Si le problème persiste, veuillez nous contacter." "es" "Vuelva a intentarlo. Si el problema persiste, póngase en contacto con nosotros.")
+  "back_home" (dict "en" "Back to homepage " "ar" "العودة إلى الصفحة الرئيسية " "fr" "Retour à la page d'accueil " "es" "Volver a la página de inicio ")
+}}
+{{/* Same $homePaths shape as top_nav.tmpl/not_found.tmpl -- add a language
+     here when it gets its own home twin. */}}
+{{ $homePaths := dict "en" "/" "ar" "/ar" "fr" "/fr" "es" "/es" }}
+<div class="container">
+  <div class="row">
+    <div class="col-lg-12 text-center mb-5">
+      <img src="/assets/images/not-found.svg" />
+      <h2>{{ index (index $t "heading") $lang }}</h2>
+      <strong>{{ index (index $t "message") $lang }}</strong>
+      <div class="mt-5">
+        <a class="btn btn-primary" href="{{ index $homePaths $lang }}">{{ index (index $t "back_home") $lang }}</a>
+      </div>
+    </div>
+  </div>
+</div>

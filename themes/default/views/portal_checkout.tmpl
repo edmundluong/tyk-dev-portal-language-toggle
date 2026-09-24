@@ -1,0 +1,616 @@
+<!-- Template used for the product cart/checkout page -->
+
+{{ $apps := .apps}}
+{{ $catalogueCount := .catalogue_count}}
+{{ $templates := .templates}}
+{{ $certs := .certs}}
+{{ $authType := ""}}
+{{ $isDefaultOrgUser := .isDefaultOrgUser}}
+{{ $isDirectCheckout := .isDirectCheckout}}
+{{ $cookies := (req).Header.Get "Cookie" }}
+{{ $supportedLangs := list "en" "ar" "fr" "es" }}
+{{ $lang := "en" }}
+{{ range $supportedLangs }}{{ if regexMatch (printf "tdp_locale=%s" .) $cookies }}{{ $lang = . }}{{ end }}{{ end }}
+{{/* Only English has a compiled formatter (Plan.FormatQuota/FormatRateLimit).
+     Every other language reconstructs from the raw fields via a printf
+     template looked up here -- add a language by adding one entry, no new
+     branch logic. */}}
+{{ $planFormats := dict "ar" (dict
+  "quota_unlimited" "غير محدود"
+  "quota_n"         "%v طلب"
+  "rate_unlimited"  "غير محدود"
+  "rate_n"          "%v طلب / %v ثانية"
+) "fr" (dict
+  "quota_unlimited" "Illimité"
+  "quota_n"         "%v appels"
+  "rate_unlimited"  "Illimité"
+  "rate_n"          "%v appels / %v s"
+) "es" (dict
+  "quota_unlimited" "Ilimitado"
+  "quota_n"         "%v llamadas"
+  "rate_unlimited"  "Ilimitado"
+  "rate_n"          "%v llamadas / %v s"
+) }}
+{{ $i18n := dict
+  "back_to_catalogue" (dict "en" "< Back to catalogue overview" "ar" "< الرجوع إلى نظرة عامة على الكتالوج" "fr" "< Retour à l'aperçu du catalogue" "es" "< Volver al resumen del catálogo")
+  "request_sent" (dict "en" "Your request has been sent" "ar" "تم إرسال طلبك" "fr" "Votre demande a été envoyée" "es" "Su solicitud se ha enviado")
+  "view_status" (dict "en" "You can view the App status in 'My Apps'." "ar" "يمكنك عرض حالة التطبيق في 'تطبيقاتي'." "fr" "Vous pouvez consulter le statut de l'application dans « Mes applications »." "es" "Puede ver el estado de la aplicación en «Mis aplicaciones».")
+  "go_to_my_apps" (dict "en" "Go to My Apps" "ar" "الذهاب إلى تطبيقاتي" "fr" "Aller à Mes applications" "es" "Ir a Mis aplicaciones")
+  "cart_empty" (dict "en" "Your cart is empty" "ar" "سلتك خالية" "fr" "Votre panier est vide" "es" "Su carrito está vacío")
+  "go_to_catalogues" (dict "en" "Go the" "ar" "اذهب إلى" "fr" "Allez sur le" "es" "Vaya al")
+  "catalogues" (dict "en" "catalogues" "ar" "الكتالوجات" "fr" "catalogues" "es" "catálogos")
+  "browse_apis" (dict "en" "and browse API products." "ar" "وتصفح منتجات API." "fr" "et parcourir les produits API." "es" "y explorar productos de API.")
+  "cart_dash" (dict "en" "Cart - " "ar" "السلة - " "fr" "Panier - " "es" "Carrito - ")
+  "submit_access_request" (dict "en" "Submit an access request" "ar" "إرسال طلب وصول" "fr" "Envoyer une demande d'accès" "es" "Enviar una solicitud de acceso")
+  "multi_catalogue_warning" (dict "en" "Your cart is containing API products from different catalogues, you will need to submit 2 or more requests separately." "ar" "تحتوي سلتك على منتجات API من كتالوجات مختلفة، ستحتاج إلى إرسال طلبين أو أكثر بشكل منفصل." "fr" "Votre panier contient des produits API provenant de différents catalogues ; vous devrez soumettre 2 demandes ou plus séparément." "es" "Su carrito contiene productos API de distintos catálogos; deberá enviar 2 o más solicitudes por separado.")
+  "selected_products" (dict "en" "Selected Products" "ar" "المنتجات المحددة" "fr" "Produits sélectionnés" "es" "Productos seleccionados")
+  "add_more_products" (dict "en" "You can add more than one API product to the cart, if you want to request access to more than one product, go to the" "ar" "يمكنك إضافة أكثر من منتج API إلى السلة؛ إذا رغبت في طلب الوصول لأكثر من منتج، اذهب إلى" "fr" "Vous pouvez ajouter plusieurs produits API au panier ; si vous souhaitez demander l'accès à plusieurs produits, rendez-vous sur le" "es" "Puede añadir más de un producto API al carrito; si desea solicitar acceso a más de un producto, vaya al")
+  "catalogue" (dict "en" "catalogue" "ar" "الكتالوج" "fr" "catalogue" "es" "catálogo")
+  "add_another" (dict "en" "and add another product to the cart." "ar" "وأضف منتجًا آخر إلى السلة." "fr" "et ajouter un autre produit au panier." "es" "y añadir otro producto al carrito.")
+  "selected_plan" (dict "en" "Selected Plan" "ar" "الخطة المحددة" "fr" "Plan sélectionné" "es" "Plan seleccionado")
+  "plan_created_with" (dict "en" "The access request will be created with the following plan" "ar" "سيتم إنشاء طلب الوصول بالخطة التالية" "fr" "La demande d'accès sera créée avec le plan suivant" "es" "La solicitud de acceso se creará con el siguiente plan")
+  "quota" (dict "en" "Quota:" "ar" "الحصة:" "fr" "Quota :" "es" "Cuota:")
+  "rate_limit" (dict "en" "Rate limit:" "ar" "حد المعدل:" "fr" "Limite de débit :" "es" "Límite de tasa:")
+  "select_an_app" (dict "en" "Select an App" "ar" "اختر تطبيقًا" "fr" "Sélectionner une application" "es" "Seleccionar una aplicación")
+  "app_container_desc" (dict "en" "An app serves as a container for one or multiple sets of credentials and in the future, different apps can have different ownerships. We recommend thinking about the use case when setting up a new app." "ar" "يُستخدم التطبيق كحاوية لمجموعة واحدة أو أكثر من بيانات الاعتماد. نوصي بالتفكير في حالة الاستخدام عند إنشاء تطبيق جديد." "fr" "Une application sert de conteneur pour un ou plusieurs jeux d'identifiants et, à l'avenir, différentes applications pourront avoir des propriétaires différents. Nous vous recommandons de réfléchir au cas d'usage lors de la création d'une nouvelle application." "es" "Una aplicación sirve como contenedor de uno o varios conjuntos de credenciales y, en el futuro, distintas aplicaciones podrán tener propietarios diferentes. Le recomendamos pensar en el caso de uso al configurar una nueva aplicación.")
+  "create_new_app" (dict "en" "Create a new app" "ar" "إنشاء تطبيق جديد" "fr" "Créer une nouvelle application" "es" "Crear una nueva aplicación")
+  "existing_app" (dict "en" "Existing app" "ar" "تطبيق موجود" "fr" "Application existante" "es" "Aplicación existente")
+  "app_name" (dict "en" "App name" "ar" "اسم التطبيق" "fr" "Nom de l'application" "es" "Nombre de la aplicación")
+  "app_name_ph" (dict "en" "App Name" "ar" "اسم التطبيق" "fr" "Nom de l'application" "es" "Nombre de la aplicación")
+  "descriptive_name" (dict "en" " Make sure it is a descriptive name" "ar" " تأكد من أنه اسم واضح ومعبّر" "fr" " Assurez-vous qu'il s'agit d'un nom descriptif" "es" " Asegúrese de que sea un nombre descriptivo")
+  "visibility" (dict "en" "Visibility" "ar" "الظهور" "fr" "Visibilité" "es" "Visibilidad")
+  "org_default" (dict "en" "Organisation (default)" "ar" "المؤسسة (افتراضي)" "fr" "Organisation (par défaut)" "es" "Organización (predeterminada)")
+  "team" (dict "en" "Team" "ar" "الفريق" "fr" "Équipe" "es" "Equipo")
+  "personal" (dict "en" "Personal" "ar" "شخصي" "fr" "Personnel" "es" "Personal")
+  "visibility_controls" (dict "en" "Controls who can see and use this app." "ar" "يتحكم في من يمكنه رؤية هذا التطبيق واستخدامه." "fr" "Contrôle qui peut voir et utiliser cette application." "es" "Controla quién puede ver y usar esta aplicación.")
+  "description" (dict "en" "Description" "ar" "الوصف" "fr" "Description" "es" "Descripción")
+  "description_ph" (dict "en" "App Description" "ar" "وصف التطبيق" "fr" "Description de l'application" "es" "Descripción de la aplicación")
+  "redirect_urls_optional" (dict "en" "Redirect URLs(optional)" "ar" "روابط إعادة التوجيه (اختياري)" "fr" "URL de redirection (facultatif)" "es" "URL de redirección (opcional)")
+  "redirect_urls_ph" (dict "en" "Redirect URLs" "ar" "روابط إعادة التوجيه" "fr" "URL de redirection" "es" "URL de redirección")
+  "separate_urls" (dict "en" "Separate URLs with commas" "ar" "اسم فصل الروابط بفواصل" "fr" "Séparez les URL par des virgules" "es" "Separe las URL con comas")
+  "no_apps_created" (dict "en" "No apps created" "ar" "لم يتم إنشاء تطبيقات" "fr" "Aucune application créée" "es" "No se han creado aplicaciones")
+  "generate_credential" (dict "en" "Generate API credential" "ar" "إنشاء بيانات اعتماد API" "fr" "Générer des identifiants API" "es" "Generar credencial de API")
+  "create_credential" (dict "en" "Create an API credential" "ar" "إنشاء بيانات اعتماد API" "fr" "Créer des identifiants API" "es" "Crear una credencial de API")
+  "credential_unique_id" (dict "en" "Your credential are unique identifiers that will be used to authenticate requests to the selected API products." "ar" "بيانات الاعتماد هي معرِّفات فريدة تُستخدم للتحقق من الطلبات إلى منتجات API المحددة." "fr" "Vos identifiants sont des identifiants uniques qui seront utilisés pour authentifier les requêtes vers les produits API sélectionnés." "es" "Sus credenciales son identificadores únicos que se utilizarán para autenticar las solicitudes a los productos API seleccionados.")
+  "new_cred_auto" (dict "en" "A new credential will be generated automatically." "ar" "سيتم إنشاء بيانات اعتماد جديدة تلقائيًا." "fr" "De nouveaux identifiants seront générés automatiquement." "es" "Se generarán nuevas credenciales automáticamente.")
+  "credential" (dict "en" "Credential" "ar" "بيانات الاعتماد" "fr" "Identifiants" "es" "Credencial")
+  "upload_certificate" (dict "en" "Upload a certificate" "ar" "رفع شهادة" "fr" "Importer un certificat" "es" "Cargar un certificado")
+  "mtls_secured" (dict "en" "This product is secured with Mutual TLS. You need to upload a certificate to use it." "ar" "هذا المنتج محمي بـ Mutual TLS. تحتاج إلى رفع شهادة لاستخدامه." "fr" "Ce produit est sécurisé par mTLS. Vous devez importer un certificat pour l'utiliser." "es" "Este producto está protegido con mTLS. Debe cargar un certificado para utilizarlo.")
+  "upload_new_cert" (dict "en" "Upload a new certificate" "ar" "رفع شهادة جديدة" "fr" "Importer un nouveau certificat" "es" "Cargar un nuevo certificado")
+  "existing_cert" (dict "en" "Existing certificate" "ar" "شهادة موجودة" "fr" "Certificat existant" "es" "Certificado existente")
+  "cert_name" (dict "en" "Certificate name" "ar" "اسم الشهادة" "fr" "Nom du certificat" "es" "Nombre del certificado")
+  "no_cert_selected" (dict "en" "No certificate selected" "ar" "لم يتم تحديد شهادة" "fr" "Aucun certificat sélectionné" "es" "No se ha seleccionado ningún certificado")
+  "view_pem_instructions" (dict "en" "View instructions how to create a pem file using SSL" "ar" "عرض تعليمات إنشاء ملف pem باستخدام SSL" "fr" "Voir les instructions pour créer un fichier pem avec SSL" "es" "Ver instrucciones para crear un archivo pem con SSL")
+  "select_a_certificate" (dict "en" "Select a certificate" "ar" "اختر شهادة" "fr" "Sélectionner un certificat" "es" "Seleccionar un certificado")
+  "select_client_type" (dict "en" "Select a client type" "ar" "اختر نوع العميل" "fr" "Sélectionner un type de client" "es" "Seleccionar un tipo de cliente")
+  "select_client_type_desc" (dict "en" "To access this product(s) you need to select one of following client types with following pre-configured options." "ar" "للوصول إلى هذا المنتج (أو المنتجات) عليك اختيار أحد أنواع العملاء التالية بالخيارات المهيّأة مسبقًا." "fr" "Pour accéder à ce(s) produit(s), vous devez sélectionner l'un des types de client suivants avec les options préconfigurées suivantes." "es" "Para acceder a este/estos producto(s), debe seleccionar uno de los siguientes tipos de cliente con las siguientes opciones preconfiguradas.")
+  "view_client_type_details" (dict "en" "View client type details" "ar" "عرض تفاصيل نوع العميل" "fr" "Voir les détails du type de client" "es" "Ver detalles del tipo de cliente")
+  "grant_types" (dict "en" " Grant types " "ar" " أنواع المنح " "fr" " Types d'autorisation " "es" " Tipos de concesión ")
+  "response_types" (dict "en" " Response types" "ar" " أنواع الاستجابة" "fr" " Types de réponse" "es" " Tipos de respuesta")
+  "token_endpoint_auth" (dict "en" " Token endpoints auth methods " "ar" " طرق مصادقة نقاط نهاية الرمز " "fr" " Méthodes d'authentification des points de terminaison de jeton " "es" " Métodos de autenticación de los puntos de conexión del token ")
+  "submit_request" (dict "en" "Submit request" "ar" "إرسال الطلب" "fr" "Envoyer la demande" "es" "Enviar solicitud")
+  "credential_dash" (dict "en" "Credential - " "ar" "بيانات الاعتماد - " "fr" "Identifiants - " "es" "Credencial - ")
+  "run_commands" (dict "en" "Run these commands in Terminal, or use any other service to create a certificate." "ar" "نفّذ هذه الأوامر في الطرفية (Terminal)، أو استخدم أي خدمة أخرى لإنشاء شهادة." "fr" "Exécutez ces commandes dans un terminal, ou utilisez un autre service pour créer un certificat." "es" "Ejecute estos comandos en la terminal, o utilice cualquier otro servicio para crear un certificado.")
+  "step1" (dict "en" "Step 1. Create certificates using OpenSSL" "ar" "الخطوة 1. أنشئ الشهادات باستخدام OpenSSL" "fr" "Étape 1. Créez des certificats avec OpenSSL" "es" "Paso 1. Cree certificados con OpenSSL")
+  "step2" (dict "en" "Step 2. Combine key.pem and cert.pem into a signle file:" "ar" "الخطوة 2. ادمج key.pem و cert.pem في ملف واحد:" "fr" "Étape 2. Combinez key.pem et cert.pem en un seul fichier :" "es" "Paso 2. Combine key.pem y cert.pem en un solo archivo:")
+  "step3" (dict "en" "Step 3. Do the same for any third-party certificate chain files, bundles, etc:" "ar" "الخطوة 3. كرر الأمر نفسه لأي ملفات سلسلة شهادات أو حزم من جهات خارجية:" "fr" "Étape 3. Faites de même pour tout fichier de chaîne de certificats tiers, bundle, etc. :" "es" "Paso 3. Haga lo mismo con cualquier archivo de cadena de certificados de terceros, paquete, etc.:")
+}}
+{{/* AuthType here is the credential's raw internal code (e.g. "authToken"),
+     not a Go-formatted label -- see the same enum-translation note in
+     catalogue_card.tmpl. Keep in sync with credential_card.tmpl's $enumT. */}}
+{{ $enumT := dict
+  "oAuth2.0" (dict "ar" "OAuth 2.0" "fr" "OAuth 2.0" "es" "OAuth 2.0")
+  "authToken" (dict "ar" "رمز المصادقة" "fr" "Jeton d'authentification" "es" "Token de autenticación")
+  "Basic Auth" (dict "ar" "مصادقة أساسية" "fr" "Authentification de base" "es" "Autenticación básica")
+  "oauth" (dict "ar" "OAuth 2.0" "fr" "OAuth 2.0" "es" "OAuth 2.0")
+}}
+
+{{/* Credentials data as JSON for client-side rendering - safe, pre-processed by Go */}}
+<script id="credentials-data" type="application/json">
+{{ .credentialsVM.ToJSON }}
+</script>
+
+<div class="cart-wrapper">
+  <div class="container">
+    <p class="mb-3 mt-3"> <a href="/portal/catalogue-products" class="breadcrumb-link">{{ index (index $i18n "back_to_catalogue") $lang }}</a></p>
+    {{ if .errors }}
+      {{ range $key, $errs := .errors }}
+        <div class="alert alert-warning cart-error" role="alert">
+          <i class="tyk-icon tykon tykon-warning "></i>
+          <div class="alert__content">
+            <strong>{{$key}}</strong>
+            <ul>
+              {{ range $errs }}
+                <li>{{.}}</li>
+              {{ end }}
+            </ul>
+          </div>
+        </div>
+      {{ end }}
+    {{ end }}
+    {{ if .provisioned }}
+      <div class="provisioned-credentials-wrapper text-center mt-5">
+        <h1 class="heading-xlarge my-4">{{ index (index $i18n "request_sent") $lang }}</h1>
+        <p class="text-regular-14">{{ index (index $i18n "view_status") $lang }}</p>
+        <p>
+          <a class="btn btn-primary" href="/portal/private/dashboard">{{ index (index $i18n "go_to_my_apps") $lang }}</a>
+        </p>
+      </div>
+    {{ else }}
+      {{if eq $catalogueCount 0}}
+        <div class="empty-cart-wrapper text-center mt-5">
+          <h1 class="heading-large">{{ index (index $i18n "cart_empty") $lang }}</h1>
+          <p class="text-regular-14">
+            {{ index (index $i18n "go_to_catalogues") $lang }} <a href="/portal/catalogue-products" class="breadcrumb-link">{{ index (index $i18n "catalogues") $lang }}</a> {{ index (index $i18n "browse_apis") $lang }}
+          </p>
+        </div>
+      {{else}}
+        <h1 class="mb-4 heading-xlarge text-center mt-5">
+          {{ if not $isDirectCheckout }}{{ index (index $i18n "cart_dash") $lang }}{{ end }}{{ index (index $i18n "submit_access_request") $lang }}
+        </h1>
+      {{end}}
+      {{ if gt $catalogueCount 1 }}
+        <div class="cart-wrapper__card-section">
+          <div class="alert alert-info" role="alert">
+            <i class="tyk-icon tykon tykon-warning "></i>
+            <div class="alert__content">
+              {{ index (index $i18n "multi_catalogue_warning") $lang }}
+            </div>
+          </div>
+        </div>
+      {{ end }}
+      {{ range $index, $request := .cart }}
+        {{$authType = $request.AuthType}}
+        {{ if $request.Products }}
+          {{ $templatesLength := len $request.AppTemplates }}
+          <form method="POST" enctype="multipart/form-data" id="{{ if gt $catalogueCount 1 }}request-{{$index}}{{end}}" class="{{ if gt $catalogueCount 1 }}collapse multi-collapse{{end}}">
+            <input type="hidden" name="catalogue-id" value="{{ .Catalogue.ID }}" />
+            <input type="hidden" name="redirect-to-app" value="true" />
+            <div class="cart-wrapper__card-section">
+              <div class="card cart-card">
+                <div class="card-body">
+                  <h2 class="card-title heading-medium text-default">
+                    <span class="card-number">1</span>
+                    {{ index (index $i18n "selected_products") $lang }}
+                  </h2>
+                  <p class="card-text text-regular-14 mt-3">{{ index (index $i18n "add_more_products") $lang }} <a href="/portal/catalogue-products" class="breadcrumb-link">{{ index (index $i18n "catalogue") $lang }}</a> {{ index (index $i18n "add_another") $lang }}</p>
+                </div>
+                <div class="card-footer mt-4">
+                  <ul class="list-group">
+                    {{ range $request.Products }}
+                      <li class="list-group-item">
+                        <span class="product-name">{{.ProductName}}</span>
+                        {{ if not $isDirectCheckout }}
+                        <a class="product-remove-cta" type="button" href="/portal/private/cart/remove/{{$index}}/{{.ID}}">
+                          <i class="tyk-icon tykon tykon-delete"></i>
+                        </a>
+                        {{ end }}
+                      </li>
+                    {{ end }}
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="cart-wrapper__card-section">
+              <div class="card cart-card">
+                <div class="card-body">
+                  <h2 class="card-title heading-medium text-default">
+                    <span class="card-number">2</span>
+                    {{ index (index $i18n "selected_plan") $lang }}
+                  </h2>
+                  <p class="card-text text-regular-14 mt-3">{{ index (index $i18n "plan_created_with") $lang }}</p>
+                </div>
+                <div class="card-footer mt-4">
+                  {{ if $request.Products }}
+                    {{$plan := $request.Plan}}
+                    <input type="hidden" name="plan-for-{{$index}}" value="{{$plan.ID}}"/>
+                    <div class="form-control w-75"> {{$plan.PlanName}} &nbsp;&nbsp;|&nbsp;&nbsp; {{ index (index $i18n "quota") $lang }} {{ if eq $lang "en" }}{{ $plan.FormatQuota }}{{ else }}{{ $pf := index $planFormats $lang }}{{ if $pf }}{{ if $plan.UnlimitedQuota }}{{ index $pf "quota_unlimited" }}{{ else }}{{ printf (index $pf "quota_n") $plan.QuotaMax }}{{ end }}{{ else }}{{ $plan.FormatQuota }}{{ end }}{{ end }}, {{ index (index $i18n "rate_limit") $lang }} {{ if eq $lang "en" }}{{ $plan.FormatRateLimit }}{{ else }}{{ $pf := index $planFormats $lang }}{{ if $pf }}{{ if $plan.UnlimitedRateLimit }}{{ index $pf "rate_unlimited" }}{{ else }}{{ printf (index $pf "rate_n") $plan.Rate $plan.Per }}{{ end }}{{ else }}{{ $plan.FormatRateLimit }}{{ end }}{{ end }}</div>
+                  {{ end }}
+                </div>
+              </div>
+            </div>
+            <div class="cart-wrapper__card-section">
+              <div class="card cart-card">
+                <div class="card-body">
+                  <h2 class="card-title heading-medium text-default">
+                    <span class="card-number">3</span>
+                    {{ index (index $i18n "select_an_app") $lang }}
+                  </h2>
+                  <p class="card-text text-regular-14 mt-3">{{ index (index $i18n "app_container_desc") $lang }}</p>
+                </div>
+                <div class="card-footer mt-4">
+                  {{ if $apps }}
+                  <div class="form-group">
+                    <div class="step-wrapper">
+                      <div class="form-check-inline mx-n3">
+                        <input id="new-app" class="form-check-input step active dcr-visibility" type="radio" name="app-action" value="create" checked >
+                        <label for="new-app" class="form-check-label text-regular-14">
+                          {{ index (index $i18n "create_new_app") $lang }}
+                        </label>
+                      </div>
+                      <div class="form-check-inline ml-3">
+                        <input id="existing-app" class="form-check-input step dcr-visibility" type="radio" name="app-action" value="existing">
+                        <label for="existing-app" class="form-check-label text-regular-14">
+                          {{ index (index $i18n "existing_app") $lang }}
+                        </label>
+                      </div>
+                    </div>
+                    <div class="content-wrapper">
+                      <div class="content-wrapper__content d-block mt-3">
+                        <div class="mb-3">
+                          <label class="heading-small text-default">{{ index (index $i18n "app_name") $lang }}</label>
+                          <input type="text" name="client_name" class="form-control" placeholder="{{ index (index $i18n "app_name_ph") $lang }}"/>
+                          <small id="clientHelp" class="form-text text-regular-14 with-info-icon">{{ index (index $i18n "descriptive_name") $lang }}</small>
+                        </div>
+                        {{ if not $isDefaultOrgUser }}
+                        <div class="mb-3">
+                          <label class="heading-small text-default">{{ index (index $i18n "visibility") $lang }}</label>
+                          <select name="client_visibility" class="form-control">
+                            <option value="organisation" selected>{{ index (index $i18n "org_default") $lang }}</option>
+                            <option value="team">{{ index (index $i18n "team") $lang }}</option>
+                            <option value="personal">{{ index (index $i18n "personal") $lang }}</option>
+                          </select>
+                          <small class="form-text text-regular-14 text-muted">{{ index (index $i18n "visibility_controls") $lang }}</small>
+                        </div>
+                        {{ else }}
+                        <input type="hidden" name="client_visibility" value="personal" />
+                        {{ end }}
+                        <div class="mb-3">
+                          <label class="heading-small text-default">{{ index (index $i18n "description") $lang }}</label>
+                          <textarea rows="3" name="description" class="form-control" placeholder="{{ index (index $i18n "description_ph") $lang }}"></textarea>
+                        </div>
+                        <div class="mb-3">
+                          <label class="heading-small text-default">{{ index (index $i18n "redirect_urls_optional") $lang }}</label>
+                          <input name="redirect_urls" class="form-control" placeholder="{{ index (index $i18n "redirect_urls_ph") $lang }}"/>
+                          <small id="redirectHelp" class="form-text text-regular-14 with-info-icon">{{ index (index $i18n "separate_urls") $lang }}</small>
+                        </div>
+                      </div>
+                      <div class="content-wrapper__content d-none mt-3">
+                       <select class="form-control w-50" id="appsControlSelect" name="selected-app">
+                          {{ if $apps }}
+                            {{ range $apps }}
+                              <option value="{{.ID}}">{{.Name}}</option>
+                            {{ end }}
+                          {{ else }}
+                            <option selected value="">{{ index (index $i18n "no_apps_created") $lang }}</option>
+                          {{ end }}
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                  {{ else }}
+                  <div class="form-group">
+                    <div class="step-wrapper">
+                      <div class="content-wrapper__content d-block mt-3">
+                        <input type="hidden" name="app-action" value="create" />
+                        <label class="heading-small text-default">
+                          {{ index (index $i18n "create_new_app") $lang }}
+                        </label>
+                      </div>
+                    </div>
+                    <div class="content-wrapper">
+                      <div class="content-wrapper__content d-block mt-3">
+                        <div class="mb-3">
+                          <label class="heading-small text-default">{{ index (index $i18n "app_name") $lang }}</label>
+                          <input type="text" name="client_name" class="form-control" placeholder="{{ index (index $i18n "app_name_ph") $lang }}"/>
+                          <small id="clientHelp" class="form-text text-regular-14 with-info-icon">{{ index (index $i18n "descriptive_name") $lang }}</small>
+                        </div>
+                        {{ if not $isDefaultOrgUser }}
+                        <div class="mb-3">
+                          <label class="heading-small text-default">{{ index (index $i18n "visibility") $lang }}</label>
+                          <select name="client_visibility" class="form-control">
+                            <option value="organisation" selected>{{ index (index $i18n "org_default") $lang }}</option>
+                            <option value="team">{{ index (index $i18n "team") $lang }}</option>
+                            <option value="personal">{{ index (index $i18n "personal") $lang }}</option>
+                          </select>
+                          <small class="form-text text-regular-14 text-muted">{{ index (index $i18n "visibility_controls") $lang }}</small>
+                        </div>
+                        {{ else }}
+                        <input type="hidden" name="client_visibility" value="personal" />
+                        {{ end }}
+                        <div class="mb-3">
+                          <label class="heading-small text-default">{{ index (index $i18n "description") $lang }}</label>
+                          <textarea rows="3" name="description" class="form-control" placeholder="{{ index (index $i18n "description_ph") $lang }}"></textarea>
+                        </div>
+                        <div class="mb-3">
+                          <label class="heading-small text-default">{{ index (index $i18n "redirect_urls_optional") $lang }}</label>
+                          <input name="redirect_urls" class="form-control" placeholder="{{ index (index $i18n "redirect_urls_ph") $lang }}"/>
+                          <small id="redirectHelp" class="form-text text-regular-14 with-info-icon">{{ index (index $i18n "separate_urls") $lang }}</small>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  {{ end }}
+                </div>
+              </div>
+            </div>
+            {{/* Step 4: Credential Selection */}}
+            {{if not $apps}}
+              {{/* No apps exist - show simple credential generation info */}}
+              <div class="cart-wrapper__card-section credential-selection-section">
+                <div class="card cart-card">
+                  <div class="card-body">
+                    <h2 class="card-title heading-medium text-default">
+                      <span class="card-number">4</span>
+                      {{ index (index $i18n "generate_credential") $lang }}
+                    </h2>
+                    <p class="card-text text-regular-14 mt-3">{{ index (index $i18n "credential_unique_id") $lang }}</p>
+                  </div>
+                  <div class="card-footer mt-4">
+                    <div class="alert alert-info mb-0" role="alert">
+                      <i class="tyk-icon tykon tykon-info"></i>
+                      <div class="alert__content">
+                        {{ index (index $i18n "new_cred_auto") $lang }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            {{end}}
+            {{if $apps}}
+              <div class="cart-wrapper__card-section credential-selection-section">
+                <div class="card cart-card">
+                  <div class="card-body">
+                    <h2 class="card-title heading-medium text-default">
+                      <span class="card-number">4</span>
+                      {{ index (index $i18n "create_credential") $lang }}
+                    </h2>
+                    <p class="card-text text-regular-14 mt-3">{{ index (index $i18n "credential_unique_id") $lang }}</p>
+                  </div>
+                  <div class="card-footer mt-4">
+                    {{/* Show this when creating a new app - no existing credentials */}}
+                    <div class="new-app-credentials" style="display: block;">
+                      <div class="alert alert-info mb-0" role="alert">
+                        <i class="tyk-icon tykon tykon-info"></i>
+                        <div class="alert__content">
+                          {{ index (index $i18n "new_cred_auto") $lang }}
+                        </div>
+                      </div>
+                    </div>
+
+                    {{/* Per-app credential sections - server-rendered from view model */}}
+                    {{ range $app := $apps }}
+                      {{ $state := $.credentialsVM.GetState $app.ID $index }}
+                      {{ if $state }}
+                      <div class="app-credentials" data-app-id="{{ $app.ID }}" data-request-id="{{ $index }}" style="display: none;">
+
+                        {{/* No compatible credentials - show alert */}}
+                        {{ if $state.ShowAlert }}
+                          <div class="alert alert-info mb-0 no-compatible-credentials-alert" role="alert">
+                            <i class="tyk-icon tykon tykon-info"></i>
+                            <div class="alert__content">
+                              <strong>{{ $state.Messages.NoCredentialsTitle }}</strong><br>
+                              {{ $state.Messages.NoCredentialsBody }}
+                            </div>
+                          </div>
+                        {{ end }}
+
+                        {{/* Has compatible credentials - show radio buttons and dropdown */}}
+                        {{ if $state.ShowRadio }}
+                          <div class="form-group">
+                            <div class="mb-3">
+                              <div class="form-check-inline mx-n3">
+                                <input id="new-cred-{{ $index }}-app-{{ $app.ID }}"
+                                       class="form-check-input" type="radio"
+                                       name="credential_action" value="create_new" checked>
+                                <label for="new-cred-{{ $index }}-app-{{ $app.ID }}" class="form-check-label text-regular-14">
+                                  {{ $state.Messages.GenerateNewLabel }}
+                                </label>
+                              </div>
+                              <div class="form-check-inline ml-3">
+                                <input id="existing-cred-{{ $index }}-app-{{ $app.ID }}"
+                                       class="form-check-input" type="radio"
+                                       name="credential_action" value="reuse_existing">
+                                <label for="existing-cred-{{ $index }}-app-{{ $app.ID }}" class="form-check-label text-regular-14">
+                                  {{ $state.Messages.ReuseExistingLabel }}
+                                </label>
+                              </div>
+                            </div>
+
+                            {{/* New credential info - shown when "Generate new" is selected */}}
+                            <div id="new-credential-info-{{ $index }}-app-{{ $app.ID }}" class="d-block mt-3">
+                              <div class="alert alert-info mb-0" role="alert">
+                                <i class="tyk-icon tykon tykon-info"></i>
+                                <div class="alert__content">{{ $state.Messages.NewCredentialInfo }}</div>
+                              </div>
+                            </div>
+
+                            {{/* Credential dropdown - shown when "Existing" is selected */}}
+                            <div id="credential-select-{{ $index }}-app-{{ $app.ID }}" class="d-none mt-3">
+                              <label class="form-label heading-small text-default">{{ index (index $i18n "credential") $lang }}</label>
+                              <div class="dropdown credential-dropdown w-50">
+                                <button class="form-control dropdown-toggle" type="button"
+                                        id="credential-dropdown-{{ $index }}-app-{{ $app.ID }}"
+                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" disabled>
+                                  <span class="placeholder-text">{{ $state.Messages.SelectPlaceholder }}</span>
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="credential-dropdown-{{ $index }}-app-{{ $app.ID }}">
+                                  {{ range $cred := $state.Credentials }}
+                                    <a class="dropdown-item" href="#"
+                                       data-value="{{ $cred.ID }}"
+                                       data-display-name="{{ $cred.DisplayName }}"
+                                       data-plan="{{ $cred.PlanName }}"
+                                       data-auth="{{ $cred.AuthType }}">
+                                      {{ $credAuthTr := index $enumT $cred.AuthType }}
+                                      {{ $credAuthDisplay := "" }}{{ if $credAuthTr }}{{ $credAuthDisplay = index $credAuthTr $lang }}{{ end }}
+                                      <span class="credential-label">{{ index (index $i18n "credential_dash") $lang }}{{ $cred.DisplayName }} | {{ $cred.PlanName }}</span>
+                                      <span class="pill">{{ if $credAuthDisplay }}{{ $credAuthDisplay }}{{ else }}{{ $cred.AuthType }}{{ end }}</span>
+                                    </a>
+                                  {{ end }}
+                                </div>
+                                <input type="hidden" name="credential_id" value="">
+                              </div>
+                              <div class="alert alert-info mt-3" role="alert">
+                                <i class="tyk-icon tykon tykon-info"></i>
+                                <div class="alert__content">{{ $state.Messages.SelectCredentialHelp }}</div>
+                              </div>
+                            </div>
+                          </div>
+                        {{ end }}
+
+                      </div>
+                      {{ end }}
+                    {{ end }}
+                  </div>
+                </div>
+              </div>
+            {{end}}
+            {{if and (eq $authType "multiAuth") (or (eq $request.AuthTypeMode "mtls_self-serve") (eq $request.AuthTypeMode ""))}}
+            <div class="cart-wrapper__card-section">
+              <div class="card cart-card">
+                <div class="card-body">
+                  <h2 class="card-title heading-medium text-default">
+                    <span class="card-number">4</span>
+                    {{ index (index $i18n "upload_certificate") $lang }}
+                  </h2>
+                  <p class="card-text text-regular-14 mt-3">
+                    {{ index (index $i18n "mtls_secured") $lang }}
+                  </p>
+                </div>
+                <div class="card-footer mt-4">
+                  <div class="step-wrapper">
+                    <div class="form-check-inline mx-n3">
+                      <input id="new-cert" class="form-check-input step active dcr-visibility" type="radio" name="cert-action" value="create" checked >
+                      <label for="new-cert" class="form-check-label text-regular-14">
+                        {{ index (index $i18n "upload_new_cert") $lang }}
+                      </label>
+                    </div>
+                    <div class="form-check-inline ml-3">
+                      <input id="existing-cert" class="form-check-input step dcr-visibility" type="radio" name="cert-action" value="existing">
+                      <label for="existing-cert" class="form-check-label text-regular-14">
+                        {{ index (index $i18n "existing_cert") $lang }}
+                      </label>
+                    </div>
+                  </div>
+                  <div class="content-wrapper">
+                    <div class="content-wrapper__content d-block mt-3 mb-3">
+                      <div class="mb-3 mt-4">
+                        <label class="heading-small text-default">{{ index (index $i18n "cert_name") $lang }}</label>
+                        <input type="text" name="certificate_name" class="form-control"/>
+                      </div>
+                      <div class="d-flex flex-row mt-4">
+                        <label for="fileInput" class="btn btn-secondary mb-1" id="upload-cert">{{ index (index $i18n "upload_certificate") $lang }}</label>
+                        <input class="d-none" type="file" id="fileInput" name="certificate_file"/>
+                        <div class="d-flex flex-row ml-3 align-items-center text-regular-14">
+                          <i id="certificate-name">{{ index (index $i18n "no_cert_selected") $lang }}</i>
+                        </div>
+                      </div>
+                      <div class="card-footer mt-3">
+                        <div class="toggle-collapsible d-flex flex-row align-items-center mt-1" data-toggle="collapse" href="#type-details-{{ $templatesLength }}" role="button" aria-expanded="false" aria-controls="type-details-{{ $templatesLength }}">
+                          <span class="arrow-up-tyk d-inline"><img src="/assets/images/icons/arrow-up.svg"></span>
+                          <span class="arrow-down-tyk d-none"><img src="/assets/images/icons/arrow-down.svg"></span>
+                          <span class="heading-small ml-3">{{ index (index $i18n "view_pem_instructions") $lang }}</span>
+                        </div>
+                        <div class="collapse" id="type-details-{{ $templatesLength }}">
+                          <div class="mt-4 ml-4 mb-3">
+                            <h6 class="heading-xsmall">{{ index (index $i18n "run_commands") $lang }}</h6>
+                            <div class="mt-3">
+                              <h6 class="heading-xsmall mb-0">{{ index (index $i18n "step1") $lang }}</h6>
+                              <span class="courier-new-regular">openssl req -newkey rsa:2048 -new -nodes -x509 -days 3650 -keyout key.pem -out cert.pem</span>
+                            </div>
+                            <div class="mt-3">
+                              <h6 class="heading-xsmall mb-0">{{ index (index $i18n "step2") $lang }}</h6>
+                              <span class="courier-new-regular">   cat key.key >> server.pem</span>
+                            </div>
+                            <div class="mt-3">
+                              <h6 class="heading-xsmall mb-0">{{ index (index $i18n "step3") $lang }}</h6>
+                              <span class="courier-new-regular">   cat intermediate.crt >> server.pem</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="content-wrapper__content d-none mt-3">
+                      <select class="form-control w-50" id="certsControlSelect" name="certificate_id">
+                        <option value="" disabled selected>{{ index (index $i18n "select_a_certificate") $lang }}</option>
+                        {{ range $cert := $certs}}
+                        <option value="{{$cert.ID}}">
+                          {{$cert.Name}}
+                        </option>
+                        {{end}}
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {{end}}
+            {{ if $request.DCREnabled }}
+              <div class="cart-wrapper__card-section dcr-templates">
+                <div class="card cart-card">
+                  <div class="card-body">
+                    <h2 class="card-title heading-medium text-default">
+                      <span class="card-number">5</span>
+                      {{ index (index $i18n "select_client_type") $lang }}
+                    </h2>
+                    <p class="card-text text-regular-14 mt-3">{{ index (index $i18n "select_client_type_desc") $lang }}</p>
+                  </div>
+                  <div class="card-footer mt-4">
+                    <div class="d-flex flex-row flex-wrap justify-content-between">
+                      {{ range $index, $t := $request.AppTemplates }}
+                        <div class="labeled-card d-flex flex-column mb-4 pb-2 pl-3">
+                          <div class="labeled-card__title align-self-center mb-4">
+                            <h3 class="heading-small mb-0">{{ $t.Name }}</h3>
+                          </div>
+                          {{if not (eq $t.Description "")}}
+                          <div class="client-type-description">
+                            <div class="heading-small text-default">{{ index (index $i18n "description") $lang }}</div>
+                            <div class="text-regular-14">{{ $t.Description }}</div>
+                          </div>
+                          {{end}}
+                          <div class="d-flex flex-row mx-n2">
+                            <input id="client-type-{{$index}}" type="radio" name="app-action-template" value="{{ $t.ID }}" {{if eq $templatesLength 1}}checked{{end}}>
+                            <label for="client-type-{{$index}}" class="form-check-label mr-3">
+                            </label>
+                            <div class="d-flex flex-column">
+                              <div class="toggle-collapsible d-flex flex-row align-items-center mx-n3" data-toggle="collapse" href="#type-details-{{ $index }}" role="button" aria-expanded="false" aria-controls="type-details-{{ $index }}">
+                                <span class="arrow-up-tyk d-inline"><img src="/assets/images/icons/arrow-up.svg"></span>
+                                <span class="arrow-down-tyk d-none"><img src="/assets/images/icons/arrow-down.svg"></span>
+                                <span class="heading-small ml-1">{{ index (index $i18n "view_client_type_details") $lang }}</span>
+                              </div>
+                              <div class="collapse" id="type-details-{{ $index }}">
+                                <div>
+                                  <span class="heading-small text-default">{{ index (index $i18n "grant_types") $lang }}</span>
+                                  <ul class="body-medium-default">
+                                    {{ range $t.GrantTypes }}
+                                      <li> {{ . }}
+                                    {{ end }}
+                                  </ul>
+                                </div>
+                                <div>
+                                  <span class="heading-small text-default">{{ index (index $i18n "response_types") $lang }}</span>
+                                  <ul class="body-medium-default">
+                                    {{ range $t.ResponseTypes }}
+                                      <li> {{ . }}
+                                    {{ end }}
+                                  </ul>
+                                </div>
+                                <div>
+                                  <span class="heading-small text-default">{{ index (index $i18n "token_endpoint_auth") $lang }}</span>
+                                  <ul class="body-medium-default">
+                                    {{ range $t.TokenEndpoints }}
+                                      <li> {{ . }}
+                                    {{ end }}
+                                  </ul>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      {{ end }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            {{ end }}
+
+            <div class="text-center mt-4 mb-5">
+              {{ if $request.Products }}
+                <button type="submit" class="btn btn-primary">{{ index (index $i18n "submit_request") $lang }}</button>
+              {{ end}}
+            </div>
+          </form>
+        {{ end }}
+    {{ end }}
+  {{ end }}
+</div>

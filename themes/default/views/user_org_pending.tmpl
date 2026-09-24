@@ -1,0 +1,20 @@
+{{ $cookies := (req).Header.Get "Cookie" }}
+{{ $supportedLangs := list "en" "ar" "fr" "es" }}
+{{ $lang := "en" }}
+{{ range $supportedLangs }}{{ if regexMatch (printf "tdp_locale=%s" .) $cookies }}{{ $lang = . }}{{ end }}{{ end }}
+{{ $t := dict
+  "heading" (dict "en" "Your organisation request is still pending." "ar" "طلب مؤسستك لا يزال معلَّقًا." "fr" "Votre demande d'organisation est toujours en attente." "es" "Su solicitud de organización sigue pendiente.")
+  "sub" (dict "en" "You'll be able to invite users once your organisation is accepted." "ar" "ستتمكن من دعوة المستخدمين بعد قبول مؤسستك." "fr" "Vous pourrez inviter des utilisateurs une fois votre organisation acceptée." "es" "Podrá invitar a usuarios una vez que se acepte su organización.")
+}}
+<div class="private-portal-wrapper">
+    <div class="container">
+        <div class="card first-invite-card">
+            <div class="card-body text-center d-flex flex-column align-content-center justify-content-center p-4">
+                <h2 class="heading-large mb-3">{{ index (index $t "heading") $lang }}</h2>
+                <p class="text-regular-14 text-default-subdue">
+                   {{ index (index $t "sub") $lang }}
+                </p>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,21 @@
+<!-- Template used in case of a '404 not found' error -->
+{{ $cookies := (req).Header.Get "Cookie" }}
+{{ $supportedLangs := list "en" "ar" "fr" "es" }}
+{{ $lang := "en" }}
+{{ range $supportedLangs }}{{ if regexMatch (printf "tdp_locale=%s" .) $cookies }}{{ $lang = . }}{{ end }}{{ end }}
+{{ $t := dict
+  "not_found" (dict "en" "Page not found." "ar" "الصفحة غير موجودة." "fr" "Page introuvable." "es" "Página no encontrada.")
+  "back_home" (dict "en" " Back to homepage " "ar" " العودة إلى الصفحة الرئيسية " "fr" " Retour à la page d'accueil " "es" " Volver a la página de inicio ")
+}}
+{{/* Same $homePaths shape as top_nav.tmpl -- add a language here when it
+     gets its own home twin. */}}
+{{ $homePaths := dict "en" "/" "ar" "/ar" "fr" "/fr" "es" "/es" }}
+<div class="container">
+	<div class="row">
+		<div class="col-lg-12 text-center mb-5">
+			<img src="/assets/images/not-found.svg" />
+			<h2>404</h2>
+			<strong>{{ index (index $t "not_found") $lang }}<a href="{{ index $homePaths $lang }}">{{ index (index $t "back_home") $lang }}</a></strong>
+		</div>
+	</div>
+</div>

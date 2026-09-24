@@ -1,0 +1,125 @@
+/* Loaded only when tdp_locale=ar (portal_layout.tmpl and friends). Bootstrap 4.5.3
+   (see assets/vendor/bootstrap/css/bootstrap.min.css) has no RTL build --
+   confirmed zero `direction:rtl`/`[dir=` rules in it -- so `dir="rtl"` on
+   <html> only flips things the BROWSER handles automatically (block/inline
+   flow, unconstrained flex "row" direction). Everything Bootstrap wrote with
+   a literal left/right value does NOT flip on its own and needs an explicit
+   override here. This is a real, ongoing list, not a one-time toggle -- add
+   to it whenever a "weird position" report traces back to a hardcoded
+   left/right rule; see themes/README.md's RTL section for the full context. */
+
+body {
+  direction: rtl;
+  text-align: right;
+}
+
+/* Spacing utilities: Bootstrap's mr-*/ml-*/pr-*/pl-*/mx-n* are physical
+   (margin-right/margin-left), not logical, so dir="rtl" leaves them
+   pointing the wrong way -- this is what showed up as "weird placed
+   badges" (icon/badge spacing bunched on the wrong side of its label).
+   Every value below is the exact set actually used across the theme's
+   .tmpl files (checked via grep, not a blanket Bootstrap-RTL sheet). */
+[dir="rtl"] .mr-0 { margin-right: 0 !important; margin-left: 0 !important; }
+[dir="rtl"] .mr-1 { margin-right: 0 !important; margin-left: .25rem !important; }
+[dir="rtl"] .mr-2 { margin-right: 0 !important; margin-left: .5rem !important; }
+[dir="rtl"] .mr-3 { margin-right: 0 !important; margin-left: 1rem !important; }
+[dir="rtl"] .mr-4 { margin-right: 0 !important; margin-left: 1.5rem !important; }
+[dir="rtl"] .mr-5 { margin-right: 0 !important; margin-left: 3rem !important; }
+[dir="rtl"] .mr-6 { margin-right: 0 !important; margin-left: 4rem !important; }
+[dir="rtl"] .ml-1 { margin-left: 0 !important; margin-right: .25rem !important; }
+[dir="rtl"] .ml-2 { margin-left: 0 !important; margin-right: .5rem !important; }
+[dir="rtl"] .ml-3 { margin-left: 0 !important; margin-right: 1rem !important; }
+[dir="rtl"] .ml-4 { margin-left: 0 !important; margin-right: 1.5rem !important; }
+[dir="rtl"] .pr-2 { padding-right: 0 !important; padding-left: .5rem !important; }
+[dir="rtl"] .pr-3 { padding-right: 0 !important; padding-left: 1rem !important; }
+[dir="rtl"] .pr-4 { padding-right: 0 !important; padding-left: 1.5rem !important; }
+[dir="rtl"] .pl-3 { padding-left: 0 !important; padding-right: 1rem !important; }
+[dir="rtl"] .pl-5 { padding-left: 0 !important; padding-right: 3rem !important; }
+[dir="rtl"] .px-0 { padding-right: 0 !important; padding-left: 0 !important; }
+[dir="rtl"] .px-3 { padding-right: 1rem !important; padding-left: 1rem !important; }
+[dir="rtl"] .px-4 { padding-right: 1.5rem !important; padding-left: 1.5rem !important; }
+[dir="rtl"] .mx-n2 { margin-right: -.5rem !important; margin-left: -.5rem !important; }
+[dir="rtl"] .mx-n3 { margin-right: -1rem !important; margin-left: -1rem !important; }
+[dir="rtl"] .ml-auto { margin-left: 0 !important; margin-right: auto !important; }
+[dir="rtl"] .mr-auto { margin-right: 0 !important; margin-left: auto !important; }
+
+/* Text alignment: only text-left is a real flip risk (text-right already
+   matches body's own rtl default so leaving it is harmless either way). */
+[dir="rtl"] .text-left { text-align: right !important; }
+[dir="rtl"] .text-right { text-align: left !important; }
+
+/* Dropdowns (language switcher menu, table row action menus, credential
+   dropdown): Bootstrap hardcodes left:0/float:left/text-align:left. */
+[dir="rtl"] .dropdown-menu {
+  left: auto;
+  right: 0;
+  float: right;
+  text-align: right;
+}
+
+/* input-group corner radii (search box + button, response-code filters):
+   Bootstrap keys the rounded corners off DOM :first-child/:last-child,
+   which no longer matches the VISUAL first/last position once the row
+   itself reverses under dir="rtl" -- this is what showed up as "button
+   borders misaligned, backwards". Swap the corners back to the visual
+   ends instead of the DOM ends. */
+[dir="rtl"] .input-group > .form-control:not(:last-child),
+[dir="rtl"] .input-group > .custom-select:not(:last-child) {
+  border-top-right-radius: .25rem;
+  border-bottom-right-radius: .25rem;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+[dir="rtl"] .input-group > .form-control:not(:first-child),
+[dir="rtl"] .input-group > .custom-select:not(:first-child) {
+  border-top-left-radius: .25rem;
+  border-bottom-left-radius: .25rem;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+/* btn-group corner radii -- same DOM-order-vs-visual-order mismatch as
+   input-group above (credential card action rows, pagination-style
+   groups). */
+[dir="rtl"] .btn-group > .btn:not(:last-child):not(.dropdown-toggle) {
+  border-top-right-radius: .25rem;
+  border-bottom-right-radius: .25rem;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+[dir="rtl"] .btn-group > .btn:not(:first-child) {
+  border-top-left-radius: .25rem;
+  border-bottom-left-radius: .25rem;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+/* Nav containers: dir="rtl" already reverses an unconstrained
+   `flex-direction: row` on its own per the CSS writing-modes spec (the
+   "row" axis follows the inline/reading direction) -- adding
+   flex-direction:row-reverse here on top of that double-reverses it back
+   to an LTR-looking order. Confirmed and removed; do not re-add without
+   checking in a real browser first. */
+
+/* Catalogue list/grid view-toggle buttons (#view-as-list, #view-as-cards):
+   same DOM-order-vs-visual-order mismatch as input-group/btn-group above.
+   #view-as-list is first in the DOM/markup, so under dir="rtl" it renders
+   on the visual right, but catalogue.css still rounds its physical LEFT
+   corners -- the edge now touching #view-as-cards in the middle, not the
+   outer edge. Swap which button gets which rounded side. */
+[dir="rtl"] #view-as-list {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+  padding-left: 7px;
+  padding-right: 20px;
+}
+[dir="rtl"] #view-as-cards {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+  padding-right: 7px;
+  padding-left: 20px;
+}

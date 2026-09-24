@@ -1,0 +1,172 @@
+{{ $cred := .cred }}
+{{ $app := .app }}
+{{ $credID := .credID }}
+{{ $availablePlans := .availablePlans }}
+{{ $currentPlanID := 0 }}
+{{ if $cred.AccessRequest }}
+  {{ if $cred.AccessRequest.Plan }}
+    {{ $currentPlanID = $cred.AccessRequest.Plan.ID }}
+  {{ end }}
+{{ end }}
+{{ $cookies := (req).Header.Get "Cookie" }}
+{{ $supportedLangs := list "en" "ar" "fr" "es" }}
+{{ $lang := "en" }}
+{{ range $supportedLangs }}{{ if regexMatch (printf "tdp_locale=%s" .) $cookies }}{{ $lang = . }}{{ end }}{{ end }}
+{{/* Only English has a compiled formatter (Plan.FormatQuota/FormatRateLimit).
+     Every other language reconstructs from the raw fields via a printf
+     template looked up here -- add a language by adding one entry, no new
+     branch logic. */}}
+{{ $planFormats := dict "ar" (dict
+  "quota_unlimited" "غير محدود"
+  "quota_n"         "%v طلب"
+  "rate_unlimited"  "غير محدود"
+  "rate_n"          "%v طلب / %v ثانية"
+) "fr" (dict
+  "quota_unlimited" "Illimité"
+  "quota_n"         "%v appels"
+  "rate_unlimited"  "Illimité"
+  "rate_n"          "%v appels / %v s"
+) "es" (dict
+  "quota_unlimited" "Ilimitado"
+  "quota_n"         "%v llamadas"
+  "rate_unlimited"  "Ilimitado"
+  "rate_n"          "%v llamadas / %v s"
+) }}
+{{ $t := dict
+  "change_plan_title" (dict "en" "Change plan for these credentials" "ar" "تغيير الخطة لبيانات الاعتماد هذه" "fr" "Changer le plan de ces identifiants" "es" "Cambiar el plan de estas credenciales")
+  "change_plan_desc" (dict "en" "You are about to update the plan for these credentials:" "ar" "أنت على وشك تحديث الخطة لبيانات الاعتماد هذه:" "fr" "Vous êtes sur le point de mettre à jour le plan de ces identifiants :" "es" "Está a punto de actualizar el plan de estas credenciales:")
+  "change_plan_li1" (dict "en" "Rate limits and quotas will be updated." "ar" "سيتم تحديث حدود المعدل والحصص." "fr" "Les limites de débit et les quotas seront mis à jour." "es" "Se actualizarán los límites de tasa y las cuotas.")
+  "change_plan_li2" (dict "en" "Usage exceeding the new limits may be affected." "ar" "قد يتأثر الاستخدام الذي يتجاوز الحدود الجديدة." "fr" "L'usage dépassant les nouvelles limites peut être affecté." "es" "El uso que supere los nuevos límites podría verse afectado.")
+  "plans_available" (dict "en" "Plans available:" "ar" "الخطط المتاحة:" "fr" "Plans disponibles :" "es" "Planes disponibles:")
+  "current" (dict "en" "Current" "ar" "الحالية" "fr" "Actuel" "es" "Actual")
+  "quota" (dict "en" "Quota:" "ar" "الحصة:" "fr" "Quota :" "es" "Cuota:")
+  "rate_limit" (dict "en" "Rate limit:" "ar" "حد المعدل:" "fr" "Limite de débit :" "es" "Límite de tasa:")
+  "no_plans" (dict "en" "No plans available (debug: availablePlans is nil/empty)" "ar" "لا توجد خطط متاحة" "fr" "Aucun plan disponible (debug : availablePlans est nil/vide)" "es" "No hay planes disponibles (depuración: availablePlans es nil/vacío)")
+  "cancel" (dict "en" "Cancel" "ar" "إلغاء" "fr" "Annuler" "es" "Cancelar")
+  "change_plan_btn" (dict "en" "Change plan" "ar" "تغيير الخطة" "fr" "Changer de plan" "es" "Cambiar de plan")
+}}
+
+<form method="POST" action="/portal/private/apps/{{ $app.ID }}/credentials/{{ $credID }}/change-plan">
+  <div class="modal fade" id="change-plan-{{ $credID }}" tabindex="-1" role="dialog" aria-labelledby="changePlanModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl flex-column justify-content-center align-items-center" role="document">
+      <div class="modal-content">
+        <div class="modal-body">
+          <h3 class="modal-h3 text-default">{{ index (index $t "change_plan_title") $lang }}</h3>
+          <p class="text-regular-14 text-default-subdue mb-2">{{ index (index $t "change_plan_desc") $lang }}</p>
+          <ul class="text-regular-14 text-default-subdue mb-3" style="list-style: disc; padding-left: 20px;">
+            <li>{{ index (index $t "change_plan_li1") $lang }}</li>
+            <li>{{ index (index $t "change_plan_li2") $lang }}</li>
+          </ul>
+
+          <hr class="my-3">
+
+          <h5 class="heading-small text-default mb-3">{{ index (index $t "plans_available") $lang }}</h5>
+
+          <div class="plans-grid mb-5" id="plans-grid-{{ $credID }}">
+            {{ if $availablePlans }}
+              {{ range $plan := $availablePlans }}
+                {{ $isCurrent := eq $plan.ID $currentPlanID }}
+                <div class="plan-card basic-card p-4 {{ if $isCurrent }} current disabled{{ end }}" data-plan-id="{{ $plan.ID }}"{{ if $isCurrent }} data-is-current="true"{{ end }} style="min-width: 250px;">
+                  {{ if $isCurrent }}
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                      <h4 class="heading-medium mb-0 text-default">{{ $plan.Name }}</h4>
+                      <span class="pill text-regular-12">{{ index (index $t "current") $lang }}</span>
+                    </div>
+                    <h6 class="heading-xsmall mb-0">{{ index (index $t "quota") $lang }} {{ if eq $lang "en" }}{{ $plan.FormatQuota }}{{ else }}{{ $pf := index $planFormats $lang }}{{ if $pf }}{{ if $plan.UnlimitedQuota }}{{ index $pf "quota_unlimited" }}{{ else }}{{ printf (index $pf "quota_n") $plan.QuotaMax }}{{ end }}{{ else }}{{ $plan.FormatQuota }}{{ end }}{{ end }}</h6>
+                    <h6 class="heading-xsmall">{{ index (index $t "rate_limit") $lang }} {{ if eq $lang "en" }}{{ $plan.FormatRateLimit }}{{ else }}{{ $pf := index $planFormats $lang }}{{ if $pf }}{{ if $plan.UnlimitedRateLimit }}{{ index $pf "rate_unlimited" }}{{ else }}{{ printf (index $pf "rate_n") $plan.Rate $plan.Per }}{{ end }}{{ else }}{{ $plan.FormatRateLimit }}{{ end }}{{ end }}</h6>
+                  {{else}}
+                    <div class="d-flex">
+                      <div class="plan-check mt-1">✓</div>
+                      <div class="ml-2">
+                        <h4 class="heading-medium mb-2 text-default">{{ $plan.Name }}</h4>
+                        <h6 class="heading-xsmall mb-0">{{ index (index $t "quota") $lang }} {{ if eq $lang "en" }}{{ $plan.FormatQuota }}{{ else }}{{ $pf := index $planFormats $lang }}{{ if $pf }}{{ if $plan.UnlimitedQuota }}{{ index $pf "quota_unlimited" }}{{ else }}{{ printf (index $pf "quota_n") $plan.QuotaMax }}{{ end }}{{ else }}{{ $plan.FormatQuota }}{{ end }}{{ end }}</h6>
+                        <h6 class="heading-xsmall">{{ index (index $t "rate_limit") $lang }} {{ if eq $lang "en" }}{{ $plan.FormatRateLimit }}{{ else }}{{ $pf := index $planFormats $lang }}{{ if $pf }}{{ if $plan.UnlimitedRateLimit }}{{ index $pf "rate_unlimited" }}{{ else }}{{ printf (index $pf "rate_n") $plan.Rate $plan.Per }}{{ end }}{{ else }}{{ $plan.FormatRateLimit }}{{ end }}{{ end }}</h6>
+                      </div>
+                    </div>
+                  {{end}}
+                </div>
+              {{ end }}
+            {{ else }}
+              <div class="text-center py-4 text-muted">{{ index (index $t "no_plans") $lang }}</div>
+            {{ end }}
+          </div>
+
+          <input type="hidden" name="new_plan_id" id="selected-plan-{{ $credID }}" required>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary-outline" data-dismiss="modal">{{ index (index $t "cancel") $lang }}</button>
+          <button type="submit" class="btn btn-primary" id="submit-change-plan-{{ $credID }}" disabled>{{ index (index $t "change_plan_btn") $lang }}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+
+<style>
+#change-plan-{{ $credID }} .modal-dialog {
+  max-width: 1000px;
+}
+
+#change-plan-{{ $credID }} .plans-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+#change-plan-{{ $credID }} .plan-card {
+  position: relative;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+#change-plan-{{ $credID }} .plan-card:hover {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+#change-plan-{{ $credID }} .plan-card.selected {
+  border: var(--tdp-border-neutral-pressed);
+}
+
+#change-plan-{{ $credID }} .plan-card.disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+#change-plan-{{ $credID }} .plan-card.disabled:hover {
+  box-shadow: none;
+}
+
+#change-plan-{{ $credID }} .plan-check {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background-color: #28a745;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+}
+
+#change-plan-{{ $credID }} .plan-card.selected .plan-check {
+  display: flex;
+}
+
+#change-plan-{{ $credID }} .plan-card.selected .plan-badge {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  #change-plan-{{ $credID }} .plans-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  #change-plan-{{ $credID }} .plans-grid {
+    grid-template-columns: 1fr;
+  }
+}
+</style>

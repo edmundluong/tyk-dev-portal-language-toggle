@@ -1,0 +1,47 @@
+{{ $cookies := (req).Header.Get "Cookie" }}
+{{ $supportedLangs := list "en" "ar" "fr" "es" }}
+{{ $lang := "en" }}
+{{ range $supportedLangs }}{{ if regexMatch (printf "tdp_locale=%s" .) $cookies }}{{ $lang = . }}{{ end }}{{ end }}
+{{ $t := dict
+  "super_admin_perms" (dict "en" "Super admin permissions" "ar" "أذونات المسؤول العام" "fr" "Autorisations super administrateur" "es" "Permisos de superadministrador")
+  "invite_delete" (dict "en" "Invite and delete" "ar" "دعوة وحذف" "fr" "Inviter et supprimer" "es" "Invitar y eliminar")
+  "invite_delete_rest" (dict "en" " users from the org" "ar" " المستخدمين من المؤسسة" "fr" " utilisateurs de l'organisation" "es" " usuarios de la organización")
+  "change_roles" (dict "en" "Change roles" "ar" "تغيير الأدوار" "fr" "Modifier les rôles" "es" "Cambiar roles")
+  "change_roles_rest" (dict "en" " for users" "ar" " للمستخدمين" "fr" " pour les utilisateurs" "es" " para usuarios")
+  "view" (dict "en" "View" "ar" "عرض" "fr" "Voir" "es" "Ver")
+  "view_rest" (dict "en" " credentials" "ar" " بيانات الاعتماد" "fr" " identifiants" "es" " credenciales")
+  "revoke_reset" (dict "en" "Revoke or reset" "ar" "إلغاء أو إعادة تعيين" "fr" "Révoquer ou réinitialiser" "es" "Revocar o restablecer")
+  "revoke_reset_rest" (dict "en" " credentials" "ar" " بيانات الاعتماد" "fr" " identifiants" "es" " credenciales")
+  "delete" (dict "en" "Delete " "ar" "حذف " "fr" "Supprimer " "es" "Eliminar ")
+  "apps" (dict "en" "Apps" "ar" "التطبيقات" "fr" "Applications" "es" "Aplicaciones")
+  "team_member_perms" (dict "en" "Team member permissions" "ar" "أذونات عضو الفريق" "fr" "Autorisations des membres de l'équipe" "es" "Permisos de los miembros del equipo")
+  "create" (dict "en" "Create " "ar" "إنشاء " "fr" "Créer " "es" "Crear ")
+  "view_label" (dict "en" " View " "ar" " عرض " "fr" " Voir " "es" " Ver ")
+  "credentials" (dict "en" "Credentials" "ar" "بيانات الاعتماد" "fr" "Identifiants" "es" "Credenciales")
+  "reset_revoke" (dict "en" " Reset/Revoke " "ar" " إعادة تعيين/إلغاء " "fr" " Réinitialiser/Révoquer " "es" " Restablecer/Revocar ")
+  "delete_label" (dict "en" " Delete " "ar" " حذف " "fr" " Supprimer " "es" " Eliminar ")
+}}
+<div class="dashed-border">
+    <div id="consumer-admin" hidden>
+        <div class="row role-caption">
+            <img src="/assets/images/icons/edit.png" class="caption-tiem"/>
+            <h4 class="heading-medium text-default">{{ index (index $t "super_admin_perms") $lang }}</h4>
+        </div>
+        <div class="text-regular-14 role-caption"><i class="tykon tykon-check caption-item"></i><b>{{ index (index $t "invite_delete") $lang }}</b>{{ index (index $t "invite_delete_rest") $lang }}</div>
+        <div class="text-regular-14 role-caption"><i class="tykon tykon-check caption-item"></i><b>{{ index (index $t "change_roles") $lang }}</b>{{ index (index $t "change_roles_rest") $lang }}</div>
+        <div class="text-regular-14 role-caption"><i class="tykon tykon-check caption-item"></i><b>{{ index (index $t "view") $lang }}</b>{{ index (index $t "view_rest") $lang }}</div>
+        <div class="text-regular-14 role-caption"><i class="tykon tykon-check caption-item"></i><b>{{ index (index $t "revoke_reset") $lang }}</b>{{ index (index $t "revoke_reset_rest") $lang }}</div>
+        <div class="text-regular-14 role-caption"><i class="tykon tykon-check caption-item"></i></i>{{ index (index $t "delete") $lang }}<b>{{ index (index $t "apps") $lang }}</b></div>
+    </div>
+
+    <div id="consumer-team-member" hidden>
+        <div class="row role-caption">
+            <img src="/assets/images/icons/edit.png" class="caption-tiem"/>
+            <h4 class="heading-medium text-default">{{ index (index $t "team_member_perms") $lang }}</h4>
+        </div>
+        <div class="text-regular-14 role-caption"><i class="tykon tykon-check caption-item"></i>{{ index (index $t "create") $lang }}<b>{{ index (index $t "apps") $lang }}</b></div>
+        <div class="text-regular-14 role-caption"><i class="tykon tykon-check caption-item"></i>{{ index (index $t "view_label") $lang }}<b>{{ index (index $t "credentials") $lang }}</b></div>
+        <div class="text-regular-14 role-caption"><i class="tykon tykon-check caption-item"></i>{{ index (index $t "reset_revoke") $lang }}<b>{{ index (index $t "credentials") $lang }}</b></div>
+        <div class="text-regular-14 role-caption"><i class="tykon tykon-check caption-item"></i>{{ index (index $t "delete_label") $lang }}<b>{{ index (index $t "apps") $lang }}</b></div>
+    </div>
+</div>

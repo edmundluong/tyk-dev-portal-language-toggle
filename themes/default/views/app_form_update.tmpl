@@ -1,0 +1,388 @@
+<!-- Template used for viewing & managing an App and its Credentials -->
+{{ $currentUser := .currentUser }}
+{{ $app := .app }}
+{{ $hasPending := false }}
+{{ $hasApproved := false }}
+{{ $approvedReqsLength := len $app.Credentials }}
+{{$appCerts := .appCerts}}
+{{$allCerts := .allCerts}}
+{{ if gt $approvedReqsLength 0 }}
+  {{ $hasApproved = true }}
+{{end}}
+{{ $authType := .authType }}
+{{ $cookies := (req).Header.Get "Cookie" }}
+{{ $supportedLangs := list "en" "ar" "fr" "es" }}
+{{ $lang := "en" }}
+{{ range $supportedLangs }}{{ if regexMatch (printf "tdp_locale=%s" .) $cookies }}{{ $lang = . }}{{ end }}{{ end }}
+{{ $t := dict
+  "back_to_apps" (dict "en" "< Back to Apps overview " "ar" "< الرجوع إلى نظرة عامة على التطبيقات " "fr" "< Retour à l'aperçu des applications " "es" "< Volver al resumen de aplicaciones ")
+  "app_overview" (dict "en" "App overview:" "ar" "نظرة عامة على التطبيق:" "fr" "Aperçu de l'application :" "es" "Resumen de la aplicación:")
+  "app_details" (dict "en" "App details" "ar" "تفاصيل التطبيق" "fr" "Détails de l'application" "es" "Detalles de la aplicación")
+  "edit_details" (dict "en" "Edit details" "ar" "تعديل التفاصيل" "fr" "Modifier les détails" "es" "Editar detalles")
+  "cancel" (dict "en" "Cancel" "ar" "إلغاء" "fr" "Annuler" "es" "Cancelar")
+  "save" (dict "en" "Save" "ar" "حفظ" "fr" "Enregistrer" "es" "Guardar")
+  "app_id" (dict "en" "APP ID:" "ar" "معرّف التطبيق:" "fr" "ID DE L'APPLICATION :" "es" "ID DE LA APLICACIÓN:")
+  "app_id_desc" (dict "en" "This is your app's internal unique ID" "ar" "هذا هو المعرّف الفريد الداخلي لتطبيقك" "fr" "Il s'agit de l'ID unique interne de votre application" "es" "Este es el ID único interno de su aplicación")
+  "name" (dict "en" "Name:" "ar" "الاسم:" "fr" "Nom :" "es" "Nombre:")
+  "description" (dict "en" "Description:" "ar" "الوصف:" "fr" "Description :" "es" "Descripción:")
+  "no_description" (dict "en" "No description set" "ar" "لم يتم تحديد وصف" "fr" "Aucune description définie" "es" "No se ha definido ninguna descripción")
+  "visibility" (dict "en" "Visibility:" "ar" "الظهور:" "fr" "Visibilité :" "es" "Visibilidad:")
+  "personal" (dict "en" "Personal" "ar" "شخصي" "fr" "Personnel" "es" "Personal")
+  "team" (dict "en" "Team" "ar" "الفريق" "fr" "Équipe" "es" "Equipo")
+  "organisation" (dict "en" "Organisation" "ar" "المؤسسة" "fr" "Organisation" "es" "Organización")
+  "redirect_urls" (dict "en" "Redirect URLs:" "ar" "روابط إعادة التوجيه:" "fr" "URL de redirection :" "es" "URL de redirección:")
+  "no_redirect_urls" (dict "en" "No redirect URLs set" "ar" "لم يتم تحديد روابط إعادة توجيه" "fr" "Aucune URL de redirection définie" "es" "No se han definido URL de redirección")
+  "app_name" (dict "en" "App name:" "ar" "اسم التطبيق:" "fr" "Nom de l'application :" "es" "Nombre de la aplicación:")
+  "app_name_ph" (dict "en" "App Name" "ar" "اسم التطبيق" "fr" "Nom de l'application" "es" "Nombre de la aplicación")
+  "description_ph" (dict "en" "App Description" "ar" "وصف التطبيق" "fr" "Description de l'application" "es" "Descripción de la aplicación")
+  "default_redirect_urls" (dict "en" "Default Redirect URLs:" "ar" "روابط إعادة التوجيه الافتراضية:" "fr" "URL de redirection par défaut :" "es" "URL de redirección predeterminadas:")
+  "redirect_urls_ph" (dict "en" "Redirect URLs" "ar" "روابط إعادة التوجيه" "fr" "URL de redirection" "es" "URL de redirección")
+  "separate_urls_default" (dict "en" "Separate URLs with commas.  This is the default redirect URL for the app and will be applied to all newly created credentials." "ar" "اسم فصل الروابط بفواصل. هذا هو رابط إعادة التوجيه الافتراضي للتطبيق وسيُطبَّق على كل بيانات الاعتماد الجديدة." "fr" "Séparez les URL par des virgules. Il s'agit de l'URL de redirection par défaut de l'application, appliquée à tous les identifiants nouvellement créés." "es" "Separe las URL con comas. Esta es la URL de redirección predeterminada de la aplicación y se aplicará a todas las credenciales recién creadas.")
+  "credential_management" (dict "en" "Credential management" "ar" "إدارة بيانات الاعتماد" "fr" "Gestion des identifiants" "es" "Gestión de credenciales")
+  "approved_access" (dict "en" "Approved access" "ar" "الوصول المعتمد" "fr" "Accès approuvé" "es" "Acceso aprobado")
+  "pending_access" (dict "en" "Pending access" "ar" "الوصول المعلّق" "fr" "Accès en attente" "es" "Acceso pendiente")
+  "no_approved" (dict "en" "There are no approved requests yet" "ar" "لا توجد طلبات معتمدة حتى الآن" "fr" "Aucune demande approuvée pour le moment" "es" "Todavía no hay solicitudes aprobadas")
+  "no_pending" (dict "en" "There are no pending requests yet" "ar" "لا توجد طلبات معلّقة حتى الآن" "fr" "Aucune demande en attente pour le moment" "es" "Todavía no hay solicitudes pendientes")
+  "advanced_settings" (dict "en" "Advanced Settings" "ar" "الإعدادات المتقدمة" "fr" "Paramètres avancés" "es" "Configuración avanzada")
+  "delete_app" (dict "en" "Delete this APP" "ar" "حذف هذا التطبيق" "fr" "Supprimer cette application" "es" "Eliminar esta aplicación")
+  "delete_app_desc" (dict "en" "Deleting this app means all access credentials will also be deleted. " "ar" "حذف هذا التطبيق يعني حذف جميع بيانات الوصول أيضًا. " "fr" "Supprimer cette application entraînera également la suppression de tous les identifiants d'accès. " "es" "Eliminar esta aplicación implica que también se eliminarán todas las credenciales de acceso. ")
+  "delete_this_app" (dict "en" "Delete this app" "ar" "حذف هذا التطبيق" "fr" "Supprimer cette application" "es" "Eliminar esta aplicación")
+  "copied" (dict "en" "Value has been copied successfully" "ar" "تم نسخ القيمة بنجاح" "fr" "La valeur a été copiée avec succès" "es" "El valor se ha copiado correctamente")
+  "delete_app_modal_title" (dict "en" "Delete app?" "ar" "حذف التطبيق؟" "fr" "Supprimer l'application ?" "es" "¿Eliminar aplicación?")
+  "delete_app_modal_body" (dict "en" "If deleting this app, all the access credentials will also be revoked. This action cannot be undone." "ar" "في حال حذف هذا التطبيق، سيتم أيضًا إلغاء جميع بيانات الوصول. لا يمكن التراجع عن هذا الإجراء." "fr" "Si vous supprimez cette application, tous les identifiants d'accès seront également révoqués. Cette action est irréversible." "es" "Si elimina esta aplicación, también se revocarán todas las credenciales de acceso. Esta acción no se puede deshacer.")
+  "delete_app_modal_confirm" (dict "en" "Do you wish to continue?" "ar" "هل تريد الاستمرار؟" "fr" "Souhaitez-vous continuer ?" "es" "¿Desea continuar?")
+  "delete" (dict "en" "Delete" "ar" "حذف" "fr" "Supprimer" "es" "Eliminar")
+}}
+<div class="apps-wrapper container">
+		<p class="mb-3 mt-3">
+			<a href="/portal/private/dashboard" class="breadcrumb-link">
+				{{ index (index $t "back_to_apps") $lang }}</a>
+    </p>
+    {{ render "messages" . }}
+    {{ if .errors }}
+      {{ range $key, $errs := .errors }}
+        <div class="alert alert-warning cart-error" role="alert">
+          <i class="tyk-icon tykon tykon-warning "></i>
+          <div class="alert__content">
+            <strong>{{$key}}</strong>
+            <ul>
+              {{ range $errs }}
+                <li>{{.}}</li>
+              {{ end }}
+            </ul>
+          </div>
+        </div>
+      {{ end }}
+    {{ end }}
+    {{ if $app }}
+      {{ if .error }}
+      <div class="alert alert-danger" role="alert">
+        <i class="tyk-icon tykon tykon-warning "></i>
+        <div class="alert__content">{{ .error }}</div>
+      </div>
+      {{ end }}
+      <div class="apps-wrapper__card-section mt-5">
+        <h1 class="heading-xlarge">{{ index (index $t "app_overview") $lang }} {{$app.Name}}</h1>
+        <form method="post" id="app-form">
+          <div class="d-flex flex-row justify-content-between align-items-center flex-wrap mb-2 mt-4">
+            <h2 class="m-0 heading-large">{{ index (index $t "app_details") $lang }}</h2>
+            <div class="cta-btns-wrapper">
+              {{ if or (eq $currentUser.ID $app.UserID) (eq $currentUser.Role "consumer-admin") }}
+              <button type="button" class="btn btn-primary-outline enable-editing d-block" data-action="edit">
+                {{ index (index $t "edit_details") $lang }}
+              </button>
+              {{ end }}
+              <div class="edit-cta d-none disable-editing">
+                <button type="button" class="btn btn-secondary-outline" data-action="cancel">
+                  {{ index (index $t "cancel") $lang }}
+                </button>
+                <button type="submit" name="submit" class="btn btn-primary" value="Update" data-action="save" data-submit-mode="update">{{ index (index $t "save") $lang }}</button>
+                <input type="hidden" name="mode" value="update">
+                <input type="hidden" value="{{ $app.ID}}">
+              </div>
+            </div>
+          </div>
+          <div class="d-flex flex-row justify-content-between pb-2 align-items-center w-100">
+              <div class="card p-0 mb-4 w-100">
+                <div class="d-flex flex-row justify-content-between flex-wrap w-100">
+                    <div class="card-footer__static-data d-block no-border w-100">
+                      <div class="col-lg-12">
+                        <div class="d-flex flex-row justify-content-between align-items-center flex-wrap p-3 requests-row-section__info">
+                          <div class="d-flex flex-column pr-3">
+                            <h6 class="heading-small text-default mr-4 mb-1">{{ index (index $t "app_id") $lang }}</h6>
+                            <span class="text-regular-14">{{ index (index $t "app_id_desc") $lang }}</span>
+                          </div>
+                          <div class="text-regular-14">
+                            {{$app.ID}}
+                            <i class="tyk-icon tykon tykon-copy ml-2" data-copy-value="{{$app.ID}}"></i>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-lg-12 requests-row-section">
+                        <div class="d-flex flex-row justify-content-between align-items-start flex-wrap p-3 requests-row-section__info">
+                          <div class="d-flex flex-column pr-3">
+                            <h6 class="heading-small text-default mr-4">{{ index (index $t "name") $lang }}</h6>
+                          </div>
+                          <div class="text-regular-14">
+                            {{ $app.Name }}
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-lg-12">
+                        <div class="d-flex flex-row justify-content-between align-items-start flex-wrap p-3 requests-row-section__info">
+                          <div class="d-flex flex-column pr-3">
+                            <h6 class="heading-small text-default mr-4">{{ index (index $t "description") $lang }}</h6>
+                          </div>
+                          <div class="text-regular-14">
+                            {{if $app.Description }} {{ $app.Description }} {{else}} <i>{{ index (index $t "no_description") $lang }}</i> {{end}}
+                          </div>
+                        </div>
+                      </div>
+                      {{ if not .isDefaultOrgUser }}
+                      <div class="col-lg-12">
+                        <div class="d-flex flex-row justify-content-between align-items-start flex-wrap p-3 requests-row-section__info">
+                          <div class="d-flex flex-column pr-3">
+                            <h6 class="heading-small text-default mr-4">{{ index (index $t "visibility") $lang }}</h6>
+                          </div>
+                          <div class="text-regular-14">
+                            {{ $app.VisibilityLabel }}
+                          </div>
+                        </div>
+                      </div>
+                      {{ end }}
+                      <div class="col-lg-12">
+                        <div class="d-flex flex-row justify-content-between align-items-center flex-wrap p-3 requests-row-section__info">
+                          <div class="d-flex flex-column pr-3">
+                            <h6 class="heading-small text-default mr-4">{{ index (index $t "redirect_urls") $lang }}</h6>
+                          </div>
+                          <div class="text-regular-14 mb-1">
+                            {{if $app.RedirectURLs }} {{ $app.RedirectURLs }} {{else}} <i>{{ index (index $t "no_redirect_urls") $lang }}</i> {{end}}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="card-footer__dynamic-data d-none w-100 p-3">
+                      <div class="mb-4">
+                        <label class="heading-small text-default">{{ index (index $t "app_name") $lang }}</label>
+                        <input type="text" name="name" class="form-control" placeholder="{{ index (index $t "app_name_ph") $lang }}" autofocus value="{{ $app.Name}}">
+                      </div>
+                      <div class="mb-4">
+                        <label class="heading-small text-default">{{ index (index $t "description") $lang }}</label>
+                        <textarea rows="3" name="description" class="form-control" placeholder="{{ index (index $t "description_ph") $lang }}">{{ $app.Description}}</textarea>
+                      </div>
+                      {{ if not .isDefaultOrgUser }}
+                      <div class="mb-4">
+                        <label class="heading-small text-default">{{ index (index $t "visibility") $lang }}</label>
+                        <select name="visibility" class="form-control">
+                          <option value="personal" {{ if eq $app.Visibility "personal" }}selected{{ end }}>{{ index (index $t "personal") $lang }}</option>
+                          <option value="team" {{ if eq $app.Visibility "team" }}selected{{ end }}>{{ index (index $t "team") $lang }}</option>
+                          <option value="organisation" {{ if eq $app.Visibility "organisation" }}selected{{ end }}>{{ index (index $t "organisation") $lang }}</option>
+                        </select>
+                      </div>
+                      {{ else }}
+                      <input type="hidden" name="visibility" value="personal" />
+                      {{ end }}
+                      <div class="mb-4">
+                        <label class="heading-small text-default">{{ index (index $t "default_redirect_urls") $lang }}</label>
+                        <input name="redirectURLs" class="form-control" placeholder="{{ index (index $t "redirect_urls_ph") $lang }}" value="{{ $app.RedirectURLs }}">
+                        <small id="redirectHelp" class="form-text with-info-icon">{{ index (index $t "separate_urls_default") $lang }}</small>
+                      </div>
+                    </div>
+                </div>
+              </div>
+          </div>
+        </form>
+        {{ if or $app.AccessRequests $app.Credentials}}
+          {{ if $app.AccessRequests}}
+            {{ range $app.AccessRequests }}
+              {{ if eq .Status "pending" }}
+                {{ $hasPending = true }}
+              {{ end }}
+            {{ end }}
+          {{ end }}
+          <h2 class="heading-large">{{ index (index $t "credential_management") $lang }}</h2>
+          <ul class="nav nav-tabs" role="tablist">
+            <li class="nav-item px-0">
+              <a class="nav-link px-4 pb-0 {{ if $hasApproved }}active{{end}}" id="approved-tab" data-toggle="tab" href="#approved" role="tab" aria-controls="approved" aria-selected="{{ if $hasApproved }}true{{end}}">
+                <h6 class="body-medium-default text-default mb-1">{{ index (index $t "approved_access") $lang }}</h6>
+              </a>
+            </li>
+            <li class="nav-item px-0">
+              <a class="nav-link px-4 pb-0 {{ if not $hasApproved }}active{{end}}" id="pending-tab" data-toggle="tab" href="#pending" role="tab" aria-controls="pending" aria-selected="{{ if $hasApproved }}false{{end}}">
+                <h6 class="body-medium-default text-default mb-1">{{ index (index $t "pending_access") $lang }}</h6>
+              </a>
+            </li>
+          </ul>
+          <div class="tab-content mt-4">
+            <div class="tab-pane fade {{ if $hasApproved }}show active{{end}}" id="approved" role="tabpanel" aria-labelledby="approved-tab">
+              {{ if lt $approvedReqsLength 1 }}
+                <div class="alert alert-info" role="alert">
+                  <i class="tyk-icon tykon tykon-warning "></i>
+                  <div class="alert__content heading-small">{{ index (index $t "no_approved") $lang }}</div>
+                </div>
+              {{end}}
+              {{ range $index, $cred := $app.Credentials }}
+                {{ $availablePlansKey := printf "availablePlans_%d" $cred.ID }}
+                {{ $availablePlans := index $ $availablePlansKey }}
+                {{ $pendingPlanKey := printf "pendingPlan_%d" $cred.ID }}
+                {{ $pendingPlan := index $ $pendingPlanKey }}
+                {{ $hasPendingKey := printf "hasPendingPlanChange_%d" $cred.ID }}
+                {{ $hasPending := index $ $hasPendingKey }}
+                {{ render "credential_card" (dict
+                  "cred" $cred
+                  "app" $app
+                  "isPending" false
+                  "appCerts" $appCerts
+                  "allCerts" $allCerts
+                  "index" $index
+                  "availablePlans" $availablePlans
+                  "pendingPlan" $pendingPlan
+                  "hasPending" $hasPending
+                ) }}
+              {{end}}
+            </div>
+            <div class="tab-pane fade {{ if not $hasApproved }}show active{{end}}" id="pending" role="tabpanel" aria-labelledby="pending-tab">
+              {{ if not $hasPending }}
+                <div class="alert alert-info" role="alert">
+                  <i class="tyk-icon tykon tykon-warning "></i>
+                  <div class="alert__content heading-small">{{ index (index $t "no_pending") $lang }}</div>
+                </div>
+              {{ else }}
+                {{ $pendingIndex := 0 }}
+                {{ range $app.AccessRequests }}
+                  {{ if eq .Status "pending" }}
+                    {{ render "credential_card" (dict
+                      "cred" .
+                      "app" $app
+                      "isPending" true
+                      "appCerts" $appCerts
+                      "allCerts" $allCerts
+                      "index" $pendingIndex
+                    ) }}
+                    {{ $pendingIndex = add $pendingIndex 1 }}
+                  {{ end }}
+                {{ end }}
+              {{ end }}
+            </div>
+          </div>
+        {{end}}
+        {{ if or (eq $currentUser.ID $app.UserID) (eq $currentUser.Role "consumer-admin") }}
+        <h2 class="heading-large mb-3">{{ index (index $t "advanced_settings") $lang }}</h2>
+        <div class="card p-0 mb-4">
+          <div class="card-footer m-0 p-4 d-flex flex-row w-100 justify-content-between">
+            <div>
+              <h4 class="heading-medium text-default">{{ index (index $t "delete_app") $lang }}</h4>
+              <h5 class="body-xlarge-default">{{ index (index $t "delete_app_desc") $lang }}</h5>
+            </div>
+            <div>
+              <button type="button" class="btn btn-danger-outline pass-id" data-toggle="modal" data-target="#deleteAppModal" data-app-id="{{$app.ID}}">{{ index (index $t "delete_this_app") $lang }}</button>
+            </div>
+          </div>
+        </div>
+        {{ end }}
+      </div>
+  {{ end }}
+  </div>
+  <div class="d-none" id="success-msg">{{ index (index $t "copied") $lang }}</div>
+</div>
+
+{{ render "confirmation_modal" (dict
+  "id" "deleteAppModal"
+  "title" (index (index $t "delete_app_modal_title") $lang)
+  "body" (raw (print "<p class='body-xlarge-default'>" (index (index $t "delete_app_modal_body") $lang) "</p><p class='body-xlarge-default'>" (index (index $t "delete_app_modal_confirm") $lang) "</p>"))
+  "confirmText" (index (index $t "delete") $lang)
+  "cancelText" (index (index $t "cancel") $lang)
+  "confirmClass" "btn-danger"
+  "showIcon" true
+  "useForm" true
+  "hiddenFields" (dict "mode" "delete")
+) }}
+
+<!-- JavaScript for credential editing -->
+<script>
+function enableCredentialEdit(credId) {
+  // Hide static display and show edit fields
+  document.querySelectorAll('.enable-credential-editing-' + credId).forEach(el => el.classList.add('d-none'));
+  document.querySelectorAll('.disable-credential-editing-' + credId).forEach(el => el.classList.remove('d-none'));
+
+  // Find the credential section and toggle redirect URL fields
+  const credSection = document.querySelector('input[name="credential_redirect_url_' + credId + '"]');
+  if (credSection) {
+    const parent = credSection.closest('.requests-row-section__info');
+    if (parent) {
+      parent.querySelector('.credential-redirect-url-static').classList.add('d-none');
+      parent.querySelector('.credential-redirect-url-edit').classList.remove('d-none');
+    }
+  }
+}
+
+function cancelCredentialEdit(credId) {
+  // Show static display and hide edit fields
+  document.querySelectorAll('.enable-credential-editing-' + credId).forEach(el => el.classList.remove('d-none'));
+  document.querySelectorAll('.disable-credential-editing-' + credId).forEach(el => el.classList.add('d-none'));
+
+  // Find the credential section and toggle redirect URL fields
+  const credSection = document.querySelector('input[name="credential_redirect_url_' + credId + '"]');
+  if (credSection) {
+    const parent = credSection.closest('.requests-row-section__info');
+    if (parent) {
+      parent.querySelector('.credential-redirect-url-static').classList.remove('d-none');
+      parent.querySelector('.credential-redirect-url-edit').classList.add('d-none');
+    }
+  }
+}
+
+function saveCredentialEdit(credId) {
+  const redirectUrlInput = document.querySelector('input[name="credential_redirect_url_' + credId + '"]');
+  if (redirectUrlInput) {
+    // Find or create the update form
+    let form = document.getElementById('credential-update-form-' + credId);
+    if (!form) {
+      // Create a hidden form similar to how rotate/delete work
+      form = document.createElement('form');
+      form.id = 'credential-update-form-' + credId;
+      form.method = 'POST';
+      form.action = '/portal/private/credentials';
+      form.style.display = 'none';
+      document.body.appendChild(form);
+    }
+
+    // Clear and populate the form
+    form.innerHTML = '';
+
+    const modeInput = document.createElement('input');
+    modeInput.type = 'hidden';
+    modeInput.name = 'mode';
+    modeInput.value = 'update';
+    form.appendChild(modeInput);
+
+    const credIdInput = document.createElement('input');
+    credIdInput.type = 'hidden';
+    credIdInput.name = 'cred_id';
+    credIdInput.value = credId;
+    form.appendChild(credIdInput);
+
+    const redirectInput = document.createElement('input');
+    redirectInput.type = 'hidden';
+    redirectInput.name = 'redirect_url';
+    redirectInput.value = redirectUrlInput.value;
+    form.appendChild(redirectInput);
+
+    // Add CSRF token from meta tag (not cookie!)
+    const meta = document.querySelector('meta[name="csrf-token"]');
+    const csrfToken = meta ? meta.getAttribute('content') : '';
+    if (csrfToken) {
+      const csrfInput = document.createElement('input');
+      csrfInput.type = 'hidden';
+      csrfInput.name = 'csrf_token';
+      csrfInput.value = csrfToken;
+      form.appendChild(csrfInput);
+    } else {
+      console.error('CSRF token not found in meta tag!');
+    }
+
+    // Submit the form
+    form.submit();
+  }
+}
+</script>

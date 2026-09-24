@@ -1,0 +1,150 @@
+{{ $accessRequest := .accessRequest }}
+{{ $appCerts := .appCerts }}
+{{ $allCerts := .allCerts }}
+{{ $appID := .appID }}
+{{ $isPending := .isPending }}
+{{ $cookies := (req).Header.Get "Cookie" }}
+{{ $supportedLangs := list "en" "ar" "fr" "es" }}
+{{ $lang := "en" }}
+{{ range $supportedLangs }}{{ if regexMatch (printf "tdp_locale=%s" .) $cookies }}{{ $lang = . }}{{ end }}{{ end }}
+{{ $t := dict
+  "mtls_certs" (dict "en" "Mutual TLS certificates" "ar" "شهادات Mutual TLS" "fr" "Certificats mTLS" "es" "Certificados mTLS")
+  "no_cert_selected" (dict "en" "No certificate selected for this request" "ar" "لم يتم تحديد شهادة لهذا الطلب" "fr" "Aucun certificat sélectionné pour cette demande" "es" "No se ha seleccionado ningún certificado para esta solicitud")
+  "no_certs_uploaded" (dict "en" "You haven't uploaded any certificates yet." "ar" "لم ترفع أي شهادات حتى الآن." "fr" "Vous n'avez pas encore importé de certificat." "es" "Todavía no ha cargado ningún certificado.")
+  "manage_certs" (dict "en" "To add and manage certificates please go to" "ar" "لإضافة الشهادات وإدارتها، انتقل إلى" "fr" "Pour ajouter et gérer des certificats, veuillez vous rendre sur" "es" "Para añadir y gestionar certificados, vaya a")
+  "certificates_link" (dict "en" "Certificates" "ar" "الشهادات" "fr" "Certificats" "es" "Certificados")
+  "on_your_dashboard" (dict "en" " on your dashboard." "ar" " في لوحة التحكم." "fr" " sur votre tableau de bord." "es" " en su panel de control.")
+  "cert_name" (dict "en" "Certificate name:" "ar" "اسم الشهادة:" "fr" "Nom du certificat :" "es" "Nombre del certificado:")
+  "status" (dict "en" "Status:" "ar" "الحالة:" "fr" "Statut :" "es" "Estado:")
+  "valid" (dict "en" "Valid" "ar" "صالحة" "fr" "Valide" "es" "Válido")
+  "expired" (dict "en" "Expired" "ar" "منتهية" "fr" "Expiré" "es" "Caducado")
+  "cert_info" (dict "en" "Certificate info:" "ar" "معلومات الشهادة:" "fr" "Informations sur le certificat :" "es" "Información del certificado:")
+  "file_name" (dict "en" "File name:" "ar" "اسم الملف:" "fr" "Nom du fichier :" "es" "Nombre del archivo:")
+  "signature_algorithm" (dict "en" "Signature Algorithm:" "ar" "خوارزمية التوقيع:" "fr" "Algorithme de signature :" "es" "Algoritmo de firma:")
+  "issuer" (dict "en" "Issuer:" "ar" "المُصدِر:" "fr" "Émetteur :" "es" "Emisor:")
+  "expiration" (dict "en" "Expiration:" "ar" "انتهاء الصلاحية:" "fr" "Expiration :" "es" "Expiración:")
+  "cert_valid" (dict "en" "your certificate is valid" "ar" "شهادتك صالحة" "fr" "votre certificat est valide" "es" "su certificado es válido")
+  "cert_expired" (dict "en" "your certificate is expired" "ar" "شهادتك منتهية" "fr" "votre certificat a expiré" "es" "su certificado ha caducado")
+  "validity" (dict "en" "Validity:" "ar" "الصلاحية:" "fr" "Validité :" "es" "Validez:")
+  "not_before" (dict "en" "Not Before:" "ar" "غير صالحة قبل:" "fr" "Pas avant :" "es" "No antes de:")
+  "not_after" (dict "en" "Not After:" "ar" "غير صالحة بعد:" "fr" "Pas après :" "es" "No después de:")
+  "subject" (dict "en" "Subject:" "ar" "الموضوع:" "fr" "Objet :" "es" "Asunto:")
+  "replace_cert" (dict "en" "Replace Mutual TLS certificate" "ar" "استبدال شهادة Mutual TLS" "fr" "Remplacer le certificat mTLS" "es" "Sustituir certificado mTLS")
+  "select_cert" (dict "en" "Select a certificate" "ar" "اختر شهادة" "fr" "Sélectionner un certificat" "es" "Seleccionar un certificado")
+  "detach_cert" (dict "en" "Detach Certificate" "ar" "فصل الشهادة" "fr" "Détacher le certificat" "es" "Desvincular certificado")
+  "replace_cert_btn" (dict "en" "Replace Certificate" "ar" "استبدال الشهادة" "fr" "Remplacer le certificat" "es" "Sustituir certificado")
+  "cancel" (dict "en" "Cancel" "ar" "إلغاء" "fr" "Annuler" "es" "Cancelar")
+  "save" (dict "en" "Save" "ar" "حفظ" "fr" "Enregistrer" "es" "Guardar")
+  "attach_cert" (dict "en" "attach mutual tls certificate" "ar" "إرفاق شهادة mutual tls" "fr" "joindre un certificat mTLS" "es" "adjuntar certificado mTLS")
+  "detach_modal_title" (dict "en" "Detach certificate?" "ar" "فصل الشهادة؟" "fr" "Détacher le certificat ?" "es" "¿Desvincular certificado?")
+  "detach_modal_body1" (dict "en" "Detaching the certificate will result in losing access to the APIs." "ar" "فصل الشهادة سيؤدي إلى فقدان الوصول إلى واجهات API." "fr" "Détacher le certificat entraînera la perte d'accès aux API." "es" "Al desvincular el certificado, perderá el acceso a las API.")
+  "detach_modal_body2" (dict "en" "If you detach the certificate, it is advised to promptly replace with a new one to maintain access to the API Product(s)." "ar" "إذا فصلت الشهادة، يُنصح باستبدالها بشهادة جديدة فورًا للحفاظ على الوصول إلى منتج (أو منتجات) API." "fr" "Si vous détachez le certificat, il est conseillé de le remplacer rapidement par un nouveau pour conserver l'accès au(x) produit(s) API." "es" "Si desvincula el certificado, se recomienda sustituirlo rápidamente por uno nuevo para mantener el acceso al/a los producto(s) API.")
+  "continue" (dict "en" "Do you wish to continue?" "ar" "هل تريد الاستمرار؟" "fr" "Souhaitez-vous continuer ?" "es" "¿Desea continuar?")
+  "remove_cert" (dict "en" "Remove certificate" "ar" "إزالة الشهادة" "fr" "Retirer le certificat" "es" "Quitar certificado")
+}}
+
+<div class="apps-wrapper__card-section-certs">
+  <form method="POST" id="app-form-cert-update" action="{{ $appID }}/cert/{{ $accessRequest.CertificateID }}" class="col-lg-12 requests-row-section">
+    <div class="d-flex flex-row justify-content-between align-items-start flex-wrap requests-row-section__info p-3">
+      {{ if and $isPending (eq $accessRequest.CertificateID 0) }}
+        <div class="mt-2 d-flex flex-column w-100">
+          <h5 class="heading-small text-default m-0 mb-2">{{ index (index $t "mtls_certs") $lang }}</h5>
+          <div class="alert alert-info" role="alert">
+            <i class="tyk-icon tykon tykon-warning"></i>
+            <div class="alert__content heading-small">{{ index (index $t "no_cert_selected") $lang }}</div>
+          </div>
+        </div>
+      {{ else if eq (len $allCerts) 0 }}
+        <div class="mt-2 d-flex flex-column">
+          <h5 class="heading-small text-default m-0">{{ index (index $t "mtls_certs") $lang }}</h5>
+          <i class="pt-3 mb-1">{{ index (index $t "no_certs_uploaded") $lang }}</i>
+          <span class="mb-3">{{ index (index $t "manage_certs") $lang }} <a class="breadcrumb-link" href="">{{ index (index $t "certificates_link") $lang }}</a>{{ index (index $t "on_your_dashboard") $lang }}</span>
+        </div>
+      {{else}}
+        {{ with index $appCerts $accessRequest.ID}}
+          <div class="card-footer__static-data d-block mt-2 mb-3">
+            <h5 class="heading-small text-default m-0">{{ index (index $t "mtls_certs") $lang }}</h5>
+            <h6 class="heading-small text-default mr-4 mt-2 mb-0">{{ index (index $t "cert_name") $lang }}</h6>
+            <p class="text-regular-14">{{.Name}}</p>
+            <h6 class="heading-small text-default mb-0">{{ index (index $t "status") $lang }}</h6>
+            {{if .IsValid}}
+              <i class="bi bi-check-circle-fill status-registered mr-1"></i>
+              <span class="text-regular-14">{{ index (index $t "valid") $lang }}</span>
+            {{else}}
+              <i class="bi bi-x-circle-fill text-danger mr-1"></i>
+              <span class="text-regular-14">{{ index (index $t "expired") $lang }}</span>
+            {{end}}
+            <h6 class="heading-small text-default mt-2 mb-0">{{ index (index $t "cert_info") $lang }}</h6>
+            <p class="body-medium-default mb-2">{{ index (index $t "file_name") $lang }} {{.Name}}</p>
+            <p class="body-medium-default mb-2">{{ index (index $t "signature_algorithm") $lang }} {{.SignatureAlgorithm}}</p>
+            <p class="body-medium-default mb-2">{{ index (index $t "issuer") $lang }} {{.Issuer}}</p>
+            <p class="body-medium-default mb-2">{{ index (index $t "expiration") $lang }} {{if .IsValid}}{{ index (index $t "cert_valid") $lang }}{{else}}{{ index (index $t "cert_expired") $lang }}{{end}}</p>
+            <p class="body-medium-default mb-2">{{ index (index $t "validity") $lang }} </p>
+            <ul class="ml-3 card-ul">
+              <li class="body-medium-default">{{ index (index $t "not_before") $lang }} {{.ValidNotBefore}}</li>
+              <li class="body-medium-default">{{ index (index $t "not_after") $lang }} {{.ValidNotAfter}}</li>
+            </ul>
+            <p class="body-medium-default">{{ index (index $t "subject") $lang }} {{.Subject}}</p>
+          </div>
+          <div class="card-footer__dynamic-data d-none mt-2 mb-3 col-8 p-0">
+            <h5 class="heading-small text-default m-0">{{ index (index $t "replace_cert") $lang }}</h5>
+            <select class="form-control w-100 mt-5 mb-3" name="selected-cert">
+              <option disabled selected value="">{{ index (index $t "select_cert") $lang }}</option>
+              {{ range $key, $cert := $allCerts }}
+                {{ if ne $key (printf "%d" $accessRequest.ID)}}
+                  <option value="{{$cert.ID}}">{{$cert.Name}}</option>
+                {{end}}
+              {{end}}
+            </select>
+          </div>
+          {{ if not $isPending }}
+          <div class="d-flex justify-content-end mt-4 cta-btns-wrapper col-4 p-0">
+            <button type="button" class="btn btn-danger-outline ml-2 enable-editing d-block" data-toggle="modal" data-target="#detachCertificateModal">{{ index (index $t "detach_cert") $lang }}</button>
+            <button type="button" class="btn btn-secondary d-block" data-action="edit">{{ index (index $t "replace_cert_btn") $lang }}</button>
+            <div class="edit-cta d-none disable-editing">
+              <button type="button" class="btn btn-secondary-outline" data-action="cancel">
+                {{ index (index $t "cancel") $lang }}
+              </button>
+              <button type="submit" class="btn btn-primary">{{ index (index $t "save") $lang }}</button>
+              <input type="hidden" name="access-request" value="{{ $accessRequest.ID }}">
+              <input type="hidden" name="provider" value="{{ $accessRequest.ProviderID }}">
+              <input type="hidden" name="cert-mode" value="update">
+            </div>
+          </div>
+        {{else}}
+          <div class="mt-2 mb-3 col-8 p-0">
+            <h6 class="heading-small text-default mr-4 text-uppercase mb-1">{{ index (index $t "attach_cert") $lang }}</h6>
+            <select class="form-control w-100 mt-5 mb-3" name="selected-cert">
+              <option disabled selected value="">{{ index (index $t "select_cert") $lang }}</option>
+              {{ range $key, $cert := $allCerts }}
+                {{ if ne $key (printf "%d" $accessRequest.ID)}}
+                  <option value="{{$cert.ID}}">{{$cert.Name}}</option>
+                {{end}}
+              {{end}}
+            </select>
+          </div>
+          <div class="d-flex justify-content-end mt-4 col-4 p-0">
+            <button type="submit" class="btn btn-primary">{{ index (index $t "save") $lang }}</button>
+            <input type="hidden" name="access-request" value="{{ $accessRequest.ID }}">
+            <input type="hidden" name="provider" value="{{ $accessRequest.ProviderID }}">
+            <input type="hidden" name="cert-mode" value="update">
+          </div>
+        {{end}}
+      {{end}}
+    </div>
+  </form>
+</div>
+{{ if not $isPending }}
+{{ render "confirmation_modal" (dict
+  "id" "detachCertificateModal"
+  "title" (index (index $t "detach_modal_title") $lang)
+  "body" (raw (print "<p>" (index (index $t "detach_modal_body1") $lang) "</p><p>" (index (index $t "detach_modal_body2") $lang) "</p><p>" (index (index $t "continue") $lang) "</p>"))
+  "confirmText" (index (index $t "remove_cert") $lang)
+  "cancelText" (index (index $t "cancel") $lang)
+  "confirmClass" "btn-danger"
+  "showIcon" true
+  "formAction" (printf "%s/cert/%d" $appID $accessRequest.CertificateID)
+  "hiddenFields" (dict "cert-mode" "delete" "access-request" $accessRequest.ID "provider" $accessRequest.ProviderID)
+) }}
+{{ end }}
+{{ end }}

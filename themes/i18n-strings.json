@@ -1,0 +1,2097 @@
+{
+  " Back to homepage ": {
+    "ar": " العودة إلى الصفحة الرئيسية ",
+    "es": " Volver a la página de inicio ",
+    "fr": " Retour à la page d'accueil "
+  },
+  " Delete ": {
+    "ar": " حذف ",
+    "es": " Eliminar ",
+    "fr": " Supprimer "
+  },
+  " Grant types ": {
+    "ar": " أنواع المنح ",
+    "es": " Tipos de concesión ",
+    "fr": " Types d'autorisation "
+  },
+  " Learn more": {
+    "ar": " تعرّف على المزيد",
+    "es": " Más información",
+    "fr": " En savoir plus"
+  },
+  " Listen path:": {
+    "ar": " مسار الاستماع:",
+    "es": " Ruta de escucha:",
+    "fr": " Chemin d'écoute :"
+  },
+  " Make sure it is a descriptive name": {
+    "ar": " تأكد من أنه اسم واضح ومعبّر",
+    "es": " Asegúrese de que sea un nombre descriptivo",
+    "fr": " Assurez-vous qu'il s'agit d'un nom descriptif"
+  },
+  " Reset/Revoke ": {
+    "ar": " إعادة تعيين/إلغاء ",
+    "es": " Restablecer/Revocar ",
+    "fr": " Réinitialiser/Révoquer "
+  },
+  " Response types": {
+    "ar": " أنواع الاستجابة",
+    "es": " Tipos de respuesta",
+    "fr": " Types de réponse"
+  },
+  " Token endpoints auth methods ": {
+    "ar": " طرق مصادقة نقاط نهاية الرمز ",
+    "es": " Métodos de autenticación de los puntos de conexión del token ",
+    "fr": " Méthodes d'authentification des points de terminaison de jeton "
+  },
+  " View ": {
+    "ar": " عرض ",
+    "es": " Ver ",
+    "fr": " Voir "
+  },
+  " credentials": {
+    "ar": " بيانات الاعتماد",
+    "es": " credenciales",
+    "fr": " identifiants"
+  },
+  " for users": {
+    "ar": " للمستخدمين",
+    "es": " para usuarios",
+    "fr": " pour les utilisateurs"
+  },
+  " on your dashboard.": {
+    "ar": " في لوحة التحكم.",
+    "es": " en su panel de control.",
+    "fr": " sur votre tableau de bord."
+  },
+  " users from the org": {
+    "ar": " المستخدمين من المؤسسة",
+    "es": " usuarios de la organización",
+    "fr": " utilisateurs de l'organisation"
+  },
+  "/": {
+    "ar": "/ar",
+    "es": "/es",
+    "fr": "/fr"
+  },
+  "< Back to Apps overview ": {
+    "ar": "< الرجوع إلى نظرة عامة على التطبيقات ",
+    "es": "< Volver al resumen de aplicaciones ",
+    "fr": "< Retour à l'aperçu des applications "
+  },
+  "< Back to catalogue overview": {
+    "ar": "< الرجوع إلى نظرة عامة على الكتالوج",
+    "es": "< Volver al resumen del catálogo",
+    "fr": "< Retour à l'aperçu du catalogue"
+  },
+  "< Back to catalogue overview ": {
+    "ar": "< الرجوع إلى نظرة عامة على الكتالوج ",
+    "es": "< Volver al resumen del catálogo ",
+    "fr": "< Retour à l'aperçu du catalogue "
+  },
+  "< Back to user list": {
+    "ar": "< الرجوع إلى قائمة المستخدمين",
+    "es": "< Volver a la lista de usuarios",
+    "fr": "< Retour à la liste des utilisateurs"
+  },
+  "A new credential will be generated automatically.": {
+    "ar": "سيتم إنشاء بيانات اعتماد جديدة تلقائيًا.",
+    "es": "Se generarán nuevas credenciales automáticamente.",
+    "fr": "De nouveaux identifiants seront générés automatiquement."
+  },
+  "API Products and plan this credential can access": {
+    "ar": "منتجات API والخطة التي يمكن لبيانات الاعتماد هذه الوصول إليها",
+    "es": "Productos API y plan a los que puede acceder esta credencial",
+    "fr": "Produits API et plan auxquels ces identifiants peuvent accéder"
+  },
+  "API products and plan access": {
+    "ar": "منتجات API والوصول إلى الخطة",
+    "es": "Productos API y acceso al plan",
+    "fr": "Produits API et accès au plan"
+  },
+  "API specification": {
+    "ar": "مواصفات API",
+    "es": "Especificación de la API",
+    "fr": "Spécification de l'API"
+  },
+  "APIs": {
+    "ar": "واجهات API",
+    "es": "API",
+    "fr": "API"
+  },
+  "APIs available in this product": {
+    "ar": "واجهات API المتاحة في هذا المنتج",
+    "es": "API disponibles en este producto",
+    "fr": "API disponibles dans ce produit"
+  },
+  "APP ID:": {
+    "ar": "معرّف التطبيق:",
+    "es": "ID DE LA APLICACIÓN:",
+    "fr": "ID DE L'APPLICATION :"
+  },
+  "Access Request %d": {
+    "ar": "طلب الوصول %d",
+    "es": "Solicitud de acceso %d",
+    "fr": "Demande d'accès %d"
+  },
+  "Access this product": {
+    "ar": "الوصول إلى هذا المنتج",
+    "es": "Acceder a este producto",
+    "fr": "Accéder à ce produit"
+  },
+  "Access with this plan": {
+    "ar": "الوصول بهذه الخطة",
+    "es": "Acceder con este plan",
+    "fr": "Accéder avec ce plan"
+  },
+  "Account Information": {
+    "ar": "معلومات الحساب",
+    "es": "Información de la cuenta",
+    "fr": "Informations sur le compte"
+  },
+  "Action": {
+    "ar": "الإجراء",
+    "es": "Acción",
+    "fr": "Action"
+  },
+  "Add to cart": {
+    "ar": "أضف إلى السلة",
+    "es": "Añadir al carrito",
+    "fr": "Ajouter au panier"
+  },
+  "Advanced Settings": {
+    "ar": "الإعدادات المتقدمة",
+    "es": "Configuración avanzada",
+    "fr": "Paramètres avancés"
+  },
+  "All apps": {
+    "ar": "جميع التطبيقات",
+    "es": "Todas las aplicaciones",
+    "fr": "Toutes les applications"
+  },
+  "All response codes": {
+    "ar": "جميع رموز الاستجابة",
+    "es": "Todos los códigos de respuesta",
+    "fr": "Tous les codes de réponse"
+  },
+  "Already a member ? ": {
+    "ar": "عضو بالفعل؟ ",
+    "es": "¿Ya es miembro? ",
+    "fr": "Déjà membre ? "
+  },
+  "Already have an account? Login!": {
+    "ar": "لديك حساب بالفعل؟ سجّل الدخول!",
+    "es": "¿Ya tiene una cuenta? ¡Inicie sesión!",
+    "fr": "Vous avez déjà un compte ? Connectez-vous !"
+  },
+  "An app serves as a container for one or multiple sets of credentials and in the future, different apps can have different ownerships. We recommend thinking about the use case when setting up a new app.": {
+    "ar": "يُستخدم التطبيق كحاوية لمجموعة واحدة أو أكثر من بيانات الاعتماد. نوصي بالتفكير في حالة الاستخدام عند إنشاء تطبيق جديد.",
+    "es": "Una aplicación sirve como contenedor de uno o varios conjuntos de credenciales y, en el futuro, distintas aplicaciones podrán tener propietarios diferentes. Le recomendamos pensar en el caso de uso al configurar una nueva aplicación.",
+    "fr": "Une application sert de conteneur pour un ou plusieurs jeux d'identifiants et, à l'avenir, différentes applications pourront avoir des propriétaires différents. Nous vous recommandons de réfléchir au cas d'usage lors de la création d'une nouvelle application."
+  },
+  "An email to reset password has been sent. Check your inbox.": {
+    "ar": "تم إرسال بريد إلكتروني لإعادة تعيين كلمة المرور. تحقق من صندوق الوارد.",
+    "es": "Se ha enviado un correo para restablecer la contraseña. Revise su bandeja de entrada.",
+    "fr": "Un e-mail de réinitialisation du mot de passe a été envoyé. Vérifiez votre boîte de réception."
+  },
+  "Any existing integrations using this API Product may stop working.": {
+    "ar": "قد تتوقف أي عمليات تكامل حالية تستخدم منتج API هذا عن العمل.",
+    "es": "Cualquier integración existente que utilice este producto API podría dejar de funcionar.",
+    "fr": "Les intégrations existantes utilisant ce produit API risquent de cesser de fonctionner."
+  },
+  "App Description": {
+    "ar": "وصف التطبيق",
+    "es": "Descripción de la aplicación",
+    "fr": "Description de l'application"
+  },
+  "App Name": {
+    "ar": "اسم التطبيق",
+    "es": "Nombre de la aplicación",
+    "fr": "Nom de l'application"
+  },
+  "App details": {
+    "ar": "تفاصيل التطبيق",
+    "es": "Detalles de la aplicación",
+    "fr": "Détails de l'application"
+  },
+  "App name": {
+    "ar": "اسم التطبيق",
+    "es": "Nombre de la aplicación",
+    "fr": "Nom de l'application"
+  },
+  "App name:": {
+    "ar": "اسم التطبيق:",
+    "es": "Nombre de la aplicación:",
+    "fr": "Nom de l'application :"
+  },
+  "App overview:": {
+    "ar": "نظرة عامة على التطبيق:",
+    "es": "Resumen de la aplicación:",
+    "fr": "Aperçu de l'application :"
+  },
+  "Approved access": {
+    "ar": "الوصول المعتمد",
+    "es": "Acceso aprobado",
+    "fr": "Accès approuvé"
+  },
+  "Apps": {
+    "ar": "التطبيقات",
+    "es": "Aplicaciones",
+    "fr": "Applications"
+  },
+  "Are you sure you want to delete this app ?": {
+    "ar": "هل أنت متأكد أنك تريد حذف هذا التطبيق؟",
+    "es": "¿Está seguro de que desea eliminar esta aplicación?",
+    "fr": "Êtes-vous sûr de vouloir supprimer cette application ?"
+  },
+  "Associated rate limits, quotas, or usage tied to this API Product will no longer apply.": {
+    "ar": "لن تُطبَّق بعد الآن حدود المعدل أو الحصص أو الاستخدام المرتبطة بمنتج API هذا.",
+    "es": "Los límites de tasa, cuotas o usos asociados a este producto API dejarán de aplicarse.",
+    "fr": "Les limites de débit, quotas ou usages associés à ce produit API ne s'appliqueront plus."
+  },
+  "Auth Method:": {
+    "ar": "طريقة المصادقة:",
+    "es": "Método de autenticación:",
+    "fr": "Méthode d'authentification :"
+  },
+  "Average latency": {
+    "ar": "متوسط زمن الاستجابة",
+    "es": "Latencia media",
+    "fr": "Latence moyenne"
+  },
+  "Back to homepage ": {
+    "ar": "العودة إلى الصفحة الرئيسية ",
+    "es": "Volver a la página de inicio ",
+    "fr": "Retour à la page d'accueil "
+  },
+  "Base URL": {
+    "ar": "عنوان URL الأساسي",
+    "es": "URL base",
+    "fr": "URL de base"
+  },
+  "Blog, insight and latest news": {
+    "ar": "المدونة، الأفكار وآخر الأخبار",
+    "es": "Blog, análisis y últimas noticias",
+    "fr": "Blog, analyses et dernières actualités"
+  },
+  "Browse API products to add": {
+    "ar": "تصفح منتجات API لإضافتها",
+    "es": "Explorar productos de API para añadir",
+    "fr": "Parcourir les produits API à ajouter"
+  },
+  "Browse and discover APIs available in your organization": {
+    "ar": "تصفح واكتشف واجهات برمجة التطبيقات المتاحة في مؤسستك",
+    "es": "Explore y descubra las API disponibles en su organización",
+    "fr": "Parcourez et découvrez les API disponibles dans votre organisation"
+  },
+  "By removing this developer from the organisation they will no longer have access to the apps and credentials associated with this org.": {
+    "ar": "بإزالة هذا المطوّر من المؤسسة، لن يعود لديه وصول إلى التطبيقات وبيانات الاعتماد المرتبطة بهذه المؤسسة.",
+    "es": "Al eliminar a este desarrollador de la organización, dejará de tener acceso a las aplicaciones y credenciales asociadas a esta organización.",
+    "fr": "En supprimant ce développeur de l'organisation, il n'aura plus accès aux applications et identifiants associés à cette organisation."
+  },
+  "By rotating the credentials, you will receive a new set of credentials and the old ones won't apply anymore.": {
+    "ar": "بتدوير بيانات الاعتماد، ستحصل على مجموعة جديدة ولن تعمل القديمة بعد الآن.",
+    "es": "Al rotar las credenciales, recibirá un nuevo conjunto de credenciales y las anteriores dejarán de ser válidas.",
+    "fr": "En faisant pivoter les identifiants, vous recevrez un nouveau jeu d'identifiants et les anciens ne seront plus valides."
+  },
+  "Cancel": {
+    "ar": "إلغاء",
+    "es": "Cancelar",
+    "fr": "Annuler"
+  },
+  "Cart - ": {
+    "ar": "السلة - ",
+    "es": "Carrito - ",
+    "fr": "Panier - "
+  },
+  "Catalogue": {
+    "ar": "الكتالوج",
+    "es": "Catálogo",
+    "fr": "Catalogue"
+  },
+  "Certificate info:": {
+    "ar": "معلومات الشهادة:",
+    "es": "Información del certificado:",
+    "fr": "Informations sur le certificat :"
+  },
+  "Certificate name": {
+    "ar": "اسم الشهادة",
+    "es": "Nombre del certificado",
+    "fr": "Nom du certificat"
+  },
+  "Certificate name:": {
+    "ar": "اسم الشهادة:",
+    "es": "Nombre del certificado:",
+    "fr": "Nom du certificat :"
+  },
+  "Certificates": {
+    "ar": "الشهادات",
+    "es": "Certificados",
+    "fr": "Certificats"
+  },
+  "Change Plan": {
+    "ar": "تغيير الخطة",
+    "es": "Cambiar de plan",
+    "fr": "Changer de plan"
+  },
+  "Change plan": {
+    "ar": "تغيير الخطة",
+    "es": "Cambiar de plan",
+    "fr": "Changer de plan"
+  },
+  "Change plan for these credentials": {
+    "ar": "تغيير الخطة لبيانات الاعتماد هذه",
+    "es": "Cambiar el plan de estas credenciales",
+    "fr": "Changer le plan de ces identifiants"
+  },
+  "Change roles": {
+    "ar": "تغيير الأدوار",
+    "es": "Cambiar roles",
+    "fr": "Modifier les rôles"
+  },
+  "Change roles for users": {
+    "ar": "تغيير أدوار المستخدمين",
+    "es": "Cambiar los roles de los usuarios",
+    "fr": "Modifier les rôles des utilisateurs"
+  },
+  "Client type description:": {
+    "ar": "وصف نوع العميل:",
+    "es": "Descripción del tipo de cliente:",
+    "fr": "Description du type de client :"
+  },
+  "Client type details": {
+    "ar": "تفاصيل نوع العميل",
+    "es": "Detalles del tipo de cliente",
+    "fr": "Détails du type de client"
+  },
+  "Client type name:": {
+    "ar": "اسم نوع العميل:",
+    "es": "Nombre del tipo de cliente:",
+    "fr": "Nom du type de client :"
+  },
+  "Complete your registration": {
+    "ar": "أكمل تسجيلك",
+    "es": "Complete su registro",
+    "fr": "Terminez votre inscription"
+  },
+  "Configure webhook subscriptions for this credential": {
+    "ar": "تهيئة اشتراكات الخطافات لهذه بيانات الاعتماد",
+    "es": "Configurar suscripciones de webhook para esta credencial",
+    "fr": "Configurer les abonnements webhook pour ces identifiants"
+  },
+  "Confirm Password": {
+    "ar": "تأكيد كلمة المرور",
+    "es": "Confirmar contraseña",
+    "fr": "Confirmer le mot de passe"
+  },
+  "Confirm Password *": {
+    "ar": "تأكيد كلمة المرور *",
+    "es": "Confirmar contraseña *",
+    "fr": "Confirmer le mot de passe *"
+  },
+  "Confirm new password:": {
+    "ar": "تأكيد كلمة المرور الجديدة:",
+    "es": "Confirme la nueva contraseña:",
+    "fr": "Confirmez le nouveau mot de passe :"
+  },
+  "Confirm password": {
+    "ar": "تأكيد كلمة المرور",
+    "es": "Confirmar contraseña",
+    "fr": "Confirmer le mot de passe"
+  },
+  "Contact the system administrator or try again later": {
+    "ar": "تواصل مع مسؤول النظام أو حاول مرة أخرى لاحقًا",
+    "es": "Póngase en contacto con el administrador del sistema o inténtelo de nuevo más tarde",
+    "fr": "Contactez l'administrateur système ou réessayez plus tard"
+  },
+  "Controls who can see and use this app.": {
+    "ar": "يتحكم في من يمكنه رؤية هذا التطبيق واستخدامه.",
+    "es": "Controla quién puede ver y usar esta aplicación.",
+    "fr": "Contrôle qui peut voir et utiliser cette application."
+  },
+  "Copy paste the client secret and ID in a POST request to the identity provider.": {
+    "ar": "نسخ ولصق سر العميل والمعرّف في طلب POST إلى مزوّد الهوية.",
+    "es": "Copie y pegue el secreto de cliente y el ID en una solicitud POST al proveedor de identidad.",
+    "fr": "Copiez-collez le secret client et l'ID dans une requête POST vers le fournisseur d'identité."
+  },
+  "Create ": {
+    "ar": "إنشاء ",
+    "es": "Crear ",
+    "fr": "Créer "
+  },
+  "Create App": {
+    "ar": "إنشاء تطبيق",
+    "es": "Crear aplicación",
+    "fr": "Créer une application"
+  },
+  "Create Apps": {
+    "ar": "إنشاء التطبيقات",
+    "es": "Crear aplicaciones",
+    "fr": "Créer des applications"
+  },
+  "Create Organisation": {
+    "ar": "إنشاء مؤسسة",
+    "es": "Crear organización",
+    "fr": "Créer une organisation"
+  },
+  "Create a new App": {
+    "ar": "إنشاء تطبيق جديد",
+    "es": "Crear una nueva aplicación",
+    "fr": "Créer une nouvelle application"
+  },
+  "Create a new app": {
+    "ar": "إنشاء تطبيق جديد",
+    "es": "Crear una nueva aplicación",
+    "fr": "Créer une nouvelle application"
+  },
+  "Create an API credential": {
+    "ar": "إنشاء بيانات اعتماد API",
+    "es": "Crear una credencial de API",
+    "fr": "Créer des identifiants API"
+  },
+  "Create an Organisation": {
+    "ar": "إنشاء مؤسسة",
+    "es": "Crear una organización",
+    "fr": "Créer une organisation"
+  },
+  "Create an account": {
+    "ar": "إنشاء حساب",
+    "es": "Crear una cuenta",
+    "fr": "Créer un compte"
+  },
+  "Create new App": {
+    "ar": "إنشاء تطبيق جديد",
+    "es": "Crear nueva aplicación",
+    "fr": "Créer une nouvelle application"
+  },
+  "Credential": {
+    "ar": "بيانات الاعتماد",
+    "es": "Credencial",
+    "fr": "Identifiants"
+  },
+  "Credential %d": {
+    "ar": "بيانات الاعتماد %d",
+    "es": "Credencial %d",
+    "fr": "Identifiants %d"
+  },
+  "Credential - ": {
+    "ar": "بيانات الاعتماد - ",
+    "es": "Credencial - ",
+    "fr": "Identifiants - "
+  },
+  "Credential management": {
+    "ar": "إدارة بيانات الاعتماد",
+    "es": "Gestión de credenciales",
+    "fr": "Gestion des identifiants"
+  },
+  "Credentials": {
+    "ar": "بيانات الاعتماد",
+    "es": "Credenciales",
+    "fr": "Identifiants"
+  },
+  "Current": {
+    "ar": "الحالية",
+    "es": "Actual",
+    "fr": "Actuel"
+  },
+  "Current password:": {
+    "ar": "كلمة المرور الحالية:",
+    "es": "Contraseña actual:",
+    "fr": "Mot de passe actuel :"
+  },
+  "DEVELOPER PORTAL": {
+    "ar": "بوابة المطورين",
+    "es": "PORTAL DEL DESARROLLADOR",
+    "fr": "PORTAIL DÉVELOPPEUR"
+  },
+  "DOWNLOAD SPEC": {
+    "ar": "تنزيل المواصفات",
+    "es": "DESCARGAR ESPECIFICACIÓN",
+    "fr": "TÉLÉCHARGER LA SPÉCIFICATION"
+  },
+  "Daily": {
+    "ar": "يوميًا",
+    "es": "Diario",
+    "fr": "Quotidien"
+  },
+  "Dashboard": {
+    "ar": "لوحة البيانات",
+    "es": "Panel de control",
+    "fr": "Tableau de bord"
+  },
+  "Date Created": {
+    "ar": "تاريخ الإنشاء",
+    "es": "Fecha de creación",
+    "fr": "Date de création"
+  },
+  "Date requested:": {
+    "ar": "تاريخ الطلب:",
+    "es": "Fecha solicitada:",
+    "fr": "Date de la demande :"
+  },
+  "Default Redirect URLs:": {
+    "ar": "روابط إعادة التوجيه الافتراضية:",
+    "es": "URL de redirección predeterminadas:",
+    "fr": "URL de redirection par défaut :"
+  },
+  "Delete": {
+    "ar": "حذف",
+    "es": "Eliminar",
+    "fr": "Supprimer"
+  },
+  "Delete ": {
+    "ar": "حذف ",
+    "es": "Eliminar ",
+    "fr": "Supprimer "
+  },
+  "Delete App": {
+    "ar": "حذف التطبيق",
+    "es": "Eliminar aplicación",
+    "fr": "Supprimer l'application"
+  },
+  "Delete Apps": {
+    "ar": "حذف التطبيقات",
+    "es": "Eliminar aplicaciones",
+    "fr": "Supprimer les applications"
+  },
+  "Delete all your apps and credentials": {
+    "ar": "حذف جميع تطبيقاتك وبيانات الاعتماد",
+    "es": "Eliminar todas sus aplicaciones y credenciales",
+    "fr": "Supprimer toutes vos applications et identifiants"
+  },
+  "Delete app?": {
+    "ar": "حذف التطبيق؟",
+    "es": "¿Eliminar aplicación?",
+    "fr": "Supprimer l'application ?"
+  },
+  "Delete profile?": {
+    "ar": "حذف الملف الشخصي؟",
+    "es": "¿Eliminar perfil?",
+    "fr": "Supprimer le profil ?"
+  },
+  "Delete this APP": {
+    "ar": "حذف هذا التطبيق",
+    "es": "Eliminar esta aplicación",
+    "fr": "Supprimer cette application"
+  },
+  "Delete this app": {
+    "ar": "حذف هذا التطبيق",
+    "es": "Eliminar esta aplicación",
+    "fr": "Supprimer cette application"
+  },
+  "Delete this profile": {
+    "ar": "حذف هذا الملف الشخصي",
+    "es": "Eliminar este perfil",
+    "fr": "Supprimer ce profil"
+  },
+  "Delete this team-member from this org?": {
+    "ar": "حذف عضو الفريق هذا من المؤسسة؟",
+    "es": "¿Eliminar a este miembro del equipo de esta organización?",
+    "fr": "Supprimer ce membre de l'équipe de cette organisation ?"
+  },
+  "Delete this user": {
+    "ar": "حذف هذا المستخدم",
+    "es": "Eliminar este usuario",
+    "fr": "Supprimer cet utilisateur"
+  },
+  "Deleting this app means all access credentials will also be deleted. ": {
+    "ar": "حذف هذا التطبيق يعني حذف جميع بيانات الوصول أيضًا. ",
+    "es": "Eliminar esta aplicación implica que también se eliminarán todas las credenciales de acceso. ",
+    "fr": "Supprimer cette application entraînera également la suppression de tous les identifiants d'accès. "
+  },
+  "Description": {
+    "ar": "الوصف",
+    "es": "Descripción",
+    "fr": "Description"
+  },
+  "Description:": {
+    "ar": "الوصف:",
+    "es": "Descripción:",
+    "fr": "Description :"
+  },
+  "Detach Certificate": {
+    "ar": "فصل الشهادة",
+    "es": "Desvincular certificado",
+    "fr": "Détacher le certificat"
+  },
+  "Detach certificate?": {
+    "ar": "فصل الشهادة؟",
+    "es": "¿Desvincular certificado?",
+    "fr": "Détacher le certificat ?"
+  },
+  "Detaching the certificate will result in losing access to the APIs.": {
+    "ar": "فصل الشهادة سيؤدي إلى فقدان الوصول إلى واجهات API.",
+    "es": "Al desvincular el certificado, perderá el acceso a las API.",
+    "fr": "Détacher le certificat entraînera la perte d'accès aux API."
+  },
+  "Developer details": {
+    "ar": "تفاصيل المطوّر",
+    "es": "Detalles del desarrollador",
+    "fr": "Détails du développeur"
+  },
+  "Do you want to proceed?": {
+    "ar": "هل تريد الاستمرار؟",
+    "es": "¿Desea continuar?",
+    "fr": "Voulez-vous continuer ?"
+  },
+  "Do you wish to continue?": {
+    "ar": "هل تريد الاستمرار؟",
+    "es": "¿Desea continuar?",
+    "fr": "Souhaitez-vous continuer ?"
+  },
+  "Docs": {
+    "ar": "المستندات",
+    "es": "Documentación",
+    "fr": "Documentation"
+  },
+  "Don’t have an account?": {
+    "ar": "ليس لديك حساب؟",
+    "es": "¿No tiene una cuenta?",
+    "fr": "Vous n'avez pas de compte ?"
+  },
+  "EVENTS:": {
+    "ar": "الأحداث:",
+    "es": "EVENTOS:",
+    "fr": "ÉVÉNEMENTS :"
+  },
+  "EXPORT API CALLS TO CSV": {
+    "ar": "تصدير طلبات API إلى CSV",
+    "es": "EXPORTAR LLAMADAS API A CSV",
+    "fr": "EXPORTER LES APPELS API EN CSV"
+  },
+  "EXPORT ERRORS TO CSV": {
+    "ar": "تصدير الأخطاء إلى CSV",
+    "es": "EXPORTAR ERRORES A CSV",
+    "fr": "EXPORTER LES ERREURS EN CSV"
+  },
+  "EXPORT LATENCY TO CSV": {
+    "ar": "تصدير زمن الاستجابة إلى CSV",
+    "es": "EXPORTAR LATENCIA A CSV",
+    "fr": "EXPORTER LA LATENCE EN CSV"
+  },
+  "EXPORT TO CSV": {
+    "ar": "تصدير إلى CSV",
+    "es": "EXPORTAR A CSV",
+    "fr": "EXPORTER EN CSV"
+  },
+  "Edit": {
+    "ar": "تعديل",
+    "es": "Editar",
+    "fr": "Modifier"
+  },
+  "Edit details": {
+    "ar": "تعديل التفاصيل",
+    "es": "Editar detalles",
+    "fr": "Modifier les détails"
+  },
+  "Edit redirect URLs": {
+    "ar": "تعديل روابط إعادة التوجيه",
+    "es": "Editar URL de redirección",
+    "fr": "Modifier les URL de redirection"
+  },
+  "Email": {
+    "ar": "البريد الإلكتروني",
+    "es": "Correo electrónico",
+    "fr": "E-mail"
+  },
+  "Email Address": {
+    "ar": "البريد الإلكتروني",
+    "es": "Dirección de correo electrónico",
+    "fr": "Adresse e-mail"
+  },
+  "Email address": {
+    "ar": "البريد الإلكتروني",
+    "es": "Dirección de correo electrónico",
+    "fr": "Adresse e-mail"
+  },
+  "Email:": {
+    "ar": "البريد الإلكتروني:",
+    "es": "Correo electrónico:",
+    "fr": "E-mail :"
+  },
+  "Error breakdown": {
+    "ar": "تفصيل الأخطاء",
+    "es": "Desglose de errores",
+    "fr": "Répartition des erreurs"
+  },
+  "Error rate": {
+    "ar": "معدل الأخطاء",
+    "es": "Tasa de errores",
+    "fr": "Taux d'erreur"
+  },
+  "Error rate (average)": {
+    "ar": "معدل الأخطاء (المتوسط)",
+    "es": "Tasa de errores (media)",
+    "fr": "Taux d'erreur (moyenne)"
+  },
+  "Errors": {
+    "ar": "الأخطاء",
+    "es": "Errores",
+    "fr": "Erreurs"
+  },
+  "Events:": {
+    "ar": "الأحداث:",
+    "es": "Eventos:",
+    "fr": "Événements :"
+  },
+  "Existing app": {
+    "ar": "تطبيق موجود",
+    "es": "Aplicación existente",
+    "fr": "Application existante"
+  },
+  "Existing certificate": {
+    "ar": "شهادة موجودة",
+    "es": "Certificado existente",
+    "fr": "Certificat existant"
+  },
+  "Expiration:": {
+    "ar": "انتهاء الصلاحية:",
+    "es": "Expiración:",
+    "fr": "Expiration :"
+  },
+  "Expired": {
+    "ar": "منتهية",
+    "es": "Caducado",
+    "fr": "Expiré"
+  },
+  "Expires:": {
+    "ar": "تنتهي في:",
+    "es": "Caduca el:",
+    "fr": "Expire le :"
+  },
+  "File name:": {
+    "ar": "اسم الملف:",
+    "es": "Nombre del archivo:",
+    "fr": "Nom du fichier :"
+  },
+  "Filter data by": {
+    "ar": "تصفية البيانات حسب",
+    "es": "Filtrar datos por",
+    "fr": "Filtrer les données par"
+  },
+  "First *": {
+    "ar": "الاسم الأول *",
+    "es": "Nombre *",
+    "fr": "Prénom *"
+  },
+  "First name": {
+    "ar": "الاسم الأول",
+    "es": "Nombre",
+    "fr": "Prénom"
+  },
+  "First name:": {
+    "ar": "الاسم الأول:",
+    "es": "Nombre:",
+    "fr": "Prénom :"
+  },
+  "First, you need to create an organisation": {
+    "ar": "أولًا، عليك إنشاء مؤسسة",
+    "es": "Primero debe crear una organización",
+    "fr": "Vous devez d'abord créer une organisation"
+  },
+  "Forgot Password?": {
+    "ar": "هل نسيت كلمة المرور؟",
+    "es": "¿Olvidó su contraseña?",
+    "fr": "Mot de passe oublié ?"
+  },
+  "Forgot your password?": {
+    "ar": "هل نسيت كلمة المرور؟",
+    "es": "¿Olvidó su contraseña?",
+    "fr": "Mot de passe oublié ?"
+  },
+  "GO TO LOGIN": {
+    "ar": "اذهب لتسجيل الدخول",
+    "es": "IR AL INICIO DE SESIÓN",
+    "fr": "ALLER À LA CONNEXION"
+  },
+  "Generate API credential": {
+    "ar": "إنشاء بيانات اعتماد API",
+    "es": "Generar credencial de API",
+    "fr": "Générer des identifiants API"
+  },
+  "Get more work done by inviting someone to collaborate with": {
+    "ar": "أنجز المزيد من العمل بدعوة شخص للتعاون معه",
+    "es": "Haga más invitando a alguien a colaborar con usted",
+    "fr": "Accomplissez plus de choses en invitant quelqu'un à collaborer avec vous"
+  },
+  "Get started": {
+    "ar": "البدء",
+    "es": "Comenzar",
+    "fr": "Commencer"
+  },
+  "Get started by inviting your first user to collaborate with.": {
+    "ar": "ابدأ بدعوة أول مستخدم للتعاون معه.",
+    "es": "Comience invitando a su primer usuario a colaborar.",
+    "fr": "Commencez par inviter votre premier utilisateur à collaborer avec vous."
+  },
+  "Go the": {
+    "ar": "اذهب إلى",
+    "es": "Vaya al",
+    "fr": "Allez sur le"
+  },
+  "Go to Admin App >": {
+    "ar": "الذهاب إلى تطبيق الإدارة",
+    "es": "Ir a la aplicación de administración >",
+    "fr": "Aller à l'application d'administration >"
+  },
+  "Go to My Apps": {
+    "ar": "الذهاب إلى تطبيقاتي",
+    "es": "Ir a Mis aplicaciones",
+    "fr": "Aller à Mes applications"
+  },
+  "Go to cart": {
+    "ar": "الذهاب إلى السلة",
+    "es": "Ir al carrito",
+    "fr": "Aller au panier"
+  },
+  "Grant types:": {
+    "ar": "أنواع المنح:",
+    "es": "Tipos de concesión:",
+    "fr": "Types d'autorisation :"
+  },
+  "GraphQL server URL is not available. This playground is in read-only mode.": {
+    "ar": "عنوان URL لخادم GraphQL غير متاح. هذا الملعب في وضع القراءة فقط.",
+    "es": "La URL del servidor GraphQL no está disponible. Este entorno de pruebas está en modo de solo lectura.",
+    "fr": "L'URL du serveur GraphQL n'est pas disponible. Ce terrain de jeu est en lecture seule."
+  },
+  "Here you can view and edit your apps. If you need help getting started, take a look at our documentation.": {
+    "ar": "يمكنك هنا عرض تطبيقاتك وتعديلها. إذا احتجت مساعدة للبدء، راجع مستنداتنا.",
+    "es": "Aquí puede ver y editar sus aplicaciones. Si necesita ayuda para empezar, consulte nuestra documentación.",
+    "fr": "Ici, vous pouvez consulter et modifier vos applications. Si vous avez besoin d'aide pour démarrer, consultez notre documentation."
+  },
+  "Here's a list of all the members that are part of this organisation.": {
+    "ar": "هذه قائمة بجميع الأعضاء المنتمين إلى هذه المؤسسة.",
+    "es": "Esta es la lista de todos los miembros que forman parte de esta organización.",
+    "fr": "Voici la liste de tous les membres de cette organisation."
+  },
+  "Hi": {
+    "ar": "مرحبًا",
+    "es": "Hola",
+    "fr": "Bonjour"
+  },
+  "Hourly": {
+    "ar": "ساعيًا",
+    "es": "Cada hora",
+    "fr": "Horaire"
+  },
+  "How to access the API Product(s)": {
+    "ar": "كيفية الوصول إلى منتج (أو منتجات) API",
+    "es": "Cómo acceder al/a los producto(s) API",
+    "fr": "Comment accéder au(x) produit(s) API"
+  },
+  "If deleting this app, all the access credentials will also be revoked. This action cannot be undone.": {
+    "ar": "في حال حذف هذا التطبيق، سيتم أيضًا إلغاء جميع بيانات الوصول. لا يمكن التراجع عن هذا الإجراء.",
+    "es": "Si elimina esta aplicación, también se revocarán todas las credenciales de acceso. Esta acción no se puede deshacer.",
+    "fr": "Si vous supprimez cette application, tous les identifiants d'accès seront également révoqués. Cette action est irréversible."
+  },
+  "If deleting this profile, all your apps and access credentials will also be deleted. This action cannot be undone.": {
+    "ar": "في حال حذف هذا الملف الشخصي، سيتم أيضًا حذف جميع تطبيقاتك وبيانات الوصول. لا يمكن التراجع عن هذا الإجراء.",
+    "es": "Si elimina este perfil, también se eliminarán todas sus aplicaciones y credenciales de acceso. Esta acción no se puede deshacer.",
+    "fr": "Si vous supprimez ce profil, toutes vos applications et identifiants d'accès seront également supprimés. Cette action est irréversible."
+  },
+  "If you detach the certificate, it is advised to promptly replace with a new one to maintain access to the API Product(s).": {
+    "ar": "إذا فصلت الشهادة، يُنصح باستبدالها بشهادة جديدة فورًا للحفاظ على الوصول إلى منتج (أو منتجات) API.",
+    "es": "Si desvincula el certificado, se recomienda sustituirlo rápidamente por uno nuevo para mantener el acceso al/a los producto(s) API.",
+    "fr": "Si vous détachez le certificat, il est conseillé de le remplacer rapidement par un nouveau pour conserver l'accès au(x) produit(s) API."
+  },
+  "In order to start inviting users to collaborate with you'll need to create an organisation.": {
+    "ar": "لتبدأ بدعوة المستخدمين للتعاون، ستحتاج إلى إنشاء مؤسسة.",
+    "es": "Para empezar a invitar a usuarios a colaborar, deberá crear una organización.",
+    "fr": "Pour commencer à inviter des utilisateurs à collaborer, vous devrez créer une organisation."
+  },
+  "Internal error": {
+    "ar": "خطأ داخلي",
+    "es": "Error interno",
+    "fr": "Erreur interne"
+  },
+  "Invite a new User": {
+    "ar": "دعوة مستخدم جديد",
+    "es": "Invitar a un nuevo usuario",
+    "fr": "Inviter un nouvel utilisateur"
+  },
+  "Invite and delete": {
+    "ar": "دعوة وحذف",
+    "es": "Invitar y eliminar",
+    "fr": "Inviter et supprimer"
+  },
+  "Invite and delete users from the org": {
+    "ar": "دعوة وحذف المستخدمين من المؤسسة",
+    "es": "Invitar y eliminar usuarios de la organización",
+    "fr": "Inviter et supprimer des utilisateurs de l'organisation"
+  },
+  "Invite code": {
+    "ar": "رمز الدعوة",
+    "es": "Código de invitación",
+    "fr": "Code d'invitation"
+  },
+  "Invite new user": {
+    "ar": "دعوة مستخدم جديد",
+    "es": "Invitar a un nuevo usuario",
+    "fr": "Inviter un nouvel utilisateur"
+  },
+  "Invite your first user": {
+    "ar": "دعوة أول مستخدم لك",
+    "es": "Invite a su primer usuario",
+    "fr": "Invitez votre premier utilisateur"
+  },
+  "Issuer:": {
+    "ar": "المُصدِر:",
+    "es": "Emisor:",
+    "fr": "Émetteur :"
+  },
+  "Keep reading": {
+    "ar": "اقرأ المزيد",
+    "es": "Seguir leyendo",
+    "fr": "Continuer la lecture"
+  },
+  "Last *": {
+    "ar": "اسم العائلة *",
+    "es": "Apellidos *",
+    "fr": "Nom *"
+  },
+  "Last name": {
+    "ar": "اسم العائلة",
+    "es": "Apellidos",
+    "fr": "Nom"
+  },
+  "Last name:": {
+    "ar": "اسم العائلة:",
+    "es": "Apellidos:",
+    "fr": "Nom :"
+  },
+  "Latency (average)": {
+    "ar": "زمن الاستجابة (المتوسط)",
+    "es": "Latencia (media)",
+    "fr": "Latence (moyenne)"
+  },
+  "Learn more": {
+    "ar": "تعرّف على المزيد",
+    "es": "Más información",
+    "fr": "En savoir plus"
+  },
+  "Loading…": {
+    "ar": "جارٍ التحميل…",
+    "es": "Cargando…",
+    "fr": "Chargement…"
+  },
+  "Log Out": {
+    "ar": "تسجيل الخروج",
+    "es": "Cerrar sesión",
+    "fr": "Se déconnecter"
+  },
+  "Log in": {
+    "ar": "تسجيل الدخول",
+    "es": "Iniciar sesión",
+    "fr": "Se connecter"
+  },
+  "Log in to your Tyk Developer Portal account": {
+    "ar": "تسجيل الدخول إلى حساب بوابة مطوري Tyk",
+    "es": "Inicie sesión en su cuenta del portal del desarrollador de Tyk",
+    "fr": "Connectez-vous à votre compte Tyk Developer Portal"
+  },
+  "Log out": {
+    "ar": "تسجيل الخروج",
+    "es": "Cerrar sesión",
+    "fr": "Se déconnecter"
+  },
+  "Login.": {
+    "ar": "تسجيل الدخول.",
+    "es": "Inicio de sesión.",
+    "fr": "Connexion."
+  },
+  "Member Since": {
+    "ar": "عضو منذ",
+    "es": "Miembro desde",
+    "fr": "Membre depuis"
+  },
+  "Member since:": {
+    "ar": "عضو منذ:",
+    "es": "Miembro desde:",
+    "fr": "Membre depuis :"
+  },
+  "More info": {
+    "ar": "مزيد من المعلومات",
+    "es": "Más información",
+    "fr": "Plus d'informations"
+  },
+  "Mutual TLS certificates": {
+    "ar": "شهادات Mutual TLS",
+    "es": "Certificados mTLS",
+    "fr": "Certificats mTLS"
+  },
+  "My Apps": {
+    "ar": "تطبيقاتي",
+    "es": "Mis aplicaciones",
+    "fr": "Mes applications"
+  },
+  "My Dashboard": {
+    "ar": "لوحة التحكم",
+    "es": "Mi panel de control",
+    "fr": "Mon tableau de bord"
+  },
+  "My apps": {
+    "ar": "تطبيقاتي",
+    "es": "Mis aplicaciones",
+    "fr": "Mes applications"
+  },
+  "Name": {
+    "ar": "الاسم",
+    "es": "Nombre",
+    "fr": "Nom"
+  },
+  "Name:": {
+    "ar": "الاسم:",
+    "es": "Nombre:",
+    "fr": "Nom :"
+  },
+  "New password:": {
+    "ar": "كلمة المرور الجديدة:",
+    "es": "Nueva contraseña:",
+    "fr": "Nouveau mot de passe :"
+  },
+  "No APIs found.": {
+    "ar": "لم يتم العثور على واجهات برمجة تطبيقات.",
+    "es": "No se encontraron API.",
+    "fr": "Aucune API trouvée."
+  },
+  "No apps created": {
+    "ar": "لم يتم إنشاء تطبيقات",
+    "es": "No se han creado aplicaciones",
+    "fr": "Aucune application créée"
+  },
+  "No apps to be shown.": {
+    "ar": "لا توجد تطبيقات لعرضها.",
+    "es": "No hay aplicaciones que mostrar.",
+    "fr": "Aucune application à afficher."
+  },
+  "No blog posts to be shown.": {
+    "ar": "لا توجد منشورات مدونة لعرضها.",
+    "es": "No hay artículos de blog que mostrar.",
+    "fr": "Aucun article de blog à afficher."
+  },
+  "No certificate selected": {
+    "ar": "لم يتم تحديد شهادة",
+    "es": "No se ha seleccionado ningún certificado",
+    "fr": "Aucun certificat sélectionné"
+  },
+  "No certificate selected for this request": {
+    "ar": "لم يتم تحديد شهادة لهذا الطلب",
+    "es": "No se ha seleccionado ningún certificado para esta solicitud",
+    "fr": "Aucun certificat sélectionné pour cette demande"
+  },
+  "No description set": {
+    "ar": "لم يتم تحديد وصف",
+    "es": "No se ha definido ninguna descripción",
+    "fr": "Aucune description définie"
+  },
+  "No plans available (debug: availablePlans is nil/empty)": {
+    "ar": "لا توجد خطط متاحة",
+    "es": "No hay planes disponibles (depuración: availablePlans es nil/vacío)",
+    "fr": "Aucun plan disponible (debug : availablePlans est nil/vide)"
+  },
+  "No redirect URLs set": {
+    "ar": "لم يتم تحديد روابط إعادة توجيه",
+    "es": "No se han definido URL de redirección",
+    "fr": "Aucune URL de redirection définie"
+  },
+  "No swagger doc set for this API": {
+    "ar": "لا يوجد مستند swagger محدَّد لواجهة API هذه",
+    "es": "No hay ningún documento swagger definido para esta API",
+    "fr": "Aucun document swagger défini pour cette API"
+  },
+  "No user to be shown.": {
+    "ar": "لا يوجد مستخدمون لعرضهم.",
+    "es": "No hay usuarios que mostrar.",
+    "fr": "Aucun utilisateur à afficher."
+  },
+  "Not After:": {
+    "ar": "غير صالحة بعد:",
+    "es": "No después de:",
+    "fr": "Pas après :"
+  },
+  "Not Before:": {
+    "ar": "غير صالحة قبل:",
+    "es": "No antes de:",
+    "fr": "Pas avant :"
+  },
+  "Not defined": {
+    "ar": "غير محدَّد",
+    "es": "No definido",
+    "fr": "Non défini"
+  },
+  "OR": {
+    "ar": "أو",
+    "es": "O",
+    "fr": "OU"
+  },
+  "Organisation": {
+    "ar": "المؤسسة",
+    "es": "Organización",
+    "fr": "Organisation"
+  },
+  "Organisation (default)": {
+    "ar": "المؤسسة (افتراضي)",
+    "es": "Organización (predeterminada)",
+    "fr": "Organisation (par défaut)"
+  },
+  "Organisation Name:": {
+    "ar": "اسم المؤسسة:",
+    "es": "Nombre de la organización:",
+    "fr": "Nom de l'organisation :"
+  },
+  "Organisation creation is currently not allowed": {
+    "ar": "إنشاء المؤسسات غير مسموح به حاليًا",
+    "es": "Actualmente no se permite la creación de organizaciones",
+    "fr": "La création d'organisation n'est actuellement pas autorisée"
+  },
+  "Organisation name": {
+    "ar": "اسم المؤسسة",
+    "es": "Nombre de la organización",
+    "fr": "Nom de l'organisation"
+  },
+  "Organisation name *": {
+    "ar": "اسم المؤسسة *",
+    "es": "Nombre de la organización *",
+    "fr": "Nom de l'organisation *"
+  },
+  "Overview": {
+    "ar": "نظرة عامة",
+    "es": "Resumen",
+    "fr": "Aperçu"
+  },
+  "Page not found.": {
+    "ar": "الصفحة غير موجودة.",
+    "es": "Página no encontrada.",
+    "fr": "Page introuvable."
+  },
+  "Password": {
+    "ar": "كلمة المرور",
+    "es": "Contraseña",
+    "fr": "Mot de passe"
+  },
+  "Password reset": {
+    "ar": "إعادة تعيين كلمة المرور",
+    "es": "Restablecimiento de contraseña",
+    "fr": "Réinitialisation du mot de passe"
+  },
+  "Password:": {
+    "ar": "كلمة المرور:",
+    "es": "Contraseña:",
+    "fr": "Mot de passe :"
+  },
+  "Pending": {
+    "ar": "معلَّق",
+    "es": "Pendiente",
+    "fr": "En attente"
+  },
+  "Pending access": {
+    "ar": "الوصول المعلّق",
+    "es": "Acceso pendiente",
+    "fr": "Accès en attente"
+  },
+  "Pending invite": {
+    "ar": "دعوة معلَّقة",
+    "es": "Invitación pendiente",
+    "fr": "Invitation en attente"
+  },
+  "Perfomance": {
+    "ar": "الأداء",
+    "es": "Rendimiento",
+    "fr": "Performance"
+  },
+  "Permissions": {
+    "ar": "الأذونات",
+    "es": "Permisos",
+    "fr": "Autorisations"
+  },
+  "Personal": {
+    "ar": "شخصي",
+    "es": "Personal",
+    "fr": "Personnel"
+  },
+  "Personal Details": {
+    "ar": "التفاصيل الشخصية",
+    "es": "Datos personales",
+    "fr": "Informations personnelles"
+  },
+  "Plans available for subscription": {
+    "ar": "الخطط المتاحة للاشتراك",
+    "es": "Planes disponibles para suscripción",
+    "fr": "Plans disponibles à l'abonnement"
+  },
+  "Plans available:": {
+    "ar": "الخطط المتاحة:",
+    "es": "Planes disponibles:",
+    "fr": "Plans disponibles :"
+  },
+  "Please fill in the details of the new user and assign a role, an invitation email will be sent with a registration link.": {
+    "ar": "يرجى تعبئة تفاصيل المستخدم الجديد وتحديد دور له، وسيتم إرسال بريد دعوة يحتوي على رابط تسجيل.",
+    "es": "Complete los datos del nuevo usuario y asígnele un rol; se enviará un correo de invitación con un enlace de registro.",
+    "fr": "Veuillez renseigner les informations du nouvel utilisateur et lui attribuer un rôle ; un e-mail d'invitation contenant un lien d'inscription sera envoyé."
+  },
+  "Powered by © Tyk Technologies": {
+    "ar": "بدعم من © Tyk Technologies",
+    "es": "Desarrollado por © Tyk Technologies",
+    "fr": "Propulsé par © Tyk Technologies"
+  },
+  "Profile": {
+    "ar": "الملف الشخصي",
+    "es": "Perfil",
+    "fr": "Profil"
+  },
+  "Profile settings": {
+    "ar": "إعدادات الملف الشخصي",
+    "es": "Configuración del perfil",
+    "fr": "Paramètres du profil"
+  },
+  "QUIT PREVIEW": {
+    "ar": "إنهاء المعاينة",
+    "es": "SALIR DE LA VISTA PREVIA",
+    "fr": "QUITTER L'APERÇU"
+  },
+  "Quota:": {
+    "ar": "الحصة:",
+    "es": "Cuota:",
+    "fr": "Quota :"
+  },
+  "Rate limit:": {
+    "ar": "حد المعدل:",
+    "es": "Límite de tasa:",
+    "fr": "Limite de débit :"
+  },
+  "Rate limits and quotas will be updated.": {
+    "ar": "سيتم تحديث حدود المعدل والحصص.",
+    "es": "Se actualizarán los límites de tasa y las cuotas.",
+    "fr": "Les limites de débit et les quotas seront mis à jour."
+  },
+  "Rate:": {
+    "ar": "المعدل:",
+    "es": "Tasa:",
+    "fr": "Débit :"
+  },
+  "Re-enter password": {
+    "ar": "أعد إدخال كلمة المرور",
+    "es": "Vuelva a introducir la contraseña",
+    "fr": "Ressaisissez le mot de passe"
+  },
+  "Receive an access token issued by the identity provider.": {
+    "ar": "استلام رمز وصول يصدره مزوّد الهوية.",
+    "es": "Reciba un token de acceso emitido por el proveedor de identidad.",
+    "fr": "Recevez un jeton d'accès émis par le fournisseur d'identité."
+  },
+  "Recent Posts": {
+    "ar": "أحدث المنشورات",
+    "es": "Artículos recientes",
+    "fr": "Articles récents"
+  },
+  "Redirect URLs": {
+    "ar": "روابط إعادة التوجيه",
+    "es": "URL de redirección",
+    "fr": "URL de redirection"
+  },
+  "Redirect URLs(optional)": {
+    "ar": "روابط إعادة التوجيه (اختياري)",
+    "es": "URL de redirección (opcional)",
+    "fr": "URL de redirection (facultatif)"
+  },
+  "Redirect URLs:": {
+    "ar": "روابط إعادة التوجيه:",
+    "es": "URL de redirección:",
+    "fr": "URL de redirection :"
+  },
+  "Register": {
+    "ar": "التسجيل",
+    "es": "Registrarse",
+    "fr": "S'inscrire"
+  },
+  "Register to developer portal": {
+    "ar": "التسجيل في بوابة المطورين",
+    "es": "Registrarse en el portal del desarrollador",
+    "fr": "S'inscrire au portail développeur"
+  },
+  "Registered": {
+    "ar": "مسجَّل",
+    "es": "Registrado",
+    "fr": "Inscrit"
+  },
+  "Related Blog Content": {
+    "ar": "محتوى المدونة ذو الصلة",
+    "es": "Contenido de blog relacionado",
+    "fr": "Contenu de blog associé"
+  },
+  "Remove": {
+    "ar": "إزالة",
+    "es": "Quitar",
+    "fr": "Retirer"
+  },
+  "Remove %s from this credential": {
+    "ar": "إزالة %s من بيانات الاعتماد هذه",
+    "es": "Quitar %s de esta credencial",
+    "fr": "Retirer %s de ces identifiants"
+  },
+  "Remove API Product": {
+    "ar": "إزالة منتج API",
+    "es": "Quitar producto API",
+    "fr": "Retirer le produit API"
+  },
+  "Remove certificate": {
+    "ar": "إزالة الشهادة",
+    "es": "Quitar certificado",
+    "fr": "Retirer le certificat"
+  },
+  "Replace Certificate": {
+    "ar": "استبدال الشهادة",
+    "es": "Sustituir certificado",
+    "fr": "Remplacer le certificat"
+  },
+  "Replace Mutual TLS certificate": {
+    "ar": "استبدال شهادة Mutual TLS",
+    "es": "Sustituir certificado mTLS",
+    "fr": "Remplacer le certificat mTLS"
+  },
+  "Reset": {
+    "ar": "إعادة التعيين",
+    "es": "Restablecer",
+    "fr": "Réinitialiser"
+  },
+  "Reset password": {
+    "ar": "إعادة تعيين كلمة المرور",
+    "es": "Restablecer contraseña",
+    "fr": "Réinitialiser le mot de passe"
+  },
+  "Response codes": {
+    "ar": "رموز الاستجابة",
+    "es": "Códigos de respuesta",
+    "fr": "Codes de réponse"
+  },
+  "Response types:": {
+    "ar": "أنواع الاستجابة:",
+    "es": "Tipos de respuesta:",
+    "fr": "Types de réponse :"
+  },
+  "Return to Log in": {
+    "ar": "العودة إلى تسجيل الدخول",
+    "es": "Volver al inicio de sesión",
+    "fr": "Retour à la connexion"
+  },
+  "Revoke credentials": {
+    "ar": "إلغاء بيانات الاعتماد",
+    "es": "Revocar credenciales",
+    "fr": "Révoquer les identifiants"
+  },
+  "Revoke credentials?": {
+    "ar": "إلغاء بيانات الاعتماد؟",
+    "es": "¿Revocar credenciales?",
+    "fr": "Révoquer les identifiants ?"
+  },
+  "Revoke or reset": {
+    "ar": "إلغاء أو إعادة تعيين",
+    "es": "Revocar o restablecer",
+    "fr": "Révoquer ou réinitialiser"
+  },
+  "Revoke or reset credentials": {
+    "ar": "إلغاء أو إعادة تعيين بيانات الاعتماد",
+    "es": "Revocar o restablecer credenciales",
+    "fr": "Révoquer ou réinitialiser les identifiants"
+  },
+  "Revoking the credentials means it will no longer grant access to the given API product(s) and plan.": {
+    "ar": "إلغاء بيانات الاعتماد يعني أنها لن تمنح الوصول بعد الآن إلى منتج (أو منتجات) API والخطة المحددة.",
+    "es": "Revocar las credenciales significa que dejarán de otorgar acceso al/a los producto(s) API y al plan indicados.",
+    "fr": "Révoquer les identifiants signifie qu'ils ne donneront plus accès au(x) produit(s) API et au plan concernés."
+  },
+  "Role": {
+    "ar": "الدور",
+    "es": "Rol",
+    "fr": "Rôle"
+  },
+  "Role Permissions": {
+    "ar": "أذونات الدور",
+    "es": "Permisos del rol",
+    "fr": "Autorisations du rôle"
+  },
+  "Role:": {
+    "ar": "الدور:",
+    "es": "Rol:",
+    "fr": "Rôle :"
+  },
+  "Rotate Credentials": {
+    "ar": "تدوير بيانات الاعتماد",
+    "es": "Rotar credenciales",
+    "fr": "Faire pivoter les identifiants"
+  },
+  "Rotate credentials": {
+    "ar": "تدوير بيانات الاعتماد",
+    "es": "Rotar credenciales",
+    "fr": "Faire pivoter les identifiants"
+  },
+  "Run these commands in Terminal, or use any other service to create a certificate.": {
+    "ar": "نفّذ هذه الأوامر في الطرفية (Terminal)، أو استخدم أي خدمة أخرى لإنشاء شهادة.",
+    "es": "Ejecute estos comandos en la terminal, o utilice cualquier otro servicio para crear un certificado.",
+    "fr": "Exécutez ces commandes dans un terminal, ou utilisez un autre service pour créer un certificat."
+  },
+  "SECRET:": {
+    "ar": "السر:",
+    "es": "SECRETO:",
+    "fr": "SECRET :"
+  },
+  "Save": {
+    "ar": "حفظ",
+    "es": "Guardar",
+    "fr": "Enregistrer"
+  },
+  "Save changes": {
+    "ar": "حفظ التغييرات",
+    "es": "Guardar cambios",
+    "fr": "Enregistrer les modifications"
+  },
+  "Save redirect URLs": {
+    "ar": "حفظ روابط إعادة التوجيه",
+    "es": "Guardar URL de redirección",
+    "fr": "Enregistrer les URL de redirection"
+  },
+  "Scope permission:": {
+    "ar": "إذن النطاق:",
+    "es": "Permiso de alcance:",
+    "fr": "Autorisation de portée :"
+  },
+  "Scopes": {
+    "ar": "النطاقات",
+    "es": "Alcances",
+    "fr": "Portées"
+  },
+  "Search": {
+    "ar": "بحث",
+    "es": "Buscar",
+    "fr": "Rechercher"
+  },
+  "Secret": {
+    "ar": "السر",
+    "es": "Secreto",
+    "fr": "Secret"
+  },
+  "Secret:": {
+    "ar": "السر:",
+    "es": "Secreto:",
+    "fr": "Secret :"
+  },
+  "Select a Catalogue": {
+    "ar": "اختر كتالوجًا",
+    "es": "Seleccionar un catálogo",
+    "fr": "Sélectionner un catalogue"
+  },
+  "Select a certificate": {
+    "ar": "اختر شهادة",
+    "es": "Seleccionar un certificado",
+    "fr": "Sélectionner un certificat"
+  },
+  "Select a client type": {
+    "ar": "اختر نوع العميل",
+    "es": "Seleccionar un tipo de cliente",
+    "fr": "Sélectionner un type de client"
+  },
+  "Select all the teams this user should be part of.": {
+    "ar": "حدد جميع الفرق التي يجب أن يكون هذا المستخدم جزءًا منها.",
+    "es": "Seleccione todos los equipos de los que debe formar parte este usuario.",
+    "fr": "Sélectionnez toutes les équipes dont cet utilisateur doit faire partie."
+  },
+  "Select an API": {
+    "ar": "اختر واجهة API",
+    "es": "Seleccionar una API",
+    "fr": "Sélectionner une API"
+  },
+  "Select an App": {
+    "ar": "اختر تطبيقًا",
+    "es": "Seleccionar una aplicación",
+    "fr": "Sélectionner une application"
+  },
+  "Selected Plan": {
+    "ar": "الخطة المحددة",
+    "es": "Plan seleccionado",
+    "fr": "Plan sélectionné"
+  },
+  "Selected Products": {
+    "ar": "المنتجات المحددة",
+    "es": "Productos seleccionados",
+    "fr": "Produits sélectionnés"
+  },
+  "Send invite": {
+    "ar": "إرسال الدعوة",
+    "es": "Enviar invitación",
+    "fr": "Envoyer l'invitation"
+  },
+  "Separate URLs with commas": {
+    "ar": "اسم فصل الروابط بفواصل",
+    "es": "Separe las URL con comas",
+    "fr": "Séparez les URL par des virgules"
+  },
+  "Separate URLs with commas.  This is the default redirect URL for the app and will be applied to all newly created credentials.": {
+    "ar": "اسم فصل الروابط بفواصل. هذا هو رابط إعادة التوجيه الافتراضي للتطبيق وسيُطبَّق على كل بيانات الاعتماد الجديدة.",
+    "es": "Separe las URL con comas. Esta es la URL de redirección predeterminada de la aplicación y se aplicará a todas las credenciales recién creadas.",
+    "fr": "Séparez les URL par des virgules. Il s'agit de l'URL de redirection par défaut de l'application, appliquée à tous les identifiants nouvellement créés."
+  },
+  "Sign up": {
+    "ar": "إنشاء حساب",
+    "es": "Registrarse",
+    "fr": "S'inscrire"
+  },
+  "Signature Algorithm:": {
+    "ar": "خوارزمية التوقيع:",
+    "es": "Algoritmo de firma:",
+    "fr": "Algorithme de signature :"
+  },
+  "Something went wrong": {
+    "ar": "حدث خطأ ما",
+    "es": "Algo salió mal",
+    "fr": "Une erreur s'est produite"
+  },
+  "Split by": {
+    "ar": "التقسيم حسب",
+    "es": "Dividir por",
+    "fr": "Répartir par"
+  },
+  "Statistics": {
+    "ar": "الإحصائيات",
+    "es": "Estadísticas",
+    "fr": "Statistiques"
+  },
+  "Status": {
+    "ar": "الحالة",
+    "es": "Estado",
+    "fr": "Statut"
+  },
+  "Status:": {
+    "ar": "الحالة:",
+    "es": "Estado:",
+    "fr": "Statut :"
+  },
+  "Step 1. Create certificates using OpenSSL": {
+    "ar": "الخطوة 1. أنشئ الشهادات باستخدام OpenSSL",
+    "es": "Paso 1. Cree certificados con OpenSSL",
+    "fr": "Étape 1. Créez des certificats avec OpenSSL"
+  },
+  "Step 2. Combine key.pem and cert.pem into a signle file:": {
+    "ar": "الخطوة 2. ادمج key.pem و cert.pem في ملف واحد:",
+    "es": "Paso 2. Combine key.pem y cert.pem en un solo archivo:",
+    "fr": "Étape 2. Combinez key.pem et cert.pem en un seul fichier :"
+  },
+  "Step 3. Do the same for any third-party certificate chain files, bundles, etc:": {
+    "ar": "الخطوة 3. كرر الأمر نفسه لأي ملفات سلسلة شهادات أو حزم من جهات خارجية:",
+    "es": "Paso 3. Haga lo mismo con cualquier archivo de cadena de certificados de terceros, paquete, etc.:",
+    "fr": "Étape 3. Faites de même pour tout fichier de chaîne de certificats tiers, bundle, etc. :"
+  },
+  "Subject:": {
+    "ar": "الموضوع:",
+    "es": "Asunto:",
+    "fr": "Objet :"
+  },
+  "Submit an access request": {
+    "ar": "إرسال طلب وصول",
+    "es": "Enviar una solicitud de acceso",
+    "fr": "Envoyer une demande d'accès"
+  },
+  "Submit request": {
+    "ar": "إرسال الطلب",
+    "es": "Enviar solicitud",
+    "fr": "Envoyer la demande"
+  },
+  "Subscribe": {
+    "ar": "الاشتراك",
+    "es": "Suscribirse",
+    "fr": "S'abonner"
+  },
+  "Subscribe to webhook": {
+    "ar": "الاشتراك في الخطاف",
+    "es": "Suscribirse al webhook",
+    "fr": "S'abonner au webhook"
+  },
+  "Success": {
+    "ar": "النجاح",
+    "es": "Correcto",
+    "fr": "Succès"
+  },
+  "Success! This API Product was added to cart.": {
+    "ar": "تمت الإضافة بنجاح! أُضيف منتج API هذا إلى السلة.",
+    "es": "¡Listo! Este producto API se ha añadido al carrito.",
+    "fr": "Succès ! Ce produit API a été ajouté au panier."
+  },
+  "Success! You've created an organisation": {
+    "ar": "تم بنجاح! لقد أنشأت مؤسسة",
+    "es": "¡Listo! Ha creado una organización",
+    "fr": "Succès ! Vous avez créé une organisation"
+  },
+  "Super Admin": {
+    "ar": "المسؤول العام",
+    "es": "Superadministrador",
+    "fr": "Super administrateur"
+  },
+  "Super admin permissions": {
+    "ar": "أذونات المسؤول العام",
+    "es": "Permisos de superadministrador",
+    "fr": "Autorisations super administrateur"
+  },
+  "Team": {
+    "ar": "الفريق",
+    "es": "Equipo",
+    "fr": "Équipe"
+  },
+  "Team Member": {
+    "ar": "عضو الفريق",
+    "es": "Miembro del equipo",
+    "fr": "Membre de l'équipe"
+  },
+  "Team member permissions": {
+    "ar": "أذونات عضو الفريق",
+    "es": "Permisos de los miembros del equipo",
+    "fr": "Autorisations des membres de l'équipe"
+  },
+  "Teams": {
+    "ar": "الفرق",
+    "es": "Equipos",
+    "fr": "Équipes"
+  },
+  "Teams:": {
+    "ar": "الفرق:",
+    "es": "Equipos:",
+    "fr": "Équipes :"
+  },
+  "Technical guides, feature mechanics and updates for the developer community.": {
+    "ar": "أدلة تقنية وآليات المزايا وتحديثات لمجتمع المطورين.",
+    "es": "Guías técnicas, mecánicas de funciones y novedades para la comunidad de desarrolladores.",
+    "fr": "Guides techniques, mécaniques des fonctionnalités et actualités pour la communauté des développeurs."
+  },
+  "The Client Type defines how your app will authenticate when calling secured APIs": {
+    "ar": "يحدد نوع العميل كيفية مصادقة تطبيقك عند استدعاء واجهات API المحمية",
+    "es": "El tipo de cliente define cómo se autenticará su aplicación al llamar a API seguras",
+    "fr": "Le type de client définit comment votre application s'authentifiera lors de l'appel d'API sécurisées"
+  },
+  "The access request will be created with the following plan": {
+    "ar": "سيتم إنشاء طلب الوصول بالخطة التالية",
+    "es": "La solicitud de acceso se creará con el siguiente plan",
+    "fr": "La demande d'accès sera créée avec le plan suivant"
+  },
+  "The credentials will no longer have access to this API Product.": {
+    "ar": "لن تتمتع بيانات الاعتماد بالوصول إلى منتج API هذا بعد الآن.",
+    "es": "Las credenciales dejarán de tener acceso a este producto API.",
+    "fr": "Les identifiants n'auront plus accès à ce produit API."
+  },
+  "The registration request has been sent, you'll recieve an email once it's been approved.": {
+    "ar": "تم إرسال طلب التسجيل، وستتلقى بريدًا إلكترونيًا عند الموافقة عليه.",
+    "es": "Se ha enviado la solicitud de registro; recibirá un correo cuando se apruebe.",
+    "fr": "La demande d'inscription a été envoyée ; vous recevrez un e-mail une fois qu'elle aura été approuvée."
+  },
+  "There are currently no API Products documentation available": {
+    "ar": "لا تتوفر حاليًا مستندات لمنتجات API",
+    "es": "Actualmente no hay documentación de productos API disponible",
+    "fr": "Aucune documentation de produit API n'est actuellement disponible"
+  },
+  "There are no approved requests yet": {
+    "ar": "لا توجد طلبات معتمدة حتى الآن",
+    "es": "Todavía no hay solicitudes aprobadas",
+    "fr": "Aucune demande approuvée pour le moment"
+  },
+  "There are no pending requests yet": {
+    "ar": "لا توجد طلبات معلّقة حتى الآن",
+    "es": "Todavía no hay solicitudes pendientes",
+    "fr": "Aucune demande en attente pour le moment"
+  },
+  "There's no specifications attached": {
+    "ar": "لا توجد مواصفات مرفقة",
+    "es": "No hay especificaciones adjuntas",
+    "fr": "Aucune spécification n'est jointe"
+  },
+  "These different plans are available to subscribe this product to.": {
+    "ar": "هذه الخطط المختلفة متاحة للاشتراك في هذا المنتج.",
+    "es": "Estos son los distintos planes disponibles para suscribirse a este producto.",
+    "fr": "Ces différents plans sont disponibles pour s'abonner à ce produit."
+  },
+  "This Portal is": {
+    "ar": "هذه البوابة",
+    "es": "Este portal está",
+    "fr": "Ce portail est"
+  },
+  "This Portal is disabled": {
+    "ar": "هذه البوابة معطّلة",
+    "es": "Este portal está desactivado",
+    "fr": "Ce portail est désactivé"
+  },
+  "This developer will no longer be a part of this organisation and will lose access to the credentials for any given app.": {
+    "ar": "لن يكون هذا المطوّر جزءًا من هذه المؤسسة بعد الآن وسيفقد الوصول إلى بيانات الاعتماد لأي تطبيق.",
+    "es": "Este desarrollador dejará de formar parte de esta organización y perderá el acceso a las credenciales de cualquier aplicación.",
+    "fr": "Ce développeur ne fera plus partie de cette organisation et perdra l'accès aux identifiants de toute application concernée."
+  },
+  "This is your app's internal unique ID": {
+    "ar": "هذا هو المعرّف الفريد الداخلي لتطبيقك",
+    "es": "Este es el ID único interno de su aplicación",
+    "fr": "Il s'agit de l'ID unique interne de votre application"
+  },
+  "This operation cannot be undone. You will also delete following:": {
+    "ar": "لا يمكن التراجع عن هذه العملية. ستحذف أيضًا ما يلي:",
+    "es": "Esta operación no se puede deshacer. También eliminará lo siguiente:",
+    "fr": "Cette opération est irréversible. Vous supprimerez également les éléments suivants :"
+  },
+  "This product is secured with Mutual TLS. You need to upload a certificate to use it.": {
+    "ar": "هذا المنتج محمي بـ Mutual TLS. تحتاج إلى رفع شهادة لاستخدامه.",
+    "es": "Este producto está protegido con mTLS. Debe cargar un certificado para utilizarlo.",
+    "fr": "Ce produit est sécurisé par mTLS. Vous devez importer un certificat pour l'utiliser."
+  },
+  "This week": {
+    "ar": "هذا الأسبوع",
+    "es": "Esta semana",
+    "fr": "Cette semaine"
+  },
+  "Time units": {
+    "ar": "وحدات الزمن",
+    "es": "Unidades de tiempo",
+    "fr": "Unités de temps"
+  },
+  "To access this product(s) you need to select one of following client types with following pre-configured options.": {
+    "ar": "للوصول إلى هذا المنتج (أو المنتجات) عليك اختيار أحد أنواع العملاء التالية بالخيارات المهيّأة مسبقًا.",
+    "es": "Para acceder a este/estos producto(s), debe seleccionar uno de los siguientes tipos de cliente con las siguientes opciones preconfiguradas.",
+    "fr": "Pour accéder à ce(s) produit(s), vous devez sélectionner l'un des types de client suivants avec les options préconfigurées suivantes."
+  },
+  "To add and manage certificates please go to": {
+    "ar": "لإضافة الشهادات وإدارتها، انتقل إلى",
+    "es": "Para añadir y gestionar certificados, vaya a",
+    "fr": "Pour ajouter et gérer des certificats, veuillez vous rendre sur"
+  },
+  "Toggle navigation": {
+    "ar": "تبديل التنقل",
+    "es": "Alternar navegación",
+    "fr": "Basculer la navigation"
+  },
+  "Token endpoint auth method:": {
+    "ar": "طريقة مصادقة نقطة نهاية الرمز:",
+    "es": "Método de autenticación del punto de conexión del token:",
+    "fr": "Méthode d'authentification du point de terminaison de jeton :"
+  },
+  "Top 5 highest error rates by API": {
+    "ar": "أعلى 5 معدلات أخطاء حسب API",
+    "es": "Las 5 tasas de error más altas por API",
+    "fr": "Top 5 des taux d'erreur les plus élevés par API"
+  },
+  "Total API Calls": {
+    "ar": "إجمالي طلبات API",
+    "es": "Total de llamadas API",
+    "fr": "Total des appels API"
+  },
+  "Total errors": {
+    "ar": "إجمالي الأخطاء",
+    "es": "Total de errores",
+    "fr": "Total des erreurs"
+  },
+  "Try again. If the problem persists please contact us.": {
+    "ar": "حاول مرة أخرى. إذا استمرت المشكلة، يرجى التواصل معنا.",
+    "es": "Vuelva a intentarlo. Si el problema persiste, póngase en contacto con nosotros.",
+    "fr": "Réessayez. Si le problème persiste, veuillez nous contacter."
+  },
+  "Type in a response code and press 'Enter' to apply the filter. You can filter by multiple response codes at the same time": {
+    "ar": "أدخل رمز استجابة واضغط على 'Enter' لتطبيق الفلتر. يمكنك التصفية بعدة رموز استجابة في الوقت نفسه",
+    "es": "Escriba un código de respuesta y pulse «Intro» para aplicar el filtro. Puede filtrar por varios códigos de respuesta a la vez",
+    "fr": "Saisissez un code de réponse et appuyez sur « Entrée » pour appliquer le filtre. Vous pouvez filtrer par plusieurs codes de réponse à la fois"
+  },
+  "URL:": {
+    "ar": "الرابط:",
+    "es": "URL:",
+    "fr": "URL :"
+  },
+  "Update subscription": {
+    "ar": "تحديث الاشتراك",
+    "es": "Actualizar suscripción",
+    "fr": "Mettre à jour l'abonnement"
+  },
+  "Update webhook subscription": {
+    "ar": "تحديث اشتراك الخطاف",
+    "es": "Actualizar suscripción de webhook",
+    "fr": "Mettre à jour l'abonnement webhook"
+  },
+  "Upload a certificate": {
+    "ar": "رفع شهادة",
+    "es": "Cargar un certificado",
+    "fr": "Importer un certificat"
+  },
+  "Upload a new certificate": {
+    "ar": "رفع شهادة جديدة",
+    "es": "Cargar un nuevo certificado",
+    "fr": "Importer un nouveau certificat"
+  },
+  "Usage exceeding the new limits may be affected.": {
+    "ar": "قد يتأثر الاستخدام الذي يتجاوز الحدود الجديدة.",
+    "es": "El uso que supere los nuevos límites podría verse afectado.",
+    "fr": "L'usage dépassant les nouvelles limites peut être affecté."
+  },
+  "Use the access token to gain access to the API product.": {
+    "ar": "استخدام رمز الوصول للوصول إلى منتج API.",
+    "es": "Utilice el token de acceso para acceder al producto API.",
+    "fr": "Utilisez le jeton d'accès pour accéder au produit API."
+  },
+  "User details": {
+    "ar": "تفاصيل المستخدم",
+    "es": "Detalles del usuario",
+    "fr": "Détails de l'utilisateur"
+  },
+  "Users": {
+    "ar": "المستخدمون",
+    "es": "Usuarios",
+    "fr": "Utilisateurs"
+  },
+  "Valid": {
+    "ar": "صالحة",
+    "es": "Válido",
+    "fr": "Valide"
+  },
+  "Validity:": {
+    "ar": "الصلاحية:",
+    "es": "Validez:",
+    "fr": "Validité :"
+  },
+  "Value has been copied successfully": {
+    "ar": "تم نسخ القيمة بنجاح",
+    "es": "El valor se ha copiado correctamente",
+    "fr": "La valeur a été copiée avec succès"
+  },
+  "View": {
+    "ar": "عرض",
+    "es": "Ver",
+    "fr": "Voir"
+  },
+  "View as grid": {
+    "ar": "عرض كشبكة",
+    "es": "Ver como cuadrícula",
+    "fr": "Afficher en grille"
+  },
+  "View as list": {
+    "ar": "عرض كقائمة",
+    "es": "Ver como lista",
+    "fr": "Afficher en liste"
+  },
+  "View client type details": {
+    "ar": "عرض تفاصيل نوع العميل",
+    "es": "Ver detalles del tipo de cliente",
+    "fr": "Voir les détails du type de client"
+  },
+  "View credentials": {
+    "ar": "عرض بيانات الاعتماد",
+    "es": "Ver credenciales",
+    "fr": "Voir les identifiants"
+  },
+  "View instructions how to create a pem file using SSL": {
+    "ar": "عرض تعليمات إنشاء ملف pem باستخدام SSL",
+    "es": "Ver instrucciones para crear un archivo pem con SSL",
+    "fr": "Voir les instructions pour créer un fichier pem avec SSL"
+  },
+  "Visibility": {
+    "ar": "الظهور",
+    "es": "Visibilidad",
+    "fr": "Visibilité"
+  },
+  "Visibility:": {
+    "ar": "الظهور:",
+    "es": "Visibilidad:",
+    "fr": "Visibilité :"
+  },
+  "Webhook URL": {
+    "ar": "رابط الخطاف",
+    "es": "URL del webhook",
+    "fr": "URL du webhook"
+  },
+  "Webhook URL:": {
+    "ar": "رابط الخطاف:",
+    "es": "URL del webhook:",
+    "fr": "URL du webhook :"
+  },
+  "Webhooks": {
+    "ar": "الخطافات (Webhooks)",
+    "es": "Webhooks",
+    "fr": "Webhooks"
+  },
+  "Webhooks are enabled for one or more products.": {
+    "ar": "الخطافات مفعّلة لمنتج واحد أو أكثر.",
+    "es": "Los webhooks están habilitados para uno o más productos.",
+    "fr": "Les webhooks sont activés pour un ou plusieurs produits."
+  },
+  "When registering with an invite code you'd be assigned to a specific team and org within this developer portal.": {
+    "ar": "عند التسجيل برمز دعوة، سيتم تعيينك إلى فريق ومؤسسة محددة داخل بوابة المطورين هذه.",
+    "es": "Al registrarse con un código de invitación, se le asignará a un equipo y una organización específicos dentro de este portal del desarrollador.",
+    "fr": "Lors de l'inscription avec un code d'invitation, vous serez affecté à une équipe et une organisation spécifiques au sein de ce portail développeur."
+  },
+  "Will be set when approved": {
+    "ar": "سيتم تحديدها عند الموافقة",
+    "es": "Se definirá cuando se apruebe",
+    "fr": "Sera défini une fois approuvé"
+  },
+  "With an organisation admin account you will be able to invite external users to collaborate with.": {
+    "ar": "بحساب مسؤول مؤسسة، ستتمكن من دعوة مستخدمين خارجيين للتعاون معهم.",
+    "es": "Con una cuenta de administrador de organización, podrá invitar a usuarios externos a colaborar.",
+    "fr": "Avec un compte administrateur d'organisation, vous pourrez inviter des utilisateurs externes à collaborer."
+  },
+  "You are about to remove this API Product from the selected credentials. Once removed:": {
+    "ar": "أنت على وشك إزالة منتج API هذا من بيانات الاعتماد المحددة. بعد الإزالة:",
+    "es": "Está a punto de quitar este producto API de las credenciales seleccionadas. Una vez eliminado:",
+    "fr": "Vous êtes sur le point de retirer ce produit API des identifiants sélectionnés. Une fois retiré :"
+  },
+  "You are about to update the plan for these credentials:": {
+    "ar": "أنت على وشك تحديث الخطة لبيانات الاعتماد هذه:",
+    "es": "Está a punto de actualizar el plan de estas credenciales:",
+    "fr": "Vous êtes sur le point de mettre à jour le plan de ces identifiants :"
+  },
+  "You can add more than one API product to the cart, if you want to request access to more than one product, go to the": {
+    "ar": "يمكنك إضافة أكثر من منتج API إلى السلة؛ إذا رغبت في طلب الوصول لأكثر من منتج، اذهب إلى",
+    "es": "Puede añadir más de un producto API al carrito; si desea solicitar acceso a más de un producto, vaya al",
+    "fr": "Vous pouvez ajouter plusieurs produits API au panier ; si vous souhaitez demander l'accès à plusieurs produits, rendez-vous sur le"
+  },
+  "You can view the App status in 'My Apps'.": {
+    "ar": "يمكنك عرض حالة التطبيق في 'تطبيقاتي'.",
+    "es": "Puede ver el estado de la aplicación en «Mis aplicaciones».",
+    "fr": "Vous pouvez consulter le statut de l'application dans « Mes applications »."
+  },
+  "You haven't uploaded any certificates yet.": {
+    "ar": "لم ترفع أي شهادات حتى الآن.",
+    "es": "Todavía no ha cargado ningún certificado.",
+    "fr": "Vous n'avez pas encore importé de certificat."
+  },
+  "You haven't yet invited any users to this organisation": {
+    "ar": "لم تدعُ أي مستخدمين إلى هذه المؤسسة بعد",
+    "es": "Todavía no ha invitado a ningún usuario a esta organización",
+    "fr": "Vous n'avez pas encore invité d'utilisateurs dans cette organisation"
+  },
+  "You'll be able to invite users once your organisation is accepted.": {
+    "ar": "ستتمكن من دعوة المستخدمين بعد قبول مؤسستك.",
+    "es": "Podrá invitar a usuarios una vez que se acepte su organización.",
+    "fr": "Vous pourrez inviter des utilisateurs une fois votre organisation acceptée."
+  },
+  "You've successfully registered. You can now login.": {
+    "ar": "تم تسجيلك بنجاح. يمكنك الآن تسجيل الدخول.",
+    "es": "Se ha registrado correctamente. Ya puede iniciar sesión.",
+    "fr": "Vous vous êtes inscrit avec succès. Vous pouvez maintenant vous connecter."
+  },
+  "Your Email *": {
+    "ar": "بريدك الإلكتروني *",
+    "es": "Su correo electrónico *",
+    "fr": "Votre e-mail *"
+  },
+  "Your Password *": {
+    "ar": "كلمة مرورك *",
+    "es": "Su contraseña *",
+    "fr": "Votre mot de passe *"
+  },
+  "Your access credentials": {
+    "ar": "بيانات وصولك",
+    "es": "Sus credenciales de acceso",
+    "fr": "Vos identifiants d'accès"
+  },
+  "Your cart is containing API products from different catalogues, you will need to submit 2 or more requests separately.": {
+    "ar": "تحتوي سلتك على منتجات API من كتالوجات مختلفة، ستحتاج إلى إرسال طلبين أو أكثر بشكل منفصل.",
+    "es": "Su carrito contiene productos API de distintos catálogos; deberá enviar 2 o más solicitudes por separado.",
+    "fr": "Votre panier contient des produits API provenant de différents catalogues ; vous devrez soumettre 2 demandes ou plus séparément."
+  },
+  "Your cart is empty": {
+    "ar": "سلتك خالية",
+    "es": "Su carrito está vacío",
+    "fr": "Votre panier est vide"
+  },
+  "Your credential are unique identifiers that will be used to authenticate requests to the selected API products.": {
+    "ar": "بيانات الاعتماد هي معرِّفات فريدة تُستخدم للتحقق من الطلبات إلى منتجات API المحددة.",
+    "es": "Sus credenciales son identificadores únicos que se utilizarán para autenticar las solicitudes a los productos API seleccionados.",
+    "fr": "Vos identifiants sont des identifiants uniques qui seront utilisés pour authentifier les requêtes vers les produits API sélectionnés."
+  },
+  "Your current Password *": {
+    "ar": "كلمة مرورك الحالية *",
+    "es": "Su contraseña actual *",
+    "fr": "Votre mot de passe actuel *"
+  },
+  "Your new password": {
+    "ar": "كلمة المرور الجديدة",
+    "es": "Su nueva contraseña",
+    "fr": "Votre nouveau mot de passe"
+  },
+  "Your organisation request is still pending.": {
+    "ar": "طلب مؤسستك لا يزال معلَّقًا.",
+    "es": "Su solicitud de organización sigue pendiente.",
+    "fr": "Votre demande d'organisation est toujours en attente."
+  },
+  "Your registration has been completed. You can now ": {
+    "ar": "تم إكمال تسجيلك. يمكنك الآن ",
+    "es": "Su registro se ha completado. Ya puede ",
+    "fr": "Votre inscription est terminée. Vous pouvez maintenant "
+  },
+  "Your request has been sent": {
+    "ar": "تم إرسال طلبك",
+    "es": "Su solicitud se ha enviado",
+    "fr": "Votre demande a été envoyée"
+  },
+  "and add another product to the cart.": {
+    "ar": "وأضف منتجًا آخر إلى السلة.",
+    "es": "y añadir otro producto al carrito.",
+    "fr": "et ajouter un autre produit au panier."
+  },
+  "and browse API products.": {
+    "ar": "وتصفح منتجات API.",
+    "es": "y explorar productos de API.",
+    "fr": "et parcourir les produits API."
+  },
+  "attach mutual tls certificate": {
+    "ar": "إرفاق شهادة mutual tls",
+    "es": "adjuntar certificado mTLS",
+    "fr": "joindre un certificat mTLS"
+  },
+  "catalogue": {
+    "ar": "الكتالوج",
+    "es": "catálogo",
+    "fr": "catalogue"
+  },
+  "catalogues": {
+    "ar": "الكتالوجات",
+    "es": "catálogos",
+    "fr": "catalogues"
+  },
+  "disabled": {
+    "ar": "معطّلة",
+    "es": "desactivado",
+    "fr": "désactivé"
+  },
+  "login": {
+    "ar": "تسجيل الدخول",
+    "es": "inicio de sesión",
+    "fr": "connexion"
+  },
+  "no plans available": {
+    "ar": "لا توجد خطط متاحة",
+    "es": "no hay planes disponibles",
+    "fr": "aucun plan disponible"
+  },
+  "no posts available": {
+    "ar": "لا توجد منشورات متاحة",
+    "es": "no hay artículos disponibles",
+    "fr": "aucun article disponible"
+  },
+  "private": {
+    "ar": "خاصة",
+    "es": "privado",
+    "fr": "privé"
+  },
+  "to complete the request.": {
+    "ar": "لإكمال الطلب.",
+    "es": "para completar la solicitud.",
+    "fr": "pour finaliser la demande."
+  },
+  "vs last week": {
+    "ar": "مقارنة بالأسبوع الماضي",
+    "es": "frente a la semana pasada",
+    "fr": "par rapport à la semaine dernière"
+  },
+  "welcome back!": {
+    "ar": "مرحبًا بعودتك!",
+    "es": "¡bienvenido de nuevo!",
+    "fr": "content de vous revoir !"
+  },
+  "your certificate is expired": {
+    "ar": "شهادتك منتهية",
+    "es": "su certificado ha caducado",
+    "fr": "votre certificat a expiré"
+  },
+  "your certificate is valid": {
+    "ar": "شهادتك صالحة",
+    "es": "su certificado es válido",
+    "fr": "votre certificat est valide"
+  }
+}

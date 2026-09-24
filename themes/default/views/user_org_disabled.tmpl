@@ -1,0 +1,20 @@
+{{ $cookies := (req).Header.Get "Cookie" }}
+{{ $supportedLangs := list "en" "ar" "fr" "es" }}
+{{ $lang := "en" }}
+{{ range $supportedLangs }}{{ if regexMatch (printf "tdp_locale=%s" .) $cookies }}{{ $lang = . }}{{ end }}{{ end }}
+{{ $t := dict
+  "heading" (dict "en" "Organisation creation is currently not allowed" "ar" "إنشاء المؤسسات غير مسموح به حاليًا" "fr" "La création d'organisation n'est actuellement pas autorisée" "es" "Actualmente no se permite la creación de organizaciones")
+  "sub" (dict "en" "Contact the system administrator or try again later" "ar" "تواصل مع مسؤول النظام أو حاول مرة أخرى لاحقًا" "fr" "Contactez l'administrateur système ou réessayez plus tard" "es" "Póngase en contacto con el administrador del sistema o inténtelo de nuevo más tarde")
+}}
+<div class="private-portal-wrapper">
+    <div class="container">
+        <div class="card first-invite-card">
+            <div class="card-body text-center d-flex flex-column align-content-center justify-content-center p-4">
+                <h1 class="heading-xlarge mb-3">{{ index (index $t "heading") $lang }}</h1>
+                <p class="text-default-subdue">
+                   {{ index (index $t "sub") $lang }}
+                </p>
+            </div>
+        </div>
+    </div>
+</div>

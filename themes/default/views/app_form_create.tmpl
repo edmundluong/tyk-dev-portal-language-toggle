@@ -1,0 +1,92 @@
+<!-- Template used for adding a new App -->
+{{ $cookies := (req).Header.Get "Cookie" }}
+{{ $supportedLangs := list "en" "ar" "fr" "es" }}
+{{ $lang := "en" }}
+{{ range $supportedLangs }}{{ if regexMatch (printf "tdp_locale=%s" .) $cookies }}{{ $lang = . }}{{ end }}{{ end }}
+{{ $t := dict
+  "back_to_apps" (dict "en" "< Back to Apps overview " "ar" "< الرجوع إلى نظرة عامة على التطبيقات " "fr" "< Retour à l'aperçu des applications " "es" "< Volver al resumen de aplicaciones ")
+  "create_app" (dict "en" "Create a new App" "ar" "إنشاء تطبيق جديد" "fr" "Créer une nouvelle application" "es" "Crear una nueva aplicación")
+  "create_app_desc" (dict "en" "An app serves as a container for one or multiple sets of credentials and in the future, different apps can have different ownerships. We recommend thinking about the use case when setting up a new app." "ar" "يُستخدم التطبيق كحاوية لمجموعة واحدة أو أكثر من بيانات الاعتماد. نوصي بالتفكير في حالة الاستخدام عند إنشاء تطبيق جديد." "fr" "Une application sert de conteneur pour un ou plusieurs jeux d'identifiants et, à l'avenir, différentes applications pourront avoir des propriétaires différents. Nous vous recommandons de réfléchir au cas d'usage lors de la création d'une nouvelle application." "es" "Una aplicación sirve como contenedor de uno o varios conjuntos de credenciales y, en el futuro, distintas aplicaciones podrán tener propietarios diferentes. Le recomendamos pensar en el caso de uso al configurar una nueva aplicación.")
+  "app_details" (dict "en" "App details" "ar" "تفاصيل التطبيق" "fr" "Détails de l'application" "es" "Detalles de la aplicación")
+  "app_name" (dict "en" "App name:" "ar" "اسم التطبيق:" "fr" "Nom de l'application :" "es" "Nombre de la aplicación:")
+  "app_name_ph" (dict "en" "App Name" "ar" "اسم التطبيق" "fr" "Nom de l'application" "es" "Nombre de la aplicación")
+  "description" (dict "en" "Description:" "ar" "الوصف:" "fr" "Description :" "es" "Descripción:")
+  "description_ph" (dict "en" "App Description" "ar" "وصف التطبيق" "fr" "Description de l'application" "es" "Descripción de la aplicación")
+  "visibility" (dict "en" "Visibility:" "ar" "الظهور:" "fr" "Visibilité :" "es" "Visibilidad:")
+  "personal" (dict "en" "Personal" "ar" "شخصي" "fr" "Personnel" "es" "Personal")
+  "team" (dict "en" "Team" "ar" "الفريق" "fr" "Équipe" "es" "Equipo")
+  "organisation" (dict "en" "Organisation" "ar" "المؤسسة" "fr" "Organisation" "es" "Organización")
+  "redirect_urls" (dict "en" "Redirect URLs:" "ar" "روابط إعادة التوجيه:" "fr" "URL de redirection :" "es" "URL de redirección:")
+  "redirect_urls_ph" (dict "en" "Redirect URLs" "ar" "روابط إعادة التوجيه" "fr" "URL de redirection" "es" "URL de redirección")
+  "separate_urls" (dict "en" "Separate URLs with commas" "ar" "اسم فصل الروابط بفواصل" "fr" "Séparez les URL par des virgules" "es" "Separe las URL con comas")
+  "cancel" (dict "en" "Cancel" "ar" "إلغاء" "fr" "Annuler" "es" "Cancelar")
+  "create" (dict "en" "Create App" "ar" "إنشاء تطبيق" "fr" "Créer une application" "es" "Crear aplicación")
+}}
+<div class="apps-wrapper container">
+    {{ if .errors }}
+      {{ range $key, $errs := .errors }}
+        <div class="alert alert-warning cart-error" role="alert">
+          <i class="tyk-icon tykon tykon-warning "></i>
+          <div class="alert__content">
+            <strong>{{$key}}</strong>
+            <ul>
+              {{ range $errs }}
+                <li>{{.}}</li>
+              {{ end }}
+            </ul>
+          </div>
+        </div>
+      {{ end }}
+    {{ end }}
+		<p class="mb-3 mt-3">
+			<a href="/portal/private/dashboard" class="breadcrumb-link">
+				{{ index (index $t "back_to_apps") $lang }}</a>
+    </p>
+    <form action="apps" method="post" id="apps-create">
+      <input type="hidden" name="mode" value="create">
+      {{ if .error }}
+        <div class="alert alert-danger" role="alert">
+          <i class="tyk-icon tykon tykon-warning "></i>
+          <div class="alert__content">{{ .error }}</div>
+        </div>
+      {{ end }}
+      <div class="apps-wrapper__card-section">
+        <h1 class="heading-xlarge">{{ index (index $t "create_app") $lang }}</h1>
+        <p class="mb-5 text-default-subdue">{{ index (index $t "create_app_desc") $lang }}</p>
+        <h2 class="heading-large mb-4">{{ index (index $t "app_details") $lang }}</h2>
+        <div class="card p-0 mb-4">
+          <div class="card-footer m-0 p-3 d-block no-border w-100">
+            <div class="mb-4">
+              <label class="heading-small text-default">{{ index (index $t "app_name") $lang }}</label>
+              <input type="text" name="name" class="form-control" placeholder="{{ index (index $t "app_name_ph") $lang }}" required autofocus/>
+            </div>
+            <div class="mb-4">
+              <label class="heading-small text-default">{{ index (index $t "description") $lang }}</label>
+              <textarea rows="3" name="description" class="form-control" placeholder="{{ index (index $t "description_ph") $lang }}"></textarea>
+            </div>
+            {{ if not .isDefaultOrgUser }}
+            <div class="mb-4">
+              <label class="heading-small text-default">{{ index (index $t "visibility") $lang }}</label>
+              <select name="visibility" class="form-control">
+                <option value="personal">{{ index (index $t "personal") $lang }}</option>
+                <option value="team">{{ index (index $t "team") $lang }}</option>
+                <option value="organisation" selected>{{ index (index $t "organisation") $lang }}</option>
+              </select>
+            </div>
+            {{ else }}
+            <input type="hidden" name="visibility" value="personal" />
+            {{ end }}
+            <div class="mb-4">
+              <label class="heading-small text-default">{{ index (index $t "redirect_urls") $lang }}</label>
+              <input name="redirectURLs" class="form-control" placeholder="{{ index (index $t "redirect_urls_ph") $lang }}"/>
+              <small id="redirectHelp" class="form-text with-info-icon">{{ index (index $t "separate_urls") $lang }}</small>
+            </div>
+          </div>
+        </div>
+        <div class="form-group text-right mt-4">
+          <a id="app_form_cancel" class="btn btn-secondary-outline" href="/portal/private/dashboard">{{ index (index $t "cancel") $lang }}</a>
+          <input type="submit" name="submit" class="btn btn-primary" value="{{ index (index $t "create") $lang }}" />
+        </div>
+      </div>
+    </form>
+</div>

@@ -1,0 +1,169 @@
+<!-- Template used to view & edit org user details -->
+
+{{$time := FormatTime .user.CreatedAt "2 Jan, 2006 at 3:04:00 PM (MST)"}}
+{{ $cookies := (req).Header.Get "Cookie" }}
+{{ $supportedLangs := list "en" "ar" "fr" "es" }}
+{{ $lang := "en" }}
+{{ range $supportedLangs }}{{ if regexMatch (printf "tdp_locale=%s" .) $cookies }}{{ $lang = . }}{{ end }}{{ end }}
+{{ $t := dict
+  "back_to_users" (dict "en" "< Back to user list" "ar" "< الرجوع إلى قائمة المستخدمين" "fr" "< Retour à la liste des utilisateurs" "es" "< Volver a la lista de usuarios")
+  "user_details" (dict "en" "User details" "ar" "تفاصيل المستخدم" "fr" "Détails de l'utilisateur" "es" "Detalles del usuario")
+  "edit_details" (dict "en" "Edit details" "ar" "تعديل التفاصيل" "fr" "Modifier les détails" "es" "Editar detalles")
+  "name" (dict "en" "Name:" "ar" "الاسم:" "fr" "Nom :" "es" "Nombre:")
+  "email" (dict "en" "Email:" "ar" "البريد الإلكتروني:" "fr" "E-mail :" "es" "Correo electrónico:")
+  "member_since" (dict "en" "Member since:" "ar" "عضو منذ:" "fr" "Membre depuis :" "es" "Miembro desde:")
+  "role" (dict "en" "Role:" "ar" "الدور:" "fr" "Rôle :" "es" "Rol:")
+  "status" (dict "en" "Status:" "ar" "الحالة:" "fr" "Statut :" "es" "Estado:")
+  "registered" (dict "en" "Registered" "ar" "مسجَّل" "fr" "Inscrit" "es" "Registrado")
+  "pending_invite" (dict "en" "Pending invite" "ar" "دعوة معلَّقة" "fr" "Invitation en attente" "es" "Invitación pendiente")
+  "advanced_settings" (dict "en" "Advanced Settings" "ar" "الإعدادات المتقدمة" "fr" "Paramètres avancés" "es" "Configuración avanzada")
+  "delete_user" (dict "en" "Delete this user" "ar" "حذف هذا المستخدم" "fr" "Supprimer cet utilisateur" "es" "Eliminar este usuario")
+  "delete_user_desc" (dict "en" "This developer will no longer be a part of this organisation and will lose access to the credentials for any given app." "ar" "لن يكون هذا المطوّر جزءًا من هذه المؤسسة بعد الآن وسيفقد الوصول إلى بيانات الاعتماد لأي تطبيق." "fr" "Ce développeur ne fera plus partie de cette organisation et perdra l'accès aux identifiants de toute application concernée." "es" "Este desarrollador dejará de formar parte de esta organización y perderá el acceso a las credenciales de cualquier aplicación.")
+  "delete_modal_title" (dict "en" "Delete this team-member from this org?" "ar" "حذف عضو الفريق هذا من المؤسسة؟" "fr" "Supprimer ce membre de l'équipe de cette organisation ?" "es" "¿Eliminar a este miembro del equipo de esta organización?")
+  "delete_modal_body" (dict "en" "By removing this developer from the organisation they will no longer have access to the apps and credentials associated with this org." "ar" "بإزالة هذا المطوّر من المؤسسة، لن يعود لديه وصول إلى التطبيقات وبيانات الاعتماد المرتبطة بهذه المؤسسة." "fr" "En supprimant ce développeur de l'organisation, il n'aura plus accès aux applications et identifiants associés à cette organisation." "es" "Al eliminar a este desarrollador de la organización, dejará de tener acceso a las aplicaciones y credenciales asociadas a esta organización.")
+  "delete_modal_confirm" (dict "en" "Do you wish to continue?" "ar" "هل تريد الاستمرار؟" "fr" "Souhaitez-vous continuer ?" "es" "¿Desea continuar?")
+  "delete" (dict "en" "Delete" "ar" "حذف" "fr" "Supprimer" "es" "Eliminar")
+  "cancel" (dict "en" "Cancel" "ar" "إلغاء" "fr" "Annuler" "es" "Cancelar")
+}}
+<div class="private-portal-wrapper">
+    <div class="container">
+        <p class="mb-3 mt-3">
+            <a href="/portal/private/users" class="breadcrumb-link">
+                {{ index (index $t "back_to_users") $lang }}
+            </a>
+        </p>
+        {{ if .errors }}
+            {{ range $key, $errs := .errors }}
+                <div class="alert alert-warning cart-error" role="alert">
+                <i class="tyk-icon tykon tykon-warning "></i>
+                <div class="alert__content">
+                    <strong>{{$key}}</strong>
+                    <ul>
+                    {{ range $errs }}
+                        <li>{{.}}</li>
+                    {{ end }}
+                    </ul>
+                </div>
+                </div>
+            {{ end }}
+        {{ end }}
+        <div class="apps-wrapper__card-section mt-5">
+            <div class="d-flex flex-row justify-content-between align-items-center flex-wrap mb-4">
+                <h1 class="heading-large m-0">{{ index (index $t "user_details") $lang }}</h1>
+                <div class="cta-btns-wrapper">
+                    <a class="btn btn-primary-outline" href="{{ .user.ID }}/edit">
+                        {{ index (index $t "edit_details") $lang }}
+                    </a>
+                </div>
+            </div>
+            <div class="card p-0 mb-4">
+                <div class="card-footer m-0 p-4">
+                    <div class="d-flex flex-row justify-content-between align-items-center flex-wrap p-3 requests-row-section__info">
+                        <div class="d-flex flex-column pr-3">
+                            <h6 class="heading-small text-default mb-1">{{ index (index $t "name") $lang }}</h6>
+                        </div>
+                        <div class="text-regular-14">
+                            {{ .user.DisplayName }}
+                        </div>
+                    </div>
+                    <div class="d-flex flex-row justify-content-between align-items-center flex-wrap p-3 requests-row-section__info">
+                        <div class="d-flex flex-column pr-3">
+                            <h6 class="heading-small text-default mb-1">{{ index (index $t "email") $lang }}</h6>
+                        </div>
+                        <div class="text-regular-14">
+                            {{ .user.Email }}
+                        </div>
+                    </div>
+                    <div class="d-flex flex-row justify-content-between align-items-center flex-wrap p-3 requests-row-section__info">
+                        <div class="d-flex flex-column pr-3">
+                            <h6 class="heading-small text-default mb-1">{{ index (index $t "member_since") $lang }}</h6>
+                        </div>
+                        <div class="text-regular-14">
+                            {{ $time }}
+                        </div>
+                    </div>
+                    <div class="d-flex flex-row justify-content-between align-items-center flex-wrap p-3 requests-row-section__info">
+                        <div class="d-flex flex-column pr-3">
+                            <h6 class="heading-small text-default mb-1">{{ index (index $t "role") $lang }}</h6>
+                        </div>
+                        <div class="text-regular-14 d-flex flex-row align-items-center">
+                            {{ .user.DisplayRole }}
+                            <i class="bi bi-question-circle-fill question-icon ml-1"></i>
+                        </div>
+                    </div>
+                    <div class="d-flex flex-row justify-content-between align-items-center flex-wrap p-3 requests-row-section__info">
+                        <div class="d-flex flex-column pr-3">
+                            <h6 class="heading-small text-default mb-1">{{ index (index $t "status") $lang }}</h6>
+                        </div>
+                        {{if .user.Active}}
+                            <div class="text-regular-14 d-flex flex-row align-items-center">
+                                <i class="bi bi-check-circle-fill status-registered"></i>
+                                {{ index (index $t "registered") $lang }}
+                            </div>
+                        {{else}}
+                            {{if .invite}}
+                                {{if not .invite.Active}}
+                                    <div class="text-regular-14 d-flex flex-row align-items-center">
+                                        <i class="bi bi-check-circle-fill status-registered"></i>
+                                        {{ index (index $t "registered") $lang }}
+                                    </div>
+                                {{else}}
+                                    <div class="text-regular-14 d-flex flex-row align-items-center">
+                                        <i class="bi bi-clock-fill status-pending"></i>
+                                        {{ index (index $t "pending_invite") $lang }}
+                                    </div>
+                                {{end}}
+                            {{end}}
+                        {{end}}
+                    </div>
+                </div>
+            </div>
+            <h2 class="heading-large mb-3">{{ index (index $t "advanced_settings") $lang }}</h2>
+            {{if .user.Active}}
+                <div class="card p-0 mb-4">
+                    <div class="card-footer m-0 p-4 d-flex flex-row w-100 justify-content-between">
+                        <div>
+                            <h4 class="heading-medium text-default">{{ index (index $t "delete_user") $lang }}</h4>
+                            <h5 class="body-xlarge-default">{{ index (index $t "delete_user_desc") $lang }}</h5>
+                        </div>
+                        <div>
+                            <button type="button" class="btn btn-danger-outline" data-toggle="modal" data-target="#deleteDeveloperModal">
+                                {{ index (index $t "delete_user") $lang }}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            {{else}}
+                {{if .invite}}
+                    {{if not .invite.Active}}
+                        <div class="card p-0 mb-4">
+                            <div class="card-footer m-0 p-4 d-flex flex-row w-100 justify-content-between">
+                                <div>
+                                    <h4 class="heading-medium text-default">{{ index (index $t "delete_user") $lang }}</h4>
+                                    <h5 class="body-xlarge-default">{{ index (index $t "delete_user_desc") $lang }}</h5>
+                                </div>
+                                <div>
+                                    <button type="button" class="btn btn-danger-outline" data-toggle="modal" data-target="#deleteDeveloperModal">
+                                        {{ index (index $t "delete_user") $lang }}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    {{end}}
+                {{end}}
+            {{end}}
+        </div>
+    </div>
+</div>
+
+{{ render "confirmation_modal" (dict
+  "id" "deleteDeveloperModal"
+  "title" (index (index $t "delete_modal_title") $lang)
+  "body" (raw (print "<p class='text-regular-14'>" (index (index $t "delete_modal_body") $lang) "</p><p class='text-regular-14'>" (index (index $t "delete_modal_confirm") $lang) "</p>"))
+  "confirmText" (index (index $t "delete") $lang)
+  "cancelText" (index (index $t "cancel") $lang)
+  "confirmClass" "btn-danger"
+  "showIcon" true
+  "useForm" true
+  "hiddenFields" (dict "mode" "delete")
+) }}

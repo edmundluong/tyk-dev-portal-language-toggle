@@ -1,0 +1,559 @@
+<!-- Template used for viewing a particular Product -->
+
+{{ $thisProduct := .product }}
+{{ $user := CurrentUser req }}
+{{$catalogues_for_product := GetCataloguesForProduct req $user $thisProduct.ID}}
+{{ $allCatalogues := .catalogues }}
+{{ $cataloguesLength := len $allCatalogues}}
+{{ $hasDocs := false }}
+{{ if $thisProduct.IsDocumentationOnly}}
+	{{ if gt (len $thisProduct.SpecDetails) 0 }}
+		{{ $initialAPI := index $thisProduct.SpecDetails 0}}
+	{{ end }}
+{{else}}
+	{{ if gt (len $thisProduct.APIDetails) 0 }}
+		{{ $initialAPI := index $thisProduct.APIDetails 0}}
+	{{ end }}
+{{end}}
+{{ $initialAPIOasUrl := ""}}
+{{ $initialAPIID := ""}}
+{{ $initialTemplate := ""}}
+{{ if $thisProduct.IsDocumentationOnly}}
+	{{ $hasDocs = true}}
+
+{{else}}
+	{{ range $thisProduct.APIDetails }}
+		{{ $oasfile := gt (.OASDocument.Base.Url | trim | length) 0 }}
+		{{ $oasurl := gt (.OASUrl | trim | length) 0 }}
+		{{ $graphqlsdl := gt (.GraphQLSDL.Base.Url | trim | length) 0 }}
+		{{ $isGraphQL := eq .APIType "GraphQL" }}
+		{{ if or $oasfile $oasurl $graphqlsdl $isGraphQL }}
+			{{ $hasDocs = true}}
+		{{ end }}
+	{{ end }}
+{{end}}
+{{ $redoc := "product_doc_redoc" }}
+{{ $asyncapi := "product_doc_asyncapi" }}
+{{ $cookies := (req).Header.Get "Cookie" }}
+{{ $supportedLangs := list "en" "ar" "fr" "es" }}
+{{ $lang := "en" }}
+{{ range $supportedLangs }}{{ if regexMatch (printf "tdp_locale=%s" .) $cookies }}{{ $lang = . }}{{ end }}{{ end }}
+{{/* The `date` funcmap function has no locale awareness -- for any
+     language with an entry in $monthNames, build the date manually from
+     the numeric day/month/year pieces and a looked-up month name;
+     languages with no entry (including English) fall back to `date`
+     directly. */}}
+{{ $monthNames := dict "ar" (dict "1" "يناير" "2" "فبراير" "3" "مارس" "4" "أبريل" "5" "مايو" "6" "يونيو" "7" "يوليو" "8" "أغسطس" "9" "سبتمبر" "10" "أكتوبر" "11" "نوفمبر" "12" "ديسمبر") "fr" (dict "1" "janvier" "2" "février" "3" "mars" "4" "avril" "5" "mai" "6" "juin" "7" "juillet" "8" "août" "9" "septembre" "10" "octobre" "11" "novembre" "12" "décembre") "es" (dict "1" "enero" "2" "febrero" "3" "marzo" "4" "abril" "5" "mayo" "6" "junio" "7" "julio" "8" "agosto" "9" "septiembre" "10" "octubre" "11" "noviembre" "12" "diciembre") }}
+{{/* Only English has a compiled formatter (Plan.FormatQuota/FormatRateLimit).
+     Every other language reconstructs from the raw fields via a printf
+     template looked up here -- add a language by adding one entry, no new
+     branch logic. */}}
+{{ $planFormats := dict "ar" (dict
+  "quota_unlimited" "غير محدود"
+  "quota_n"         "%v طلب"
+  "rate_unlimited"  "غير محدود"
+  "rate_n"          "%v طلب / %v ثانية"
+) "fr" (dict
+  "quota_unlimited" "Illimité"
+  "quota_n"         "%v appels"
+  "rate_unlimited"  "Illimité"
+  "rate_n"          "%v appels / %v s"
+) "es" (dict
+  "quota_unlimited" "Ilimitado"
+  "quota_n"         "%v llamadas"
+  "rate_unlimited"  "Ilimitado"
+  "rate_n"          "%v llamadas / %v s"
+) }}
+{{ $i18n := dict
+  "back_to_catalogue" (dict "en" "< Back to catalogue overview " "ar" "< الرجوع إلى نظرة عامة على الكتالوج " "fr" "< Retour à l'aperçu du catalogue " "es" "< Volver al resumen del catálogo ")
+  "added_to_cart" (dict "en" "Success! This API Product was added to cart." "ar" "تمت الإضافة بنجاح! أُضيف منتج API هذا إلى السلة." "fr" "Succès ! Ce produit API a été ajouté au panier." "es" "¡Listo! Este producto API se ha añadido al carrito.")
+  "go_to_cart" (dict "en" "Go to cart" "ar" "الذهاب إلى السلة" "fr" "Aller au panier" "es" "Ir al carrito")
+  "to_complete_request" (dict "en" "to complete the request." "ar" "لإكمال الطلب." "fr" "pour finaliser la demande." "es" "para completar la solicitud.")
+  "access_this_product" (dict "en" "Access this product" "ar" "الوصول إلى هذا المنتج" "fr" "Accéder à ce produit" "es" "Acceder a este producto")
+  "overview" (dict "en" "Overview" "ar" "نظرة عامة" "fr" "Aperçu" "es" "Resumen")
+  "api_specification" (dict "en" "API specification" "ar" "مواصفات API" "fr" "Spécification de l'API" "es" "Especificación de la API")
+  "get_started" (dict "en" "Get started" "ar" "البدء" "fr" "Commencer" "es" "Comenzar")
+  "more_info" (dict "en" "More info" "ar" "مزيد من المعلومات" "fr" "Plus d'informations" "es" "Más información")
+  "scopes" (dict "en" "Scopes" "ar" "النطاقات" "fr" "Portées" "es" "Alcances")
+  "base_url" (dict "en" "Base URL" "ar" "عنوان URL الأساسي" "fr" "URL de base" "es" "URL base")
+  "apis_available" (dict "en" "APIs available in this product" "ar" "واجهات API المتاحة في هذا المنتج" "fr" "API disponibles dans ce produit" "es" "API disponibles en este producto")
+  "listen_path" (dict "en" " Listen path:" "ar" " مسار الاستماع:" "fr" " Chemin d'écoute :" "es" " Ruta de escucha:")
+  "description" (dict "en" "Description:" "ar" "الوصف:" "fr" "Description :" "es" "Descripción:")
+  "plans_available" (dict "en" "Plans available for subscription" "ar" "الخطط المتاحة للاشتراك" "fr" "Plans disponibles à l'abonnement" "es" "Planes disponibles para suscripción")
+  "plans_desc" (dict "en" "These different plans are available to subscribe this product to." "ar" "هذه الخطط المختلفة متاحة للاشتراك في هذا المنتج." "fr" "Ces différents plans sont disponibles pour s'abonner à ce produit." "es" "Estos son los distintos planes disponibles para suscribirse a este producto.")
+  "no_plans" (dict "en" "no plans available" "ar" "لا توجد خطط متاحة" "fr" "aucun plan disponible" "es" "no hay planes disponibles")
+  "quota" (dict "en" "Quota:" "ar" "الحصة:" "fr" "Quota :" "es" "Cuota:")
+  "rate" (dict "en" "Rate:" "ar" "المعدل:" "fr" "Débit :" "es" "Tasa:")
+  "access_with_plan" (dict "en" "Access with this plan" "ar" "الوصول بهذه الخطة" "fr" "Accéder avec ce plan" "es" "Acceder con este plan")
+  "select_catalogue" (dict "en" "Select a Catalogue" "ar" "اختر كتالوجًا" "fr" "Sélectionner un catalogue" "es" "Seleccionar un catálogo")
+  "catalogue_col" (dict "en" "Catalogue" "ar" "الكتالوج" "fr" "Catalogue" "es" "Catálogo")
+  "cancel" (dict "en" "Cancel" "ar" "إلغاء" "fr" "Annuler" "es" "Cancelar")
+  "add_to_cart" (dict "en" "Add to cart" "ar" "أضف إلى السلة" "fr" "Ajouter au panier" "es" "Añadir al carrito")
+  "related_blog" (dict "en" "Related Blog Content" "ar" "محتوى المدونة ذو الصلة" "fr" "Contenu de blog associé" "es" "Contenido de blog relacionado")
+  "no_posts" (dict "en" "no posts available" "ar" "لا توجد منشورات متاحة" "fr" "aucun article disponible" "es" "no hay artículos disponibles")
+  "keep_reading" (dict "en" "Keep reading" "ar" "اقرأ المزيد" "fr" "Continuer la lecture" "es" "Seguir leyendo")
+  "select_an_api" (dict "en" "Select an API" "ar" "اختر واجهة API" "fr" "Sélectionner une API" "es" "Seleccionar una API")
+  "download_spec" (dict "en" "DOWNLOAD SPEC" "ar" "تنزيل المواصفات" "fr" "TÉLÉCHARGER LA SPÉCIFICATION" "es" "DESCARGAR ESPECIFICACIÓN")
+  "no_spec_attached" (dict "en" "There's no specifications attached" "ar" "لا توجد مواصفات مرفقة" "fr" "Aucune spécification n'est jointe" "es" "No hay especificaciones adjuntas")
+  "no_docs_available" (dict "en" "There are currently no API Products documentation available" "ar" "لا تتوفر حاليًا مستندات لمنتجات API" "fr" "Aucune documentation de produit API n'est actuellement disponible" "es" "Actualmente no hay documentación de productos API disponible")
+  "copied" (dict "en" "Value has been copied successfully" "ar" "تم نسخ القيمة بنجاح" "fr" "La valeur a été copiée avec succès" "es" "El valor se ha copiado correctamente")
+}}
+{{/* GetAPITypeFormatted/GetAuthTypeBadgeFormatted are compiled Go methods,
+     not template text -- see the same note in catalogue_card.tmpl. Keep
+     this list in sync with that file's $enumT. */}}
+{{ $enumT := dict
+  "Auth Token" (dict "ar" "رمز المصادقة" "fr" "Jeton d'authentification" "es" "Token de autenticación")
+  "API Key" (dict "ar" "مفتاح API" "fr" "Clé API" "es" "Clave de API")
+  "Basic Auth" (dict "ar" "مصادقة أساسية" "fr" "Authentification de base" "es" "Autenticación básica")
+  "Custom" (dict "ar" "مخصص" "fr" "Personnalisé" "es" "Personalizado")
+}}
+
+<div class="api-product-page-wrapper">
+    <div class="container">
+	<p class="mb-3">
+	    <a href="/portal/catalogue-products" class="breadcrumb-link">
+		{{ index (index $i18n "back_to_catalogue") $lang }}</a>
+	</p>
+	{{ if .errors }}
+	<div class="alert alert-danger" role="alert">
+	    {{ range $category, $messages := .errors }}
+            <i class="tyk-icon tykon tykon-warning "></i>
+            {{ range $i, $message := $messages }}
+            <br/>
+            <div class="alert__content">{{ $message }}</div>
+            {{ end }}
+	</div>
+	{{end}}
+	{{ end }}
+	{{ if .added }}
+	<div class="alert alert-success" role="alert">
+	    <i class="tyk-icon tykon tykon-check "></i>
+	    <div class="alert__content">{{ index (index $i18n "added_to_cart") $lang }} <a href="/portal/private/cart/provision">{{ index (index $i18n "go_to_cart") $lang }}</a> {{ index (index $i18n "to_complete_request") $lang }}</div>
+	</div>
+	{{ end }}
+    </div>
+    <div class="api-detail-background-color">
+	<div class="api-product-page__header w-100 mt-5">
+            <div class="maxh-268 minh-268 api-detail-background-color card d-flex flex-row {{ if $thisProduct.Logo.URL }}has-logo{{end}} container justify-content-between">
+		<div class="left-side-card-body">
+		    <div class="card-title mt-35 d-flex flex-row align-items-center">
+			<h1 class="heading-medium">{{.product.ProductName}}</h1>
+			{{ if not $thisProduct.IsDocumentationOnly }}
+			<div class="pill-container {{ if not $thisProduct.Logo.URL }}ml-2 align-self-start{{end}} mb-2">
+			    <div class="pill">
+				{{ $authBadge := .product.GetAuthTypeBadgeFormatted }}
+				{{ $authBadgeArTr := index $enumT $authBadge }}
+				{{ $authBadgeArDisplay := "" }}{{ if $authBadgeArTr }}{{ $authBadgeArDisplay = index $authBadgeArTr $lang }}{{ end }}
+				<h5 class="body-medium-default m-0">{{ if $authBadgeArDisplay }}{{ $authBadgeArDisplay }}{{ else }}{{ $authBadge }}{{ end }}</h5>
+			    </div>
+			</div>
+			{{ end }}
+		    </div>
+		    <div class="minh-95 pr-4">
+			{{if .product.Description }}
+			<p class="text-regular-14 maxh-95 m-0">{{ .product.Description }}</p>
+			{{end}}
+		    </div>
+		    <div class="api-product-page__header card__action-buttons">
+			<!--	Not displaying access button for Products with Basic Auth or Documentation Only products 	-->
+			{{if and (ne $.product.AuthType "ba") (ne $.product.AuthType "custom") (not $thisProduct.IsDocumentationOnly)}}
+				{{ if $user }}
+					<button type="button" class="btn btn-primary" id="access-button">
+						<a href="#available-plans" class="access-btn-link">{{ index (index $i18n "access_this_product") $lang }}</a>
+					</button>
+				{{end}}
+			{{end}}
+		    </div>
+		</div>
+		{{ if $thisProduct.Logo.URL }}
+		<img class="card-img-top img-fluid" src='{{$thisProduct.Logo.URL}}' alt="">
+		{{ end }}
+            </div>
+	</div>
+    </div>
+    <div class="container mb-45">
+	<div class="step-wrapper tabs-wrapper d-flex flex-row">
+	    <span class="step active tab">{{ index (index $i18n "overview") $lang }}</span>
+	    <span class="step tab">{{ index (index $i18n "api_specification") $lang }}</span>
+	    <span class="step tab">{{ index (index $i18n "get_started") $lang }}</span>
+	</div>
+    </div>
+    <div class="content-wrapper">
+	   <div class="content-wrapper__content d-block container">
+	    <div class="api-product-page__details">
+		{{if .product.Content }}
+		<div class="api-product-page__info">
+		    <div class="api-product-page__info-title">
+			<h2 class="heading-large">{{ index (index $i18n "more_info") $lang }}</h2>
+		    </div>
+		    <div class="api-product-page__info-description more-info-text">
+			<p>{{ safe .product.Content }}</p>
+		    </div>
+		</div>
+		{{end}}
+		{{if len .product.Scopes }}
+		<div class="api-product-page__info">
+		    <div class="api-product-page__info-title">
+			<h2 class="heading-large">{{ index (index $i18n "scopes") $lang }}</h2>
+		    </div>
+		    <div class="api-product-page__info-description">
+			<ul class="pl-3">
+			    {{ range .scopes }}
+			    <li> {{ . }} </li>
+			    {{end}}
+			</ul>
+		    </div>
+		</div>
+		{{end}}
+		{{ $upstreamURL := ProviderUpstreamURL req $thisProduct.ProviderID }}
+		{{if $upstreamURL }}
+		<div class="api-product-page__info">
+		    <div class="api-product-page__info-title">
+			<h2>{{ index (index $i18n "base_url") $lang }}</h2>
+		    </div>
+		    <div class="api-product-page__info-description">
+			<p class="api-product-page__info-description__base-url copy">
+			    {{ $upstreamURL }}
+			    <i class="tyk-icon tykon tykon-copy ml-3" data-copy-value="{{ $upstreamURL }}"></i>
+			</p>
+		    </div>
+		</div>
+		{{end}}
+		{{ $apisLength := len .product.APIDetails}}
+		{{$lastApi := sub $apisLength 1}}
+		{{ if gt $apisLength 0}}
+		<div class="api-product-page__info">
+		    <div class="api-product-page__info-title">
+			<h2 class="heading-large">{{ index (index $i18n "apis_available") $lang }}</h2>
+		    </div>
+		    <div class="api-product-page__info-description text-default-subdue flex-column">
+			<div class="row m-0 justify-content-center">
+			    {{ range $index, $api := .product.APIDetails }}
+			    <div class="product-api-details col-xl-3 labeled-card d-flex flex-column align-items-center {{if and (ge $index 0) (lt $index $lastApi)}}mr-35{{end}} mb-4">
+				<div class="labeled-card__title heading-large text-default-subdue mb-4">
+				    <h3 class="mb-0">{{ $api.Name }}</h3>
+				</div>
+				{{ $formattedType := $api.GetAPITypeFormatted }}
+				{{ $formattedTypeArTr := index $enumT $formattedType }}
+				{{ $formattedTypeArDisplay := "" }}{{ if $formattedTypeArTr }}{{ $formattedTypeArDisplay = index $formattedTypeArTr $lang }}{{ end }}
+				<span class="badge badge-api-type badge-{{ lower $formattedType }}">{{ if $formattedTypeArDisplay }}{{ $formattedTypeArDisplay }}{{ else }}{{ $formattedType }}{{ end }}</span>
+				<div>
+				    <p class="text-regular-14 listen-path-text">{{ index (index $i18n "listen_path") $lang }}
+					<span class="heading-small">{{ $api.ListenPath }}</span></p>
+				</div>
+				<div class="mt-12">
+				    {{if not (eq $api.Description "")}}
+				    <span class="m-0 body-large-bold">{{ index (index $i18n "description") $lang }}</span>
+				    <p class="api-description-text text-regular-14" data-description="{{$api.Description}}">{{safe (TruncateString $api.Description 60)}}</p>
+				    {{end}}
+				</div>
+			    </div>
+			    {{ end }}
+			</div>
+		    </div>
+		</div>
+		{{end}}
+<!--	Not displaying plans for Products with Basic Auth or Documentation Only products 	-->
+		{{if and (ne $.product.AuthType "ba") (ne $.product.AuthType "custom") (not $thisProduct.IsDocumentationOnly)}}
+		<div class="api-product-page__info">
+		    <div class="api-product-page__info-title">
+			<h2 class="heading-large" id="available-plans">{{ index (index $i18n "plans_available") $lang }}</h2>
+			<p class="text-regular-14 text-default-subdue">{{ index (index $i18n "plans_desc") $lang }}</p>
+		    </div>
+		    <div class="api-product-page__info-description flex-column">
+			<div class="row m-0 justify-content-center">
+			    {{ $plansLength := len .unique_plans }}
+			    {{$lastPlan := sub $plansLength 1}}
+                            {{ if eq $plansLength 0 }}
+                            <i>{{ index (index $i18n "no_plans") $lang }}</i>
+                            {{ else }}
+                            {{ range $index,$plan := .unique_plans }}
+                            {{$plan_id := .ID}}
+                            <div class="col-xl-3 labeled-card-plan {{if and (ge $index 0) (lt $index $lastPlan)}}mr-4{{end}} mb-3">
+				<div class="mt-43">
+                                    <h2 class="heading-large text-default-subdue">{{$plan.PlanName}}</h2>
+				</div>
+				<div class="mt-3 rate-limit-and-quota">
+                                    <p class="text-regular-14 m-0">{{ index (index $i18n "quota") $lang }} {{ if eq $lang "en" }}{{ $plan.FormatQuota }}{{ else }}{{ $pf := index $planFormats $lang }}{{ if $pf }}{{ if $plan.UnlimitedQuota }}{{ index $pf "quota_unlimited" }}{{ else }}{{ printf (index $pf "quota_n") $plan.QuotaMax }}{{ end }}{{ else }}{{ $plan.FormatQuota }}{{ end }}{{ end }}</p>
+                                    <p class="text-regular-14 m-0">{{ index (index $i18n "rate") $lang }} {{ if eq $lang "en" }}{{ $plan.FormatRateLimit }}{{ else }}{{ $pf := index $planFormats $lang }}{{ if $pf }}{{ if $plan.UnlimitedRateLimit }}{{ index $pf "rate_unlimited" }}{{ else }}{{ printf (index $pf "rate_n") $plan.Rate $plan.Per }}{{ end }}{{ else }}{{ $plan.FormatRateLimit }}{{ end }}{{ end }}</p>
+				</div>
+				<div class="mt-4">
+                                    {{ if $user }}
+                                    {{if eq (len $catalogues_for_product) 1}}
+                                    {{range $catalogues_for_product}}
+                                    <form method="post" id="add-to-cart-form-b">
+                                        <input type="hidden" name="product_id" value={{$thisProduct.ID}}>
+                                        <input type="hidden" name="catalogue_id" value="{{ .ID }}">
+                                        <input type="hidden" name="plan_id" value="{{$plan_id}}">
+                                        <button type="submit" class="btn btn-secondary" id="add-to-cart-btn" data-single-catalogue="true">{{ index (index $i18n "access_with_plan") $lang }}</button>
+                                    </form>
+                                    {{end}}
+                                    {{else}}
+                                    <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#selectCatalogueForPlan{{$plan_id}}">{{ index (index $i18n "access_with_plan") $lang }}</button>
+                                    <form method="post" id="add-to-cart-form-b">
+					<div class="modal fade" id="selectCatalogueForPlan{{$plan_id}}" tabindex="-1" role="dialog" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+						<div class="modal-content p-2">
+						    <div class="modal-header justify-content-center">
+							<h2 class="modal-title">{{ index (index $i18n "select_catalogue") $lang }}</h2>
+						    </div>
+						    <div class="modal-footer">
+							<div class="table-wrapper">
+							    <table class="table">
+								<thead>
+								    <tr>
+									<th>{{ index (index $i18n "catalogue_col") $lang }}</th>
+									<th class="actions-cell"></th>
+								    </tr>
+								</thead>
+								<tbody>
+								    {{ range $catalogues_for_product }}
+								    <tr>
+									<td> {{ .Name }}</td>
+									<td class="text-center">
+									    <input type="radio" product-id="{{$thisProduct.ID}}" class="catalogue-input-radio" name="catalogue_id" value="{{ .ID }}" />
+									</td>
+								    </tr>
+								    {{ end }}
+								    <input type="hidden" name="product_id" value="{{$thisProduct.ID}}" class="product-input-radio" />
+								    <input type="hidden" name="plan_id" value="{{$plan_id}}">
+								</tbody>
+							    </table>
+							</div>
+							<div class="pt-2">
+							    <button type="button" class="btn btn-secondary-outline" data-dismiss="modal">{{ index (index $i18n "cancel") $lang }}</button>
+							    <button type="submit" class="btn btn-primary" id="add-to-cart-btn">{{ index (index $i18n "add_to_cart") $lang }}</button>
+							</div>
+						    </div>
+						</div>
+                                            </div>
+					</div>
+                                    </form>
+                                    {{end}}
+                                    {{end}}
+				</div>
+                            </div>
+                            {{end}}
+                            {{ end }}
+			</div>
+		    </div>
+		</div>
+		{{end}}
+
+		<!-- Related Blog posts -->
+		{{if .posts}}
+		<div class="api-product-page__info">
+		    <div class="api-product-page__info-title">
+				<h2 class="heading-large">{{ index (index $i18n "related_blog") $lang }}</h2>
+		    </div>
+		    <div class="api-product-page__posts d-flex flex-column">
+				<div class="row m-0 justify-content-center">
+					{{$postsLength := len .posts}}
+					{{$lastPost := sub $postsLength 1}}
+					{{ if eq $postsLength 0 }}
+						<i>{{ index (index $i18n "no_posts") $lang }}</i>
+					{{ else }}
+						{{ range $index, $post := .posts }}
+							{{$post_id := .ID}}
+							<div class="p-4 labeled-card-post {{if and (ge $index 0) (lt $index $lastPost)}}mr-4{{end}} mb-3 d-flex flex-column align-items-center">
+								<div class="text-uppercase text-regular-16 text-default-subdue m-0 text-center mb-3">
+									{{ $md := index $monthNames $lang }}{{ if $md }}{{ .CreatedAt | date "2" }} {{ index $md (.CreatedAt | date "1") }} {{ .CreatedAt | date "2006" }}{{ else }}{{.CreatedAt | date "2 Jan, 2006" }}{{ end }} - {{.Author.DisplayName}}
+								</div>
+								<div class="text-center mb-4">
+									<h2 class="heading-large text-default-subdue labeled-card-post-title m-0">{{.Title}}</h2>
+								</div>
+								<div class="d-flex flex-wrap justify-content-center mb-4">
+									{{range $indx, $category := .Categories}}
+										<div class="text-regular-14 pill m-0 mr-2 mb-2">{{.Name}}</div>
+									{{end}}
+								</div>
+								<div class="mt-auto">
+									<a href="{{.URL}}" class="btn btn-secondary-outline">{{ index (index $i18n "keep_reading") $lang }}</a>
+								</div>
+							</div>
+						{{end}}
+					{{end}}
+				</div>
+		    </div>
+		</div>
+		{{end}}
+		<!-- End Related blog posts -->
+            </div>
+	</div>
+	<div>
+	    <div class="content-wrapper__content d-none">
+		{{if $hasDocs}}
+		<div class="container api-product-page_spec">
+		    <p>{{ index (index $i18n "select_an_api") $lang }}</p>
+		    <div class="d-flex flex-row justify-content-between align-items-center mt-1 mb-5 pb-3">
+				<select id="OasApiSelect">
+					<option value="">{{ index (index $i18n "select_an_api") $lang }}</option>
+					{{ $docArray := $thisProduct.APIDetails}}
+					{{ if $thisProduct.IsDocumentationOnly}}
+						{{ range $index, $spec_detail := $thisProduct.SpecDetails }}
+						{{ $oasfile := gt ($spec_detail.OASDocument.Base.Url | trim | length) 0 }}
+						{{ $oasurl := gt ($spec_detail.OASUrl | trim | length) 0 }}
+						{{ $graphqlsdl := gt ($spec_detail.GraphQLSDL.Base.Url | trim | length) 0 }}
+						{{ $hasGraphqlEndpoint := gt ($spec_detail.GraphQLServerEndpoint | trim | length) 0 }}
+						{{ $isGraphql := or $graphqlsdl $hasGraphqlEndpoint }}
+						{{ if or $oasfile $oasurl $isGraphql }}
+							{{$url := ""}}
+							{{if $oasfile }}
+								{{$url = .OASDocument.Base.Url}}
+							{{else if $oasurl}}
+								{{$url = .OASUrl}}
+							{{else if $graphqlsdl}}
+								{{$url = .GraphQLSDL.Base.Url}}
+							{{end}}
+							{{$template := ProductDocTemplate req $thisProduct.Path $spec_detail.SpecAlias }}
+							{{if (eq $initialAPIID "")}}
+								{{ $initialAPIOasUrl = $url }}
+								{{ $initialAPIID = $spec_detail.SpecAlias }}
+								{{ $initialTemplate = $template }}
+							{{end}}
+							<option value="{{$spec_detail.SpecAlias}}-{{$url}}" data-template="{{$template}}" {{if eq $initialAPIID $spec_detail.SpecAlias}}selected="selected"{{end}}>
+								{{$spec_detail.SpecAlias}}
+								<span class="pill ml-2 bg-[#fff7cc]">
+								</span>
+							</option>
+						{{end}}
+					{{end}}
+					{{else}}
+						{{ range $index, $api_detail := $thisProduct.APIDetails }}
+							{{ $oasfile := gt ($api_detail.OASDocument.Base.Url | trim | length) 0 }}
+							{{ $oasurl := gt ($api_detail.OASUrl | trim | length) 0 }}
+							{{ $graphqlsdl := gt ($api_detail.GraphQLSDL.Base.Url | trim | length) 0 }}
+							{{ $isGraphQL := or (eq $api_detail.APIType "GraphQL") (eq $api_detail.APIType "UDG") }}
+							{{ if or $oasfile $oasurl $graphqlsdl $isGraphQL }}
+								{{$url := ""}}
+								{{if $oasfile }}
+									{{$url = .OASDocument.Base.Url}}
+								{{else if $oasurl}}
+									{{$url = .OASUrl}}
+								{{else if $graphqlsdl}}
+									{{$url = .GraphQLSDL.Base.Url}}
+								{{end}}
+								{{$template := ProductDocTemplate req $thisProduct.Path $api_detail.APIID }}
+								{{if and (not $isGraphQL) (eq $initialAPIID "")}}
+									{{ $initialAPIOasUrl = $url }}
+									{{ $initialAPIID = $api_detail.APIID }}
+									{{ $initialTemplate = $template }}
+								{{end}}
+								<option value="{{$api_detail.APIID}}-{{ $url }}" data-graphqlendpoint="{{ .GraphQLServerEndpoint }}" data-template="{{$template}}" {{if eq $initialAPIID $api_detail.APIID}}selected="selected"{{end}}>
+									{{$api_detail.Name}}
+								</option>
+							{{end}}
+						{{end}}
+					{{end}}
+				</select>
+				<div class="oas-display-content-download-button">
+					<form name="oas_form" method="get" data-path="/portal/catalogue-products/{{$thisProduct.Path}}" id="display-download-button" action="{{if ne $initialAPIID ""}}/portal/catalogue-products/{{$thisProduct.Path}}/{{$initialAPIID}}/docs/download{{end}}">
+						<button class="download-oas-button" type="submit" {{if eq $initialAPIID ""}}disabled{{end}}>{{ index (index $i18n "download_spec") $lang }}</button>
+					</form>
+				</div>
+		    </div>
+		</div>
+        {{ if $thisProduct.WebhooksEnabled }}
+        	{{ $oas_template = $asyncapi }}
+        {{ end }}
+        <div id="api_doc_wrapper">
+		{{if eq $initialTemplate $redoc}}
+            <div id="redoc-wrapper">
+            <redoc hide-download-button></redoc>
+            </div>
+        {{else if eq $initialTemplate $asyncapi}}
+            <script src="https://unpkg.com/@asyncapi/react-component@latest/browser/standalone/index.js"></script>
+            <link rel="stylesheet" href="https://unpkg.com/@asyncapi/react-component@latest/styles/default.min.css">
+
+            <div id="asyncapi"></div>
+
+            <script>
+                AsyncApiStandalone.render({
+                    schema: {
+                        url: '{{$initialAPIOasUrl}}',
+                        options: { method: "GET", mode: "cors" },
+                    },
+                    config: {
+                        "show": {
+                            "sidebar": false,
+                            "info": true,
+                            "operations": true,
+                            "servers": true,
+                            "messages": true,
+                            "schemas": true,
+                            "errors": true
+                        },
+                        "expand":{
+                            "messageExamples": false
+                        },
+                        "sidebar": {
+                            "showServers": "byDefault",
+                            "showOperations": "byDefault"
+                        }
+                        },
+                    },
+                    document.getElementById('asyncapi')
+                );
+            </script>
+		{{else if eq $initialTemplate "product_doc_graphql_playground"}}
+		<div id="graphql-playground-wrapper">
+			<iframe src="/portal/catalogue-products/{{$thisProduct.Path}}/{{$initialAPIID}}/docs?embed=1" width="100%" height="600" frameborder="0"></iframe>
+		</div>
+		{{else if gt (len $initialAPIOasUrl) 0}}
+        <div id="oas-display-stoplight">
+        <elements-api apiDescriptionUrl="{{$initialAPIOasUrl}}" router="hash" layout="responsive" hideExport="true"/>
+        </div>
+        {{end}}
+        </div>
+		{{else}}
+		<div class="container">
+		    <div class="alert alert-warning mt-5" role="alert">
+			<i class="tyk-icon tykon tykon-warning "></i>
+			<div class="alert__content">
+			    {{ index (index $i18n "no_spec_attached") $lang }}
+			</div>
+		    </div>
+		</div>
+		{{end}}
+	    </div>
+
+
+	    <div class="content-wrapper__content d-none container">
+		{{if gt (len $thisProduct.Docs) 0}}
+		<div class="container d-flex d-row mt-60">
+          <div class="step-wrapper-api-docs d-flex flex-column">
+            {{range $index,$doc := $thisProduct.Docs}}
+              <span class="step text-regular-14 {{if eq $index 0}}active{{end}}">{{$doc.Title}}</span>
+            {{end}}
+          </div>
+          <div class="content-wrapper-api-docs ml-110">
+            {{range $index,$doc := $thisProduct.Docs}}
+              <div class="content-wrapper__content-api-docs {{if eq $index 0}}d-block{{else}}d-none{{end}}">
+                <h3 class="dark mb-50">{{$doc.Title}}</h3>
+              {{if and $doc.MarkdownEnabled (gt (len $doc.MarkdownContent) 0)}}
+                <div id="set-markdown-content-{{$index}}" class="api-docs-text">
+				 {{safe_md $doc.MarkdownContent}}
+                </div>
+              {{else}}
+                <div class="api-docs-text">
+                 {{safe $doc.Content}}
+                </div>
+              {{end}}
+              </div>
+            {{end}}
+          </div>
+        </div>
+		{{else}}
+		<div class="alert alert-warning mt-5" role="alert">
+		    <i class="tyk-icon tykon tykon-warning "></i>
+		    <div class="alert__content">
+			{{ index (index $i18n "no_docs_available") $lang }}
+		    </div>
+		</div>
+		{{end}}
+	    </div>
+
+	</div>
+    </div>
+    <div class="d-none" id="success-msg">{{ index (index $i18n "copied") $lang }}</div>
+</div>

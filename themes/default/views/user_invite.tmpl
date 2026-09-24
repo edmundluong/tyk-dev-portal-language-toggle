@@ -1,0 +1,129 @@
+{{ $cookies := (req).Header.Get "Cookie" }}
+{{ $supportedLangs := list "en" "ar" "fr" "es" }}
+{{ $lang := "en" }}
+{{ range $supportedLangs }}{{ if regexMatch (printf "tdp_locale=%s" .) $cookies }}{{ $lang = . }}{{ end }}{{ end }}
+{{ $t := dict
+  "back_to_users" (dict "en" "< Back to user list" "ar" "< الرجوع إلى قائمة المستخدمين" "fr" "< Retour à la liste des utilisateurs" "es" "< Volver a la lista de usuarios")
+  "invite_new_user" (dict "en" "Invite a new User" "ar" "دعوة مستخدم جديد" "fr" "Inviter un nouvel utilisateur" "es" "Invitar a un nuevo usuario")
+  "invite_desc" (dict "en" "Please fill in the details of the new user and assign a role, an invitation email will be sent with a registration link." "ar" "يرجى تعبئة تفاصيل المستخدم الجديد وتحديد دور له، وسيتم إرسال بريد دعوة يحتوي على رابط تسجيل." "fr" "Veuillez renseigner les informations du nouvel utilisateur et lui attribuer un rôle ; un e-mail d'invitation contenant un lien d'inscription sera envoyé." "es" "Complete los datos del nuevo usuario y asígnele un rol; se enviará un correo de invitación con un enlace de registro.")
+  "name" (dict "en" "Name:" "ar" "الاسم:" "fr" "Nom :" "es" "Nombre:")
+  "last_name" (dict "en" "Last name:" "ar" "اسم العائلة:" "fr" "Nom :" "es" "Apellidos:")
+  "name_ph" (dict "en" "Name" "ar" "الاسم" "fr" "Nom" "es" "Nombre")
+  "last_name_ph" (dict "en" "Last name" "ar" "اسم العائلة" "fr" "Nom" "es" "Apellidos")
+  "email" (dict "en" "Email:" "ar" "البريد الإلكتروني:" "fr" "E-mail :" "es" "Correo electrónico:")
+  "email_ph" (dict "en" "Email" "ar" "البريد الإلكتروني" "fr" "E-mail" "es" "Correo electrónico")
+  "role" (dict "en" "Role:" "ar" "الدور:" "fr" "Rôle :" "es" "Rol:")
+  "teams" (dict "en" "Teams" "ar" "الفرق" "fr" "Équipes" "es" "Equipos")
+  "teams_desc" (dict "en" "Select all the teams this user should be part of." "ar" "حدد جميع الفرق التي يجب أن يكون هذا المستخدم جزءًا منها." "fr" "Sélectionnez toutes les équipes dont cet utilisateur doit faire partie." "es" "Seleccione todos los equipos de los que debe formar parte este usuario.")
+  "cancel" (dict "en" "Cancel" "ar" "إلغاء" "fr" "Annuler" "es" "Cancelar")
+  "send_invite" (dict "en" "Send invite" "ar" "إرسال الدعوة" "fr" "Envoyer l'invitation" "es" "Enviar invitación")
+}}
+<div class="private-portal-wrapper">
+  <div class="container">
+    <p class="mb-3 mt-3">
+      <a href="/portal/private/users" class="breadcrumb-link">
+        {{ index (index $t "back_to_users") $lang }}
+      </a>
+    </p>
+
+    {{ if .errors }}
+      {{ range $key, $errs := .errors }}
+        <div class="alert alert-warning cart-error" role="alert">
+          <i class="tyk-icon tykon tykon-warning "></i>
+          <div class="alert__content">
+            <strong>{{$key}}</strong>
+            <ul>
+              {{ range $errs }}
+                <li>{{.}}</li>
+              {{ end }}
+            </ul>
+          </div>
+        </div>
+      {{ end }}
+    {{ end }}
+
+    <form action="invite" method="post" id="user-invite">
+      {{ if .error }}
+        <div class="alert alert-danger" role="alert">
+          <i class="tyk-icon tykon tykon-warning "></i>
+          <div class="alert__content">{{ .error }}</div>
+        </div>
+      {{ end }}
+      <div class="apps-wrapper__card-section mt-5">
+        <h1 class="heading-large mb-2">{{ index (index $t "invite_new_user") $lang }}</h1>
+        <p class="text-regular-14 text-default-subdue mb-4">{{ index (index $t "invite_desc") $lang }}</p>
+
+        <div class="card p-0 mb-4">
+          <div class="card-footer m-0 p-4">
+            <div class="row mb-4">
+              <div class="col-6">
+                <label class="heading-small text-default">{{ index (index $t "name") $lang }}</label>
+                <input type="text" class="form-control" name="first"  value="{{.first}}" placeholder="{{ index (index $t "name_ph") $lang }}" required autofocus />
+              </div>
+              <div class="col-6">
+                <label class="heading-small text-default">{{ index (index $t "last_name") $lang }}</label>
+                <input type="text" class="form-control" name="last" value="{{.last}}" placeholder="{{ index (index $t "last_name_ph") $lang }}" required autofocus/>
+              </div>
+            </div>
+            <div class="row mb-4">
+              <div class="col-12">
+                <label class="heading-small text-default">{{ index (index $t "email") $lang }}</label>
+                <input class="form-control" name="email" value="{{.email}}" placeholder="{{ index (index $t "email_ph") $lang }}" required/>
+              </div>
+            </div>
+
+            <div class="col-12 mb-4">
+              {{ $roles := GetUserInvitationRoles }}
+              {{ if $roles }}
+                <label class="heading-small text-default">{{ index (index $t "role") $lang }}</label>
+                <div class="row">
+                  {{ range $role := $roles }}
+                    <div class="col-6">
+                      <div class="form-check d-flex align-items-center">
+                        <input
+                          class="form-check-input me-2"
+                          type="radio"
+                          name="role"
+                          id="{{ $role.ID }}"
+                          value="{{ $role.ID }}"
+                          required
+                        />
+                        <label class="text-regular-14 form-check-label" for="{{ $role.ID }}">
+                          {{ $role.DisplayName }}
+                        </label>
+                      </div>
+                    </div>
+                  {{ end }}
+                </div>
+              {{ end }}
+            </div>
+          </div>
+        </div>
+        {{ render "role_detail_table" . }}
+        <div class="mb-4">
+          <label class="heading-medium text-default">{{ index (index $t "teams") $lang }}</label>
+          <p class="text-regular-14 text-default-subdue">{{ index (index $t "teams_desc") $lang }}</p>
+          {{ range $team := .teams }}
+            <div class="form-check mb-2">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                value="{{ $team.ID }}"
+                id="team-{{ $team.ID }}"
+                name="teams"
+                {{ if $team.Default }}checked{{ end }}
+              />
+              <label class="form-check-label text-regular-14 text-default-subdue" for="team-{{ $team.ID }}">
+                {{ $team.Name }}
+              </label>
+            </div>
+          {{ end }}
+        </div>
+        <div class="form-group text-right mt-4">
+          <a id="user_invite_cancel" class="btn btn-secondary-outline" href="/portal/private/users">{{ index (index $t "cancel") $lang }}</a>
+          <input type="submit" name="submit" class="btn btn-primary" value="{{ index (index $t "send_invite") $lang }}" />
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

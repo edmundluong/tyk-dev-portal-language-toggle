@@ -1,0 +1,126 @@
+{{ $errFirst := "" }}
+{{ $errLast := "" }}
+{{ $errEmail := "" }}
+{{ $errPassword1 := "" }}
+{{ $errPassword2 := "" }}
+{{ $genericError := "" }}
+
+{{ $cookies := (req).Header.Get "Cookie" }}
+{{ $supportedLangs := list "en" "ar" "fr" "es" }}
+{{ $lang := "en" }}
+{{ range $supportedLangs }}{{ if regexMatch (printf "tdp_locale=%s" .) $cookies }}{{ $lang = . }}{{ end }}{{ end }}
+{{ $t := dict
+  "heading" (dict "en" "Create an account" "ar" "إنشاء حساب" "fr" "Créer un compte" "es" "Crear una cuenta")
+  "registered" (dict "en" "You've successfully registered. You can now login." "ar" "تم تسجيلك بنجاح. يمكنك الآن تسجيل الدخول." "fr" "Vous vous êtes inscrit avec succès. Vous pouvez maintenant vous connecter." "es" "Se ha registrado correctamente. Ya puede iniciar sesión.")
+  "pending" (dict "en" "The registration request has been sent, you'll recieve an email once it's been approved." "ar" "تم إرسال طلب التسجيل، وستتلقى بريدًا إلكترونيًا عند الموافقة عليه." "fr" "La demande d'inscription a été envoyée ; vous recevrez un e-mail une fois qu'elle aura été approuvée." "es" "Se ha enviado la solicitud de registro; recibirá un correo cuando se apruebe.")
+  "go_to_login" (dict "en" "GO TO LOGIN" "ar" "اذهب لتسجيل الدخول" "fr" "ALLER À LA CONNEXION" "es" "IR AL INICIO DE SESIÓN")
+  "email" (dict "en" "Email address" "ar" "البريد الإلكتروني" "fr" "Adresse e-mail" "es" "Dirección de correo electrónico")
+  "email_ph" (dict "en" "Your Email *" "ar" "بريدك الإلكتروني *" "fr" "Votre e-mail *" "es" "Su correo electrónico *")
+  "first" (dict "en" "First name" "ar" "الاسم الأول" "fr" "Prénom" "es" "Nombre")
+  "first_ph" (dict "en" "First *" "ar" "الاسم الأول *" "fr" "Prénom *" "es" "Nombre *")
+  "last" (dict "en" "Last name" "ar" "اسم العائلة" "fr" "Nom" "es" "Apellidos")
+  "last_ph" (dict "en" "Last *" "ar" "اسم العائلة *" "fr" "Nom *" "es" "Apellidos *")
+  "password" (dict "en" "Password" "ar" "كلمة المرور" "fr" "Mot de passe" "es" "Contraseña")
+  "password_ph" (dict "en" "Your Password *" "ar" "كلمة مرورك *" "fr" "Votre mot de passe *" "es" "Su contraseña *")
+  "confirm_password" (dict "en" "Re-enter password" "ar" "أعد إدخال كلمة المرور" "fr" "Ressaisissez le mot de passe" "es" "Vuelva a introducir la contraseña")
+  "confirm_password_ph" (dict "en" "Confirm Password *" "ar" "تأكيد كلمة المرور *" "fr" "Confirmer le mot de passe *" "es" "Confirmar contraseña *")
+  "invite_code" (dict "en" "Invite code" "ar" "رمز الدعوة" "fr" "Code d'invitation" "es" "Código de invitación")
+  "invite_tip" (dict "en" "When registering with an invite code you'd be assigned to a specific team and org within this developer portal." "ar" "عند التسجيل برمز دعوة، سيتم تعيينك إلى فريق ومؤسسة محددة داخل بوابة المطورين هذه." "fr" "Lors de l'inscription avec un code d'invitation, vous serez affecté à une équipe et une organisation spécifiques au sein de ce portail développeur." "es" "Al registrarse con un código de invitación, se le asignará a un equipo y una organización específicos dentro de este portal del desarrollador.")
+  "submit" (dict "en" "Register to developer portal" "ar" "التسجيل في بوابة المطورين" "fr" "S'inscrire au portail développeur" "es" "Registrarse en el portal del desarrollador")
+  "already_member" (dict "en" "Already a member ? " "ar" "عضو بالفعل؟ " "fr" "Déjà membre ? " "es" "¿Ya es miembro? ")
+  "login" (dict "en" "Login." "ar" "تسجيل الدخول." "fr" "Connexion." "es" "Inicio de sesión.")
+}}
+
+{{ if .errors }}
+  {{ range $field, $errs := .errors }}
+      {{ range $errs }}
+        {{if eq $field "last" }} {{ $errLast = . }}
+        {{else if eq $field "first" }} {{ $errFirst = . }}
+        {{else if eq $field "password1" }} {{ $errPassword1 = . }}
+        {{else if eq $field "password2" }} {{ $errPassword2 = . }}
+        {{else if eq $field "email" }} {{ $errEmail = . }}
+        {{else}} {{ $genericError = .}}
+        {{end}}
+      {{ end }}
+  {{ end }}
+{{ end }}
+
+<div class="d-flex flex-column align-items-center justify-content-center flex-grow-1 login-page-wrapper" style="background: url('/assets/images/login.svg') center center no-repeat, linear-gradient(93.59deg, #36364C 19.75%, #505071 81.94%);">
+  <div class="login-form-wrapper p-4">
+    <h2 class="mb-5 text-center">{{ index (index $t "heading") $lang }}</h2>
+    {{ if or .done .pending }}
+      <div class="alert alert-{{ if .done }}success{{else}}info{{end}}" role="alert">
+        {{ if .done }}
+          <i class="tyk-icon tykon tykon-check "></i>
+          <div class="alert__content">{{ index (index $t "registered") $lang }}</div>
+        {{ else }}
+          <i class="tyk-icon tykon tykon-warning "></i>
+          <div class="alert__content">{{ index (index $t "pending") $lang }}</div>
+        {{ end }}
+      </div>
+      {{if .done}}
+        <p class="text-center mt-4">
+          <a class="btn btn-primary" href="{{LoginURL}}">{{ index (index $t "go_to_login") $lang }}</a>
+        </p>
+      {{end}}
+    {{ else }}
+      <form action="/auth/password/register{{ if .invite_id }}?token={{.invite_id}}{{ end }}" method="post" class="mb-5">
+        {{if ne $genericError "" }}
+          <div class="alert alert-danger" role="alert">
+            <i class="tyk-icon tykon tykon-warning "></i>
+            <div class="alert__content">{{$genericError}}</div>
+          </div>
+        {{end}}
+        <div class="form-group">
+          <label class="form-label">{{ index (index $t "email") $lang }}</label>
+          <input type="text" name="email" class="form-control {{if ne $errEmail "" }}has-error{{end}}" placeholder="{{ index (index $t "email_ph") $lang }}" value="{{ .email }}" />
+          {{if ne $errEmail "" }}
+            <p class="invalid-feedback d-block">{{ $errEmail }}</p>
+          {{end}}
+        </div>
+        <div class="form-group">
+          <label class="form-label">{{ index (index $t "first") $lang }}</label>
+          <input type="text" name="first" class="form-control {{if ne $errFirst "" }}has-error{{end}}" placeholder="{{ index (index $t "first_ph") $lang }}" value="{{ .first }}" />
+          {{if ne $errFirst "" }}
+            <p class="invalid-feedback d-block">{{ $errFirst }}</p>
+          {{end}}
+        </div>
+        <div class="form-group">
+          <label class="form-label">{{ index (index $t "last") $lang }}</label>
+          <input type="text" name="last" class="form-control {{if ne $errLast "" }}has-error{{end}}" placeholder="{{ index (index $t "last_ph") $lang }}" value="{{ .last }}" />
+            {{if ne $errLast "" }}
+              <p class="invalid-feedback d-block">{{ $errLast }}</p>
+            {{end}}
+        </div>
+        <div class="form-group">
+          <label class="form-label">{{ index (index $t "password") $lang }}</label>
+          <input type="password" name="password1" class="form-control content-field {{if ne $errPassword1 "" }}has-error{{end}}" placeholder="{{ index (index $t "password_ph") $lang }}" value="" autocomplete="off" />
+          {{if ne $errPassword1 "" }}
+            <p class="invalid-feedback d-block">{{ $errPassword1 }}</p>
+          {{end}}
+        </div>
+        <div class="form-group">
+          <label class="form-label">{{ index (index $t "confirm_password") $lang }}</label>
+          <input type="password" name="password2" class="form-control content-field {{if ne $errPassword2 "" }}has-error{{end}}" placeholder="{{ index (index $t "confirm_password_ph") $lang }}" value="" autocomplete="off" />
+          {{if ne $errPassword2 "" }}
+            <p class="invalid-feedback d-block">{{ $errPassword2 }}</p>
+          {{end}}
+        </div>
+        <div class="form-group">
+          <label class="form-label"> {{ index (index $t "invite_code") $lang }}
+            <span class="help-icon" data-toggle="tooltip" data-placement="right" title="{{ index (index $t "invite_tip") $lang }}">
+              <img src="../../assets/images/help.svg" >
+            </span>
+          </label>
+          <input type="text" name="invite_id" class="form-control" placeholder="{{ index (index $t "invite_code") $lang }}" value="{{ .invite_id }}" {{ if .invite_id }} style="pointer-events: none;" {{ end }} />
+        </div>
+        <div class="form-group text-center">
+          <input type="submit" name="submit" class="btn btn-primary" value="{{ index (index $t "submit") $lang }}" />
+        </div>
+        <div class="form-group text-center">
+          {{ index (index $t "already_member") $lang }}<a href="{{LoginURL}}" class="breadcrumb-link">{{ index (index $t "login") $lang }}</a>
+        </div>
+      </form>
+    {{ end }}
+  </div>
+</div>

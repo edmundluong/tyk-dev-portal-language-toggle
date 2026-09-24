@@ -1,0 +1,41 @@
+<!-- Template used for Side Menu -->
+
+{{ $user := CurrentUser req }}
+{{ $cookies := (req).Header.Get "Cookie" }}
+{{ $supportedLangs := list "en" "ar" "fr" "es" }}
+{{ $lang := "en" }}
+{{ range $supportedLangs }}{{ if regexMatch (printf "tdp_locale=%s" .) $cookies }}{{ $lang = . }}{{ end }}{{ end }}
+{{ $t := dict
+  "dashboard" (dict "en" "Dashboard" "ar" "لوحة البيانات" "fr" "Tableau de bord" "es" "Panel de control")
+  "my_apps" (dict "en" "My apps" "ar" "تطبيقاتي" "fr" "Mes applications" "es" "Mis aplicaciones")
+  "users" (dict "en" "Users" "ar" "المستخدمون" "fr" "Utilisateurs" "es" "Usuarios")
+  "profile_settings" (dict "en" "Profile settings" "ar" "إعدادات الملف الشخصي" "fr" "Paramètres du profil" "es" "Configuración del perfil")
+  "logout" (dict "en" "Log Out" "ar" "تسجيل الخروج" "fr" "Se déconnecter" "es" "Cerrar sesión")
+}}
+{{ if $user }}
+    <div class="side-menu-container">
+        <ul class="sidebar-nav">
+            <li id="/portal/private/analytics">
+                <i class="bi bi-ui-checks-grid"></i>
+                <a href="/portal/private/analytics">{{ index (index $t "dashboard") $lang }}</a>
+            </li>
+            <li id="/portal/private/dashboard">
+                <i class="bi bi-ui-checks-grid"></i>
+                <a href="/portal/private/dashboard">{{ index (index $t "my_apps") $lang }}</a>
+            </li>
+            <li id="/portal/private/users">
+                <i class="bi bi-people"></i>
+                <a href="/portal/private/users">{{ index (index $t "users") $lang }}</a>
+            </li>
+            <hr>
+            <li id="/portal/private/profile">
+                <i class="bi bi-person"></i>
+                <a href="/portal/private/profile">{{ index (index $t "profile_settings") $lang }}</a>
+            </li>
+            <li>
+                <i class="bi bi-box-arrow-right"></i>
+                <a href="/auth/logout">{{ index (index $t "logout") $lang }}</a>
+            </li>
+        </ul>
+    </div>
+{{end}}

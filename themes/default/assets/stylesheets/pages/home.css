@@ -1,0 +1,102 @@
+.home-page-wrapper .text-container {
+	padding-block: 8rem;
+}
+
+.home-page-wrapper .inner-container {
+	background-color: white;
+	max-height: 293px;
+	border-radius: var(--tdp-border-radius);
+	color: var(--tdp-text-color);
+}
+
+.home-page-wrapper .inner-container img {
+	max-width: 279px;
+	max-height: 279px;
+	margin-top: 10px;
+}
+
+.home-page-wrapper li {
+	margin-bottom: 5px;
+}
+
+.row.dark-to-light-bg,
+.row.light-to-dark-bg {
+  /* home.tmpl uses Bootstrap's .row as a full-bleed section wrapper in
+     three places (featured-apis-wrapper, the no-featured-products empty
+     state, partners-wrapper) rather than nesting it in a .container.
+     Zeroing the row's default left/right margins here keeps these
+     sections flush with the viewport edge in every layout direction. */
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.partners-wrapper__image-container {
+	background: transparent;
+	border-radius: var(--tdp-border-radius);
+}
+
+.partners-wrapper__image-container img {
+  margin-left: -10px;
+}
+
+.use-cases {
+  padding-block: 40px;
+}
+
+.step-wrapper .step {
+  cursor: pointer;
+  width: fit-content;
+}
+
+.step-wrapper .step.active,
+.step-wrapper .step:hover {
+  color: var(--tdp-link-color);
+}
+
+/* Featured Products Section - Catalogue Card Overrides */
+.featured-apis-wrapper .row.justify-content-center {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* Override Bootstrap column classes for featured cards */
+.featured-apis-wrapper .card-container.col-lg-4.col-md-6.col-sm-12 {
+  flex: 0 0 calc(33.333% - 20px);
+  max-width: calc(33.333% - 20px);
+  margin: 0 10px 24px 10px;
+}
+
+.featured-apis-wrapper .product-card {
+  background-color: white;
+  width: 100%;
+  min-height: 380px;
+}
+
+.featured-apis-wrapper .product-card .card-body {
+  padding: 20px;
+}
+
+.featured-apis-wrapper .product-card .card-cta {
+  padding: 16px 20px;
+}
+
+/* Responsive adjustments for featured products */
+@media (max-width: 991px) {
+  .featured-apis-wrapper .card-container.col-lg-4.col-md-6.col-sm-12 {
+    flex: 0 0 calc(50% - 20px);
+    max-width: calc(50% - 20px);
+  }
+}
+
+@media (max-width: 767px) {
+  .featured-apis-wrapper .card-container.col-lg-4.col-md-6.col-sm-12 {
+    flex: 0 0 100%;
+    max-width: 100%;
+    margin: 0 0 24px 0;
+  }
+}
+
+.on-dark {
+	  color: var(--tdp-on-dark-text-color);
+}

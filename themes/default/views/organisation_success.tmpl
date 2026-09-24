@@ -1,0 +1,34 @@
+{{ $cookies := (req).Header.Get "Cookie" }}
+{{ $supportedLangs := list "en" "ar" "fr" "es" }}
+{{ $lang := "en" }}
+{{ range $supportedLangs }}{{ if regexMatch (printf "tdp_locale=%s" .) $cookies }}{{ $lang = . }}{{ end }}{{ end }}
+{{ $t := dict
+  "heading" (dict "en" "Success! You've created an organisation" "ar" "تم بنجاح! لقد أنشأت مؤسسة" "fr" "Succès ! Vous avez créé une organisation" "es" "¡Listo! Ha creado una organización")
+  "sub" (dict "en" "Get started by inviting your first user to collaborate with." "ar" "ابدأ بدعوة أول مستخدم للتعاون معه." "fr" "Commencez par inviter votre premier utilisateur à collaborer avec vous." "es" "Comience invitando a su primer usuario a colaborar.")
+  "invite_first" (dict "en" "Invite your first user" "ar" "دعوة أول مستخدم لك" "fr" "Invitez votre premier utilisateur" "es" "Invite a su primer usuario")
+  "or" (dict "en" "OR" "ar" "أو" "fr" "OU" "es" "O")
+  "learn_more" (dict "en" " Learn more" "ar" " تعرّف على المزيد" "fr" " En savoir plus" "es" " Más información")
+}}
+<div class="private-portal-wrapper">
+    <div class="container">
+        <div class="card first-invite-card">
+            <div class="card-body text-center d-flex flex-column align-content-center justify-content-center p-4">
+                <h1 class="heading-xlarge mb-3">{{ index (index $t "heading") $lang }}</h1>
+                <p class="text-default-subdue mb-4">
+                    {{ index (index $t "sub") $lang }}
+                </p>
+                <div class="mb-3">
+                    <a class="btn btn-primary" href="users/invite">
+                          <i class="tyk-icon tykon tykon-plus"></i>
+                         <span>{{ index (index $t "invite_first") $lang }}</span>
+                    </a>
+                </div>
+                <p class="text-default-subdue">
+                 {{ index (index $t "or") $lang }}
+                  <a href="#" class="breadcrumb-link">{{ index (index $t "learn_more") $lang }}</a>
+                  <a href="#"><i class="bi bi-box-arrow-up-right learn-icon"></i></a>
+              </p>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,34 @@
+{{ $cookies := (req).Header.Get "Cookie" }}
+{{ $supportedLangs := list "en" "ar" "fr" "es" }}
+{{ $lang := "en" }}
+{{ range $supportedLangs }}{{ if regexMatch (printf "tdp_locale=%s" .) $cookies }}{{ $lang = . }}{{ end }}{{ end }}
+{{ $t := dict
+  "heading" (dict "en" "You haven't yet invited any users to this organisation" "ar" "لم تدعُ أي مستخدمين إلى هذه المؤسسة بعد" "fr" "Vous n'avez pas encore invité d'utilisateurs dans cette organisation" "es" "Todavía no ha invitado a ningún usuario a esta organización")
+  "sub" (dict "en" "Get more work done by inviting someone to collaborate with" "ar" "أنجز المزيد من العمل بدعوة شخص للتعاون معه" "fr" "Accomplissez plus de choses en invitant quelqu'un à collaborer avec vous" "es" "Haga más invitando a alguien a colaborar con usted")
+  "invite_first" (dict "en" "Invite your first user" "ar" "دعوة أول مستخدم لك" "fr" "Invitez votre premier utilisateur" "es" "Invite a su primer usuario")
+  "or" (dict "en" "OR" "ar" "أو" "fr" "OU" "es" "O")
+  "learn_more" (dict "en" " Learn more" "ar" " تعرّف على المزيد" "fr" " En savoir plus" "es" " Más información")
+}}
+<div class="private-portal-wrapper">
+  <div class="container">
+    <div class="card first-invite-card">
+        <div class="card-body text-center d-flex flex-column align-content-center justify-content-center p-4">
+            <h1 class="heading-large mb-3">{{ index (index $t "heading") $lang }}</h1>
+                <p class="text-regular-14 text-default-subdue mb-4">
+                    {{ index (index $t "sub") $lang }}
+                </p>
+                <div class="mb-3">
+                    <a class="btn btn-primary" href="users/invite">
+                          <i class="tyk-icon tykon tykon-plus"></i>
+                         <span>{{ index (index $t "invite_first") $lang }}</span>
+                    </a>
+                </div>
+              <p class="text-regular-14 text-default-subdue">
+                 {{ index (index $t "or") $lang }}
+                  <a href="#" class="breadcrumb-link">{{ index (index $t "learn_more") $lang }}</a>
+                  <a href="#"><i class="bi bi-box-arrow-up-right learn-icon"></i></a>
+              </p>
+        </div>
+    </div>
+  </div>
+</div>
